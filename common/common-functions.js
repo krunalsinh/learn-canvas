@@ -53,7 +53,24 @@ function drawTriangle(context, x = 0, y = 0, radius = 50, color = "#666"){
     context.fillStyle = color;
     context.fill();
     context.closePath();
+}
+function drawStar(context, x = 0, y = 0, radius = 50, color = "#666"){
+    const l = radius * 2; 
+    context.beginPath();
+    context.moveTo(x + l * 0.5 , y );
+    context.lineTo(x + l * 0.64, y + l * 0.34 );
+    context.lineTo(x + l , y + l * 0.37 );
+    context.lineTo(x + l * 0.72, y + l * 0.61 );
+    context.lineTo(x + l * 0.80, y + l );
+    context.lineTo(x + l * 0.50, y + l * 0.77 );
+    context.lineTo(x + l * 0.19, y + l );
+    context.lineTo(x + l * 0.27, y + l * 0.61 );
+    context.lineTo(x , y + l * 0.37 );
+    context.lineTo(x + l * 0.36, y + l * 0.34 );
     
+    context.fillStyle = color;
+    context.fill();
+    context.closePath();
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawLine, addText, fillRect };
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect };

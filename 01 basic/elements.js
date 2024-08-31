@@ -1,4 +1,4 @@
-import {drawRectangle, drawCircle, drawTriangle} from '../common/common-functions.js';
+import {drawRectangle, drawCircle, drawTriangle, drawStar} from '../common/common-functions.js';
 class box{
     constructor(ctx,x,y,width,height,color){
         this.ctx = ctx;
@@ -10,6 +10,7 @@ class box{
         this.sx = 6 * (Math.random() - 0.5);
         this.sy = 6 * (Math.random() - 0.5);
     }
+
     animate(){
         this.x += this.sx;
         this.y += this.sy;
@@ -20,6 +21,10 @@ class box{
         if(this.y + this.height > innerHeight || this.y < 0){
             this.sy = -this.sy;
         }
+        this.draw();
+    }
+
+    draw(){
         drawRectangle(this.ctx, this.x, this.y, this.width, this.height, this.color);
     }
 }
@@ -36,9 +41,14 @@ class circle extends box{
         if(this.x + this.radius > innerWidth || this.x < this.radius){
             this.sx = -this.sx;
         }
+
         if(this.y + this.radius > innerHeight || this.y < this.radius){
             this.sy = -this.sy;
         }
+        this.draw();
+    }
+
+    draw(){
         drawCircle(this.ctx, this.x , this.y , this.radius, this.color)
     }
 }
@@ -58,8 +68,22 @@ class triangle extends box{
         if(this.y + this.radius * 2 > innerHeight || this.y < 0){
             this.sy = -this.sy;
         }
+        this.draw();
+    }
+    
+    draw(){
         drawTriangle(this.ctx, this.x , this.y , this.radius, this.color)
     }
 }
 
-export {box, circle, triangle};
+
+class star extends triangle{
+    constructor(ctx,x,y,radius,color,width,height){
+       super(ctx,x,y,radius,color,width,height);
+    }
+    draw(){
+        drawStar(this.ctx, this.x , this.y , this.radius, this.color)
+    }
+}
+
+export {box, circle, triangle, star};
