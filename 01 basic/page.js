@@ -1,45 +1,39 @@
+import {fillRect, drawTriangle, drawCircle} from '../common/common-functions.js';
+import {box, circle, triangle} from "./elements.js";
+
 const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = innerWidth;
 
-const ctx = canvas.getContext('2d');
+const eleCount = 50;
+const colors = ['red', 'green', 'blue', 'yellow'];
+const arr = [];
 
-// drawRectangle(ctx, 100, 100, 400, 500, 'red');
-// drawRectangle(ctx);
-drawCircle(ctx, 100, 100, 100,  'blue');
-// drawCircle(ctx);
-// drawLine(ctx,10,10,500,500, 3, 'red');
-
-addText(ctx, 100, 100, "100px", 'sans-serif', 'red', 'Loream Ipsum')
-
-function drawRectangle(context, x = 0, y = 0 , width = 50, height = 50, color = "#666"){
-    context.beginPath();
-    context.rect( x, y, width, height);
-    context.fillStyle = color;
-    context.fill();
-    context.closePath();
+for(let i = 0; i < eleCount; i++){
+    const radius = Math.random() * 50 + 10; 
+    const width = radius, height = radius;
+    const randX = (Math.random() * (innerWidth - radius * 2)) + radius;
+    const randY = (Math.random() * (innerHeight - radius * 2)) + radius;
+    const color = colors[Math.floor(Math.random() * (colors.length - 1))];
+    
+    if(Math.random() < 0.75){
+        arr.push(new box(ctx, randX, randY, height, width, color));
+    }else if(Math.random() < 0.35){
+        arr.push(new circle(ctx, randX, randY, radius, color));
+    }else{
+        arr.push(new triangle(ctx, randX, randY, radius, color));
+    }
 }
 
-function drawCircle(context, x = 0, y = 0, radius = 50, color = "#666"){
-    context.beginPath();
-    context.arc(x , y , radius, 0, Math.PI * 2, false);
-    context.fillStyle = color;
-    context.fill();
-    context.closePath();
+function animationFunc(){
+    fillRect(ctx, 0 , 0, innerWidth, innerHeight, '#000');
+    arr.forEach(e => e.animate());
+    requestAnimationFrame(animationFunc);
 }
 
-function drawLine(context, x1 = 0, y1 = 0 , x2 = 0, y2 = 0, strokeWidth = 1, color = "#666"){
-    context.beginPath();
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
-    context.lineWidth = strokeWidth;
-    context.strokeStyle = color;
-    context.stroke();
-    context.closePath();
-}
 
-function addText(context,x,y, fontSize = '10px', fontFamily = "sans-serif", color = "#666", text = ""){
-    context.font = `${fontSize}  sans-serif`;
-    context.fillStyle = color;
-    context.fillText(text, x, y);
-}
+// drawCircle(ctx,150,150,100, 'blue')
+// drawTriangle(ctx, 50, 50, 100, 'red');
+
+animationFunc()
