@@ -13,11 +13,16 @@ function drawRectangle(context, x = 0, y = 0 , width = 50, height = 50, color = 
     context.closePath();
 }
 
-function drawCircle(context, x = 0, y = 0, radius = 50, color = "#666"){
+function drawCircle(context, x = 0, y = 0, radius = 50, color = "#666", stroke = false){
     context.beginPath();
     context.arc(x , y , radius, 0, Math.PI * 2, false);
-    context.fillStyle = color;
-    context.fill();
+    if(!stroke){
+        context.fillStyle = color;
+        context.fill();
+    }else{
+        context.strokeStyle = color;
+        context.stroke();
+    }
     context.closePath();
 }
 
