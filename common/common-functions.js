@@ -78,4 +78,18 @@ function drawStar(context, x = 0, y = 0, radius = 50, color = "#666"){
     context.closePath();
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect };
+function getDistance(x1, y1, x2, y2) {
+    var xdist = x2 - x1;
+    var ydist = y2 - y1;
+    return Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
+}
+
+function moveTo(x1, y1, x2, y2, speed) {
+    const calc = (Math.atan2(y2 - y1, x2 - x1) / Math.PI * 180) * Math.PI / 180;
+    return {
+        x: speed * Math.cos(calc),
+        y: speed * Math.sin(calc)
+    };
+}
+
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo };
