@@ -1,4 +1,4 @@
-import {drawCircle, addText} from '../common/common-functions.js';
+import {drawCircle, addText, moveTo} from '../common/common-functions.js';
 
 class circle {
     constructor(ctx,x,y,radius,color, stroke, strokeSize){
@@ -19,26 +19,54 @@ class circle {
     }
 }
 
-class player extends circle{
-    constructor(ctx,x,y,radius,color, angle, direction, centerCircle){
+class enemy extends circle{
+    constructor(ctx,x,y,radius,color, angle, centerCircle){
         super(ctx,x,y,radius,color);
-        this.direction = direction;
+        this.direction = 0;
+        this.angle = angle;
+        this.centerCircle = centerCircle;
+        this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
+        this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
+    }
+    animate(enemyMove){
+        this.direction = enemyMove;
+        this.angle += this.direction;
+        this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
+        this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
+        this.draw();
+    }
+}
+
+class player extends circle{
+    constructor(ctx,x,y,radius,color, angle, centerCircle){
+        super(ctx,x,y,radius,color);
+        this.direction = 0;
         this.angle = angle;
         this.centerCircle = centerCircle;
         this.x = this.centerCircle.x + 50 * Math.cos(this.angle);
         this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
+        this.fire = false;
+        this.fireSpeed = 20;
     }
 
-    animate(){
+    animate(playerMove, playerFire){
+        this.fire = playerFire;
+        this.direction = playerMove;
         this.angle += this.direction;
-        this.x = this.centerCircle.x + 50 * Math.cos(this.angle);
-        this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
+        if(!this.fire){
+            this.x = this.centerCircle.x + 50 * Math.cos(this.angle);
+            this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
+        }else{
+            let latestCord = moveTo(this.centerCircle.x, this.centerCircle.y , this.x, this.y, this.fireSpeed);
+            this.x += latestCord.x;
+            this.y += latestCord.y;
+        }
         this.draw();
     }
 }
 
 class score {
-    constructor(ctx,x,y,font,fontSize, color, text){
+    constructor(ctx,x,y,font,fontSize, color, score){
         this.ctx = ctx;
         this.x = x;
         this.y = y;
@@ -46,13 +74,17 @@ class score {
         this.fontSize = fontSize;
         this.color = color;
         this.angle = 0.1;
-        this.text = text;
+        this.score = score;
+    }
+
+    updateScore(){
+        this.score += 1;
     }
 
     draw(){
-        addText(this.ctx, this.x, this.y, this.fontSize, this.font, this.color, this.text);
+        addText(this.ctx, this.x, this.y, this.fontSize, this.font, this.color, `Score : ${this.score}`);
     }
 }
 
-export { circle, score, player};
+export { circle, score, player, enemy};
 
