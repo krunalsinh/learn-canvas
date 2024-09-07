@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orbit Blast</title>
     <link rel="stylesheet" href="../common/style.css" />
+    <link rel="stylesheet" href="./page.css" />
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="app-popup show">
+        <h2 class="app-popup-title">Game Rules</h2>
+        <ul class="app-popup-list">
+            <li>On every enemy hit you got one point and earn one life point.</li>
+            <li>On every miss fire you lose one life point.</li>
+            <li>IF you lost all life points the game will be over.</li>
+        </ul>
+        <button class="app-btn" id="gameStartBtn">Start Game</button>
+    </div>
     <script src="./page.js" type="module"></script>
 </body>
 </html>
