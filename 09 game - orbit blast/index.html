@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Orbit Blast</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../common/style.css" />
     <link rel="stylesheet" href="./page.css" />
-</head>
-<body>
+  </head>
+  <body>
     <canvas id="canvas"></canvas>
-    <div class="app-popup show">
+    <div class="app-popup show" id="gameStartPopup">
+      <div class="popup-inner-wrapper">
         <h2 class="app-popup-title">Game Rules</h2>
         <ul class="app-popup-list">
-            <li>On every enemy hit you got one point and earn one life point.</li>
-            <li>On every miss fire you lose one life point.</li>
-            <li>IF you lost all life points the game will be over.</li>
+          <li>On every enemy hit you got one point and earn one life point.</li>
+          <li>On every miss fire you lose one life point.</li>
+          <li>If you lost all life points the game will be over.</li>
         </ul>
         <button class="app-btn" id="gameStartBtn">Start Game</button>
+      </div>
+    </div>
+    <div class="app-popup" id="gameEndPopup">
+        <div class="popup-inner-wrapper">
+          <h2 class="app-popup-title">Game Over</h2>
+          
+          <button class="app-btn" id="gameRestartBtn">Restart Game</button>
+        </div>
+      </div>
+    <div class="text-animation hide" id="textAnimation">
+        <span>The Game Begins</span>
+        <span>3</span>
+        <span>2</span>
+        <span>1</span>
     </div>
     <script src="./page.js" type="module"></script>
-</body>
+  </body>
 </html>

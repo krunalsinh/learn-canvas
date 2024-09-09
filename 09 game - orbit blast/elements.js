@@ -20,16 +20,15 @@ class circle {
 }
 
 class enemy extends circle {
-    constructor(ctx, x, y, radius, color, angle, centerCircle) {
+    constructor(ctx, x, y, radius, color, angle, centerCircle, direction) {
         super(ctx, x, y, radius, color);
-        this.direction = 0;
+        this.direction = direction;
         this.angle = angle;
         this.centerCircle = centerCircle;
         this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
         this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
     }
-    animate(enemyMove) {
-        this.direction = enemyMove;
+    animate() {
         this.angle += this.direction;
         this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
         this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
@@ -93,14 +92,21 @@ class life extends score {
         this.life = life;
     }
 
-    updateLife() {
+    decreaseLife() {
         this.life -= 1;
+    }
 
+    increaseLife() {
+        this.life += 1;
+    }
+    
+    updateState(){
         if (this.life < 16) {
             this.color = "red";
         } else if (this.life < 32) {
             this.color = "yellow";
         }
+        this.draw();
     }
 
     draw() {

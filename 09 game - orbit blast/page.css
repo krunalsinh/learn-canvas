@@ -1,41 +1,173 @@
-.app-popup{
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+body {
+  font-family: "Roboto", system-ui;
+  font-weight: 400;
+}
+.app-popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: 300px;
+  width: 500px;
+  color: #fff;
+  padding: 5px;
+}
+.app-popup:before{
+    content: "";
+    border-radius: 35px;
+    position: absolute;
+    inset: 0;
+    display: block;
+    background-image: linear-gradient(
+      var(--angle, 0deg),
+      #2af598 0%,
+      #009efd 100%
+    );
+    animation: rotate-effect 3000ms infinite linear;
+}
+@keyframes rotate-effect {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.app-popup.pop-out {
+    display: block;
+  animation: slideOut 1000ms ease-out forwards;
+}
+.app-popup.pop-in {
+    display: block;
+  animation: slideIn 1000ms ease-out forwards;
+}
+.popup-inner-wrapper {
+  position: relative;
+  background-color: #111;
+  min-height: 100%;
+  padding: 30px 38px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 35px;
+}
+.app-popup-title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+.app-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+  font-weight: 400;
+  cursor: pointer;
+  transition: 150ms;
+  background-image: linear-gradient(120deg, #2af598 0%, #009efd 100%);
+}
+.app-popup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  padding-left: 18px;
+}
+.app-btn:hover {
+  scale: 1.1;
+}
+.app-popup .app-btn,
+.app-popup .btn-box {
+  margin-top: auto;
+}
+
+@keyframes slideOut {
+  0% {
+    transform: scale(1) translateY(0px) rotateX(0deg);
+  }
+  50% {
+    transform: scale(1) translateY(20px) rotateX(0deg);
+  }
+  70% {
+    transform: scale(0.5) translateY(-50px) rotateX(-90deg);
+  }
+  100% {
+    transform: scale(0) translateY(-20px) rotateX(-90deg);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: scale(1) translateY(-40px) rotateX(-40deg);
+  }
+  50% {
+    transform: scale(1) translateY(20px) rotateX(20deg);
+    transform-origin: bottom center;
+  }
+  70% {
+    transform: scale(1) translateY(-10px) rotateX(-10deg);
+    transform-origin: top center;
+  }
+  100% {
+    transform: scale(1) translateY(0px) rotateX(0deg);
+    transform-origin: bottom center;
+  }
+}
+.text-animation{
+    color: #fff;
     position: fixed;
     inset: 0;
     margin: auto;
-    height: 300px;
-    width: 500px;
-    color: #fff;
-    background-color: red;
-    border-radius: 35px;
-    padding: 30px 38px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    place-items: center;
 }
-.app-popup-title{
-    font-size: 30px;
-    margin-bottom: 20px;
+.text-animation.hide{
+    display: none;
 }
-.app-btn{
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 5px;
-    border: none;
-    font-weight: 400;
-    cursor: pointer;
-    transition: 150ms;
+.text-animation span{
+    position: absolute;
+    font-size: 90px;
+    font-weight: 600;
+    background-image: -webkit-linear-gradient(#2af598, #009efd);
+    background-image: linear-gradient(#2af598, #009efd);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
 }
-.app-popup-list{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 0;
-    margin: 0;
-    padding-left: 18px;
+.text-animation span:nth-child(1){
+    animation: popInOutText1 6000ms ease-in-out forwards;
 }
-.app-btn:hover{
-    scale: 1.1;
+@keyframes popInOutText1{
+    0%{scale: 0; opacity: 0;}
+    10%,15%{scale: 1; opacity: 1;}
+    25%,100%{scale: 5; opacity: 0;}
 }
-.app-popup .app-btn, .app-popup .btn-box{
-    margin-top: auto;
+.text-animation span:nth-child(2){
+    animation: popInOutText2 6000ms ease-in-out forwards;
+}
+@keyframes popInOutText2{
+    0%,25%{scale: 0; opacity: 0;}
+    34%,40%{scale: 1; opacity: 1;}
+    50%,100%{scale: 5; opacity: 0;}
+}
+
+.text-animation span:nth-child(3){
+    animation: popInOutText3 6000ms ease-in-out forwards;
+}
+@keyframes popInOutText3{
+    0%,50%{scale: 0; opacity: 0;}
+    59%,55%{scale: 1; opacity: 1;}
+    75%,100%{scale: 5; opacity: 0;}
+}
+
+.text-animation span:nth-child(4){
+    animation: popInOutText4 6000ms ease-in-out forwards;
+}
+@keyframes popInOutText4{
+    0%,75%{scale: 0; opacity: 0;}
+    84%,90%{scale: 1; opacity: 1;}
+    100%{scale: 5; opacity: 0;}
 }
