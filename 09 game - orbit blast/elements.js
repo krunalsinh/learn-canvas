@@ -20,18 +20,20 @@ class circle {
 }
 
 class enemy extends circle {
-    constructor(ctx, x, y, radius, color, angle, centerCircle, direction) {
-        super(ctx, x, y, radius, color);
+    constructor(ctx, radius, color, angle, centerCircle, direction, enemyPathCircleWidth) {
+        super(ctx, 0, 0, radius, color);
+        
         this.direction = direction;
         this.angle = angle;
         this.centerCircle = centerCircle;
-        this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
-        this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
+        this.distFromCenter = enemyPathCircleWidth;
+        this.x = this.centerCircle.x + this.distFromCenter * Math.cos(this.angle);
+        this.y = this.centerCircle.y + this.distFromCenter * Math.sin(this.angle);
     }
     animate() {
         this.angle += this.direction;
-        this.x = this.centerCircle.x + 300 * Math.cos(this.angle);
-        this.y = this.centerCircle.y + 300 * Math.sin(this.angle);
+        this.x = this.centerCircle.x + this.distFromCenter * Math.cos(this.angle);
+        this.y = this.centerCircle.y + this.distFromCenter * Math.sin(this.angle);
         this.draw();
     }
 }
@@ -44,24 +46,10 @@ class player extends circle {
         this.centerCircle = centerCircle;
         this.x = this.centerCircle.x + 50 * Math.cos(this.angle);
         this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
-        this.fire = false;
         this.fireSpeed = 20;
     }
 
-    animate(playerMove, playerFire) {
-        this.fire = playerFire;
-        this.direction = playerMove;
-        this.angle += this.direction;
-        if (!this.fire) {
-            this.x = this.centerCircle.x + 50 * Math.cos(this.angle);
-            this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
-        } else {
-            let latestCord = moveTo(this.centerCircle.x, this.centerCircle.y, this.x, this.y, this.fireSpeed);
-            this.x += latestCord.x;
-            this.y += latestCord.y;
-        }
-        this.draw();
-    }
+    
 }
 
 class score {

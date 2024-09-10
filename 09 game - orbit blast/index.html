@@ -17,8 +17,11 @@
     <canvas id="canvas"></canvas>
     <div class="app-popup show" id="gameStartPopup">
       <div class="popup-inner-wrapper">
-        <h2 class="app-popup-title">Game Rules</h2>
+        <h2 class="app-popup-title">Game Instructions</h2>
         <ul class="app-popup-list">
+          <li>Press <span class="key-box">A</span> and <span class="key-box">D</span> to rotate player left and right.</li>
+          <li>Press key <span class="key-box">W</span> to fire player to enemy.</li>
+          <li>In mobile device you can swipe <span class="key-box">Left</span> and <span class="key-box">Right</span> to rotate player left and right. And <span class="key-box">Top</span> screen to fire player.</li>
           <li>On every enemy hit you got one point and earn one life point.</li>
           <li>On every miss fire you lose one life point.</li>
           <li>If you lost all life points the game will be over.</li>
@@ -28,7 +31,7 @@
     </div>
     <div class="app-popup" id="gameEndPopup">
         <div class="popup-inner-wrapper">
-          <h2 class="app-popup-title">Game Over</h2>
+          <h2 class="app-popup-title" style="text-align: center;">Game Over</h2>
           
           <button class="app-btn" id="gameRestartBtn">Restart Game</button>
         </div>

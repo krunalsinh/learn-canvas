@@ -10,12 +10,14 @@ body {
 .app-popup {
   display: none;
   position: fixed;
-  inset: 0;
-  margin: auto;
-  height: 300px;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: 500px;
+  max-width: calc(100% - 20px);
   color: #fff;
   padding: 5px;
+  top: 50px;
 }
 .app-popup:before{
     content: "";
@@ -52,10 +54,18 @@ body {
   display: flex;
   flex-direction: column;
   border-radius: 35px;
+  gap: 30px;
 }
 .app-popup-title {
   font-size: 30px;
-  margin-bottom: 20px;
+}
+.key-box{
+  display: inline-block;
+  background-color: #00834f;
+  padding: 1px 4px;
+  margin-inline: 5px;
+  border-radius: 3px;
+  font-size: 0.85em;
 }
 .app-btn {
   display: inline-block;
