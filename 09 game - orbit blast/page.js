@@ -6,6 +6,7 @@ const gameStartPopup = document.querySelector("#gameStartPopup");
 const gameRestartBtn = document.querySelector("#gameRestartBtn");
 const gameEndPopup = document.querySelector("#gameEndPopup");
 const textAnimation = document.querySelector("#textAnimation");
+const bestScoreEle = document.querySelector("#bestScore");
 
 let gameStarted = false;
 
@@ -18,13 +19,13 @@ let minV;
 
 let centerCircle, enemyPathCircle;
 
-let playerArr = [], playerFire = false, playerMove = 0;
+let player = null, playerFire = false, playerMove = 0, playerTouched = false, playerTempX, playerTempY, playerTrailsArr = [];
 
 let enemyArr = [];
 
-let gameScoreCount = 0, gameScore;
+let gameScoreCount = 0, gameScore, bestScore = 0;
 
-let lifeCount = 50, playerLife;
+let lifeCount = 5, playerLife;
 
 let particlesArr = [];
 
@@ -35,10 +36,7 @@ let playerPropArr = [];
 let lastIntervalTimestamp = 0;
 let animationFrame;
 
-
 gameStartPopup.classList.add('pop-in');
-
-
 
 function animationFunc(now) {
   if (gameStarted) {
@@ -46,7 +44,12 @@ function animationFunc(now) {
     if (!lastIntervalTimestamp || now - lastIntervalTimestamp >= 2 * 1000) {
       lastIntervalTimestamp = now;
       enemyArr.forEach(enemy => enemy.direction = getRandDirection())
+    }
 
+    if (!lastIntervalTimestamp || now - lastIntervalTimestamp >= 2 * 150) {
+      if(playerFire){
+        playerTrailsArr.push(new circle(ctx, player.x, player.y, 3, player.color));
+      }
     }
 
     fillRect(ctx, 0, 0, innerWidth, innerHeight, 'rgba(0,0,0,1)');
@@ -55,54 +58,75 @@ function animationFunc(now) {
 
     enemyPathCircle.draw();
 
-    playerArr.forEach((player, playerIndex) => {
-      player.draw();
+    player.draw();
 
-      if (player.x + player.radius > innerWidth || player.x - player.radius < 0 || player.y + player.radius > innerHeight || player.y - player.radius < 0) {
-        playerArr.splice(playerIndex, 1);
-        playerFire = false;
+    if (player.x + player.radius > innerWidth || player.x - player.radius < 0 || player.y + player.radius > innerHeight || player.y - player.radius < 0) {
 
-        spawnPlayer();
+      let playerAngle = Math.random() * 6.28;
+      player.x = centerCircle.x + 50 * Math.cos(playerAngle);
+      player.y = centerCircle.x + 50 * Math.sin(playerAngle);
+      playerFire = false;
 
-        playerLife.decreaseLife();
+      playerLife.decreaseLife();
+    }
+
+    if (playerTouched) {
+
+      let latestCord = moveTo(playerTempX, playerTempY, player.x, player.y, -player.fireSpeed);
+      player.x += latestCord.x;
+      player.y += latestCord.y;
+
+      let distTemp = getDistance(player.x, player.y, playerTempX, playerTempY);
+      if (distTemp < player.fireSpeed + 1) {
+        playerTouched = false;
       }
 
-        player.angle += playerMove;
-        if (!playerFire) {
-            player.x = centerCircle.x + 50 * Math.cos(player.angle);
-            player.y = centerCircle.y + 50 * Math.sin(player.angle);
-        } else {
-            let latestCord = moveTo(centerCircle.x, centerCircle.y, player.x, player.y, player.fireSpeed);
-            player.x += latestCord.x;
-            player.y += latestCord.y;
-        }
-    });
+    } else if (playerFire) {
+      let latestCord = moveTo(centerCircle.x, centerCircle.y, player.x, player.y, player.fireSpeed);
+      player.x += latestCord.x;
+      player.y += latestCord.y;
+    } else {
+      player.angle += playerMove;
+      player.x = centerCircle.x + 50 * Math.cos(player.angle);
+      player.y = centerCircle.y + 50 * Math.sin(player.angle);
+    }
+
+    playerTrailsArr.forEach( (trail,trailIndex) => {
+      trail.radius -= 0.1;
+      if(trail.radius < 1){
+        playerTrailsArr.splice(trailIndex,1);
+      }
+      trail.draw();
+    })
+
 
     enemyArr.forEach((enemy, enemyIndex) => {
-      if (playerArr[0]) {
-        const distanceEnemyPlayer = getDistance(playerArr[0].x, playerArr[0].y, enemy.x, enemy.y);
-        if (distanceEnemyPlayer < playerArr[0].radius + enemy.radius) {
+      const distanceEnemyPlayer = getDistance(player.x, player.y, enemy.x, enemy.y);
+      if (distanceEnemyPlayer < player.radius + enemy.radius) {
 
-          for (let particle_i = 0; particle_i < 20; particle_i++) {
-            let dx = (Math.random() - 0.5) * (Math.random() * 6 + 3);
-            let dy = (Math.random() - 0.5) * (Math.random() * 6 + 3);
-            particlesArr.push(new particle(ctx, playerArr[0].x, playerArr[0].y, 2, Math.random() > 0.5 ? '#2af598' : 'yellow', dx, dy));
-          }
+        playerFire = false;
+        playerTouched = true;
 
-          gameScore.updateScore();
-
-          playerArr.splice(0, 1);
-          playerFire = false;
-          spawnPlayer();
-
-          enemyArr.splice(enemyIndex, 1);
-          setTimeout(() => spawnEnemy(1), 1500);
-
-          playerLife.increaseLife();
-
+        for (let particle_i = 0; particle_i < 20; particle_i++) {
+          let dx = (Math.random() - 0.5) * (Math.random() * 6 + 3);
+          let dy = (Math.random() - 0.5) * (Math.random() * 6 + 3);
+          particlesArr.push(new particle(ctx, player.x, player.y, 2, Math.random() > 0.5 ? '#2af598' : 'yellow', dx, dy));
         }
-        enemy.animate()
+
+        gameScore.updateScore();
+
+        // let playerAngle = Math.random() * 6.28;
+        // player.x = centerCircle.x + 50 * Math.cos(playerAngle);
+        // player.y = centerCircle.x + 50 * Math.sin(playerAngle);
+        // spawnPlayer();
+
+        enemyArr.splice(enemyIndex, 1);
+        setTimeout(() => spawnEnemy(1), 1500);
+
+        playerLife.increaseLife();
+
       }
+      enemy.animate()
     })
 
     gameScore.draw();
@@ -110,7 +134,10 @@ function animationFunc(now) {
 
     playerLife.updateState();
     if (playerLife.life < 1) {
+      bestScore = Math.max(bestScore, gameScore.score);
+      bestScoreEle.innerHTML = bestScore;
       endGame();
+
     }
 
     particlesArr.forEach((e, i) => {
@@ -140,25 +167,23 @@ function spawnPlayer() {
   let playerAngle = Math.random() * 6.28;
   let playerX = centerCircle.x + 50 * Math.cos(playerAngle);
   let playerY = centerCircle.y + 50 * Math.sin(playerAngle);
-  let player = new hero(ctx, playerX, playerY, 10, '#009efd', playerAngle, centerCircle);
-  playerArr.push(player);
+  player = new hero(ctx, playerX, playerY, 10, '#009efd', playerAngle, centerCircle);
+
 }
 
 function getRandDirection() {
-  return Math.random() < 0.5 ?  0.02 + (Math.random() * (0.06 - 0.02)) :  -0.02 + (Math.random() * (-0.06 + 0.02))
+  return Math.random() < 0.5 ? 0.02 + (Math.random() * (0.06 - 0.02)) : -0.02 + (Math.random() * (-0.06 + 0.02))
 }
 
 
 function endGame() {
   gameStarted = false;
 
-  playerArr = [];
+  player = null;
+
+  playerTrailsArr = [];
 
   enemyArr = [];
-
-  gameScoreCount = 0;
-
-  lifeCount = 5;
 
   particlesArr = [];
 
@@ -176,21 +201,21 @@ function beginGame() {
 
   setTimeout(() => {
     gameStartPopup.classList.remove('pop-out');
-    // textAnimation.classList.remove('hide')
+    textAnimation.classList.remove('hide')
   }, 1000);
   setTimeout(() => {
-    // textAnimation.classList.add('hide');
+    textAnimation.classList.add('hide');
 
     gameInit();
 
-  }, 0);
+  }, 7000);
 }
 
 function gameInit() {
 
   canvas.height = innerHeight;
   canvas.width = innerWidth;
-  
+
   minV = Math.min(innerWidth, innerHeight);
 
   enemyPathCircleStrokeWidth = Math.min(60, minV / 12);
@@ -199,25 +224,21 @@ function gameInit() {
   centerCircle = new circle(ctx, innerWidth / 2, innerHeight / 2, 20, '#fff');
   enemyPathCircle = new circle(ctx, innerWidth / 2, innerHeight / 2, enemyPathCircleWidth, '#111', true, enemyPathCircleStrokeWidth);
 
-  playerArr = []; playerFire = false; playerMove = 0;
-  
+  playerFire = false; playerMove = 0;
+
   enemyArr = [];
 
-  gameScoreCount = 0;
   gameScore = new score(ctx, innerWidth - 200, 50, "sans-serif", "30px", "#fff", gameScoreCount);
 
-  lifeCount = 50;
   playerLife = new life(ctx, 15, 50, "sans-serif", "30px", "#fff", lifeCount);
 
   lastIntervalTimestamp = 0;
-  
+
   spawnPlayer();
 
   spawnEnemy(3);
 
-  gameScore.score = 0;
 
-  playerLife.life = 50;
 
   gameStarted = true;
 
@@ -231,37 +252,52 @@ function getRandColor() {
 }
 
 addEventListener('keydown', function (e) {
-  if (e.code === 'KeyA') playerMove = -0.1;
-  if (e.code === 'KeyD') playerMove = 0.1;
-  if (e.code === 'KeyW') playerFire = true;
+  if(gameStarted){
+    if (e.code === 'KeyA') playerMove = -0.1;
+    if (e.code === 'KeyD') playerMove = 0.1;
+    if (e.code === 'KeyW') {
+      playerFire = true;
+      playerTempX = player.x;
+      playerTempY = player.y;
+    }
+  }
 });
 
 addEventListener('keyup', function (e) {
-  if (e.code === 'KeyA') playerMove = 0;
-  if (e.code === 'KeyD') playerMove = 0;
+  if(gameStarted){
+    if (e.code === 'KeyA') playerMove = 0;
+    if (e.code === 'KeyD') playerMove = 0;
+  }
 });
 
 let ts_x = 0, tm_x = 0, touchStart = false;
 addEventListener("touchstart", (e) => {
-  touchStart = true;
-  ts_x = e.touches[0].pageX;
+  if(gameStarted){
+    touchStart = true;
+    ts_x = e.touches[0].pageX;
+  }
 });
 
 addEventListener("touchmove", (e) => {
-  tm_x = e.touches[0].pageX;
-  if(ts_x - tm_x < 0 && gameStarted){
-    playerMove = 0.01 * (ts_x - tm_x) / 20;
-    
-  }else{
-    playerMove = 0.01 * (ts_x - tm_x) / 20;
+  if(gameStarted){
+    tm_x = e.touches[0].pageX;
+    if (ts_x - tm_x < 0) {
+      playerMove = 0.01 * (ts_x - tm_x) / 20;
+
+    } else {
+      playerMove = 0.01 * (ts_x - tm_x) / 20;
+    }
   }
-  console.log(playerMove);
-  
 });
 
 addEventListener("touchend", (e) => {
-  touchStart = false;
-  if(gameStarted){ playerMove = 0; playerFire = true; }
+  if (gameStarted) { 
+    touchStart = false;
+    playerMove = 0; 
+    playerFire = true; 
+    playerTempX = player.x;
+    playerTempY = player.y;
+  }
 });
 
 gameStartBtn.addEventListener('click', e => {
@@ -287,7 +323,7 @@ gameRestartBtn.addEventListener('click', e => {
 //2) move player clockwise/anticlockwise using left/right key -- done
 //3) enemy animate in random direction on some interval -- done
 //4) fire player -- done
-//5) respawn player if miss collision -- done
+//5) reset player if miss collision -- done
 //6) detect collision between player and enemy -- done
 //7) respawn enemy if collide with player -- done
 //8) update score if collide with player -- done
@@ -295,4 +331,8 @@ gameRestartBtn.addEventListener('click', e => {
 //10) creation spark on collision -- done
 //11) create game begin popup and text animation
 //12) when every life points finished game will be stopped and game over popup appear -- done
+//13) player move back to its original position if it collide with enemy
+//14) create trail when plyer fire
+//15) display best score in game over popup
+//16) add music
 

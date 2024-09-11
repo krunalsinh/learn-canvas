@@ -48,9 +48,9 @@ class player extends circle {
         this.y = this.centerCircle.y + 50 * Math.sin(this.angle);
         this.fireSpeed = 20;
     }
-
-    
 }
+
+
 
 class score {
     constructor(ctx, x, y, font, fontSize, color, score) {

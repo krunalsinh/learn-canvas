@@ -7,6 +7,9 @@ body {
   font-family: "Roboto", system-ui;
   font-weight: 400;
 }
+.text-center{
+  text-align: center;
+}
 .app-popup {
   display: none;
   position: fixed;
@@ -146,6 +149,11 @@ body {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+}
+@media (max-width: 768px){
+  .text-animation span{
+    font-size: 40px;
+  }
 }
 .text-animation span:nth-child(1){
     animation: popInOutText1 6000ms ease-in-out forwards;
