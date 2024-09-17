@@ -15,16 +15,21 @@
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <button class="clear-btn sound-play-pause-btn" id="gameMusicPlayPauseBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="45" width="45">
+        <path fill="#fff" fill-rule="evenodd" d="m320 359-34-26c40-43 40-109 0-151l34-27c52 58 52 146 0 204ZM234 85l-110 88H43v170h81l110 86V85Z"/>
+      </svg>
+    </button>
     <div class="app-popup show" id="gameStartPopup">
       <div class="popup-inner-wrapper">
         <h2 class="app-popup-title">Game Instructions</h2>
         <ul class="app-popup-list">
-          <li>Press <span class="key-box">A</span> and <span class="key-box">D</span> to rotate player left and right.</li>
+          <li>Press <span class="key-box">A</span> and <span class="key-box">D</span> to rotate the player left and right.</li>
           <li>Press key <span class="key-box">W</span> to fire player to enemy.</li>
-          <li>In mobile device you can swipe <span class="key-box">Left</span> and <span class="key-box">Right</span> to rotate player left and right. And <span class="key-box">Top</span> screen to fire player.</li>
-          <li>On every enemy hit you got one point and earn one life point.</li>
-          <li>On every miss fire you lose one life point.</li>
-          <li>If you lost all life points the game will be over.</li>
+          <li>On mobile devices, swipe <span class="key-box">Left</span> and <span class="key-box">Right</span> to rotate player left and right. And <span class="key-box">Tap</span> screen to fire player at the enemy.</li>
+          <li>Each successful hit on an enemy earns you one point and an extra life.</li>
+          <li>Every missed shot costs you one life point.</li>
+          <li>The game ends when you lose all your life points.</li>
         </ul>
         <button class="app-btn" id="gameStartBtn">Start Game</button>
       </div>
@@ -42,6 +47,10 @@
         <span>2</span>
         <span>1</span>
     </div>
+    <audio id="gameAudio" volume="0.2">
+      <source src="./game-music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
     <script src="./page.js" type="module"></script>
   </body>
 </html>

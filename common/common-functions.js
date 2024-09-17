@@ -80,9 +80,9 @@ function drawStar(context, x = 0, y = 0, radius = 50, color = "#666"){
 }
 
 function getDistance(x1, y1, x2, y2) {
-    var xdist = x2 - x1;
-    var ydist = y2 - y1;
-    return Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
+    const xdist = x2 - x1;
+    const ydist = y2 - y1;
+    return Math.hypot(xdist, ydist);
 }
 
 function moveTo(x1, y1, x2, y2, speed) {

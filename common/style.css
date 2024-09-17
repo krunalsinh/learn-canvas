@@ -7,3 +7,9 @@ html,body{
     overflow: hidden;
     background-color: #000;
 }
+.clear-btn{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}

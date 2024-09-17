@@ -126,5 +126,30 @@ class particle extends circle {
     }
 }
 
-export { circle, score, player, enemy, life, particle };
+class dispEle extends circle {
+    constructor(ctx, x, y, radius, color) {
+        super(ctx, x, y, radius, color);
+        this.sx = 7 * (Math.random() - 0.5) + 5;
+        this.sy = 7 * (Math.random() - 0.5) + 5;
+    }
+
+    animate(){
+        this.x += this.sx;
+        this.y += this.sy;
+        
+        if(this.x + this.radius > innerWidth || this.x < this.radius){
+            this.sx = -this.sx;
+        }
+
+        if(this.y + this.radius > innerHeight || this.y < this.radius){
+            this.sy = -this.sy;
+        }
+
+        this.draw();
+    }
+
+}
+
+
+export { circle, score, player, enemy, life, particle, dispEle };
 

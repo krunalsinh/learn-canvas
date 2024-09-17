@@ -189,3 +189,25 @@ body {
     84%,90%{scale: 1; opacity: 1;}
     100%{scale: 5; opacity: 0;}
 }
+.sound-play-pause-btn{
+  position: fixed;
+  left: 148px;
+  top: 17px;
+  cursor: pointer;
+}
+.sound-play-pause-btn::before{
+  content: "";
+  position: absolute;
+  display: inline-block;
+  height: 2px;
+  width: 38px;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  opacity: 0;
+  background-color: #939393;
+  transition: 150ms;
+  top: 22px;
+}
+.sound-play-pause-btn.paused::before{
+  opacity: 1;
+}

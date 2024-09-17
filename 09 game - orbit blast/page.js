@@ -1,5 +1,5 @@
 import { fillRect, getDistance, moveTo, addText } from '../common/common-functions.js';
-import { circle, score, player as hero, enemy as villain, life, particle } from "./elements.js";
+import { circle, score, player as hero, enemy as villain, life, particle, dispEle } from "./elements.js";
 
 const gameStartBtn = document.querySelector("#gameStartBtn");
 const gameStartPopup = document.querySelector("#gameStartPopup");
@@ -7,6 +7,8 @@ const gameRestartBtn = document.querySelector("#gameRestartBtn");
 const gameEndPopup = document.querySelector("#gameEndPopup");
 const textAnimation = document.querySelector("#textAnimation");
 const bestScoreEle = document.querySelector("#bestScore");
+const gameMusic = document.querySelector("#gameAudio");
+const gameMusicPlayPauseBtn = document.querySelector("#gameMusicPlayPauseBtn");
 
 let gameStarted = false;
 
@@ -25,18 +27,25 @@ let enemyArr = [];
 
 let gameScoreCount = 0, gameScore, bestScore = 0;
 
-let lifeCount = 5, playerLife;
+let lifeCount = 50, playerLife;
 
 let particlesArr = [];
 
 let enemyPathCircleStrokeWidth, enemyPathCircleWidth;
 
-let playerPropArr = [];
-
 let lastIntervalTimestamp = 0;
 let animationFrame;
 
+let displayAnimStarted = false;
+const colors = ['#8ecae6', '#219ebc', '#ffb703', '#fb8500'];
+let dispEleArr = [];
+let dispanimationFrame;
+
+
+
+startDisplayAnimFunc();
 gameStartPopup.classList.add('pop-in');
+
 
 function animationFunc(now) {
   if (gameStarted) {
@@ -47,7 +56,7 @@ function animationFunc(now) {
     }
 
     if (!lastIntervalTimestamp || now - lastIntervalTimestamp >= 2 * 150) {
-      if(playerFire){
+      if (playerFire) {
         playerTrailsArr.push(new circle(ctx, player.x, player.y, 3, player.color));
       }
     }
@@ -91,10 +100,10 @@ function animationFunc(now) {
       player.y = centerCircle.y + 50 * Math.sin(player.angle);
     }
 
-    playerTrailsArr.forEach( (trail,trailIndex) => {
+    playerTrailsArr.forEach((trail, trailIndex) => {
       trail.radius -= 0.1;
-      if(trail.radius < 1){
-        playerTrailsArr.splice(trailIndex,1);
+      if (trail.radius < 1) {
+        playerTrailsArr.splice(trailIndex, 1);
       }
       trail.draw();
     })
@@ -115,11 +124,6 @@ function animationFunc(now) {
 
         gameScore.updateScore();
 
-        // let playerAngle = Math.random() * 6.28;
-        // player.x = centerCircle.x + 50 * Math.cos(playerAngle);
-        // player.y = centerCircle.x + 50 * Math.sin(playerAngle);
-        // spawnPlayer();
-
         enemyArr.splice(enemyIndex, 1);
         setTimeout(() => spawnEnemy(1), 1500);
 
@@ -137,7 +141,7 @@ function animationFunc(now) {
       bestScore = Math.max(bestScore, gameScore.score);
       bestScoreEle.innerHTML = bestScore;
       endGame();
-
+      startDisplayAnimFunc();
     }
 
     particlesArr.forEach((e, i) => {
@@ -152,6 +156,39 @@ function animationFunc(now) {
     animationFrame = requestAnimationFrame(animationFunc);
 
   }
+
+}
+
+function generateDispElements() {
+  for (let i = 0; i < 25; i++) {
+    const radius = Math.random() * 8 + 6;
+    const randX = (Math.random() * (innerWidth - radius * 4)) + radius;
+    const randY = (Math.random() * (innerHeight - radius * 4)) + radius;
+    const color = colors[Math.floor(Math.random() * (colors.length - 1))];
+
+    dispEleArr.push(new dispEle(ctx, randX, randY, radius, color));
+  }
+}
+function dispAnimFunc(now) {
+  if (displayAnimStarted) {
+    fillRect(ctx, 0, 0, innerWidth, innerHeight, 'rgba(0,0,0,0.1)');
+
+    dispEleArr.forEach(e => {
+      e.animate()
+    })
+ 
+    dispanimationFrame = requestAnimationFrame(dispAnimFunc);
+  }
+}
+function startDisplayAnimFunc(){
+  generateDispElements();
+displayAnimStarted = true;
+dispAnimFunc();
+}
+function stopDisplayAnimFunc(){
+  cancelAnimationFrame(dispanimationFrame);
+  displayAnimStarted = false;
+  dispEleArr = [];
 }
 
 function spawnEnemy(enemyCount = 1) {
@@ -193,9 +230,16 @@ function endGame() {
   fillRect(ctx, 0, 0, innerWidth, innerHeight, 'rgba(0,0,0,1)');
 
   gameEndPopup.classList.add('pop-in');
+
+  stopGameAudio();
+  gameMusicPlayPauseBtn.classList.remove('paused');
 }
 
 function beginGame() {
+  gameMusic.load();
+  gameMusicPlayPauseBtn.classList.remove('paused');
+  playGameAudio();
+
   gameStartPopup.classList.remove('pop-in');
   gameStartPopup.classList.add('pop-out');
 
@@ -206,6 +250,7 @@ function beginGame() {
   setTimeout(() => {
     textAnimation.classList.add('hide');
 
+    stopDisplayAnimFunc();
     gameInit();
 
   }, 7000);
@@ -244,6 +289,7 @@ function gameInit() {
 
   animationFunc();
 
+  
 }
 
 function getRandColor() {
@@ -251,8 +297,21 @@ function getRandColor() {
   return colors[Math.floor(Math.random() * (colors.length - 1))]
 }
 
+function playGameAudio() {
+  gameMusic.play();
+}
+
+function pauseGameAudio() {
+  gameMusic.pause();
+}
+
+function stopGameAudio() {
+  gameMusic.pause();
+  gameMusic.currentTime = 0;
+}
+
 addEventListener('keydown', function (e) {
-  if(gameStarted){
+  if (gameStarted) {
     if (e.code === 'KeyA') playerMove = -0.1;
     if (e.code === 'KeyD') playerMove = 0.1;
     if (e.code === 'KeyW') {
@@ -264,7 +323,7 @@ addEventListener('keydown', function (e) {
 });
 
 addEventListener('keyup', function (e) {
-  if(gameStarted){
+  if (gameStarted) {
     if (e.code === 'KeyA') playerMove = 0;
     if (e.code === 'KeyD') playerMove = 0;
   }
@@ -272,14 +331,14 @@ addEventListener('keyup', function (e) {
 
 let ts_x = 0, tm_x = 0, touchStart = false;
 addEventListener("touchstart", (e) => {
-  if(gameStarted){
+  if (gameStarted) {
     touchStart = true;
     ts_x = e.touches[0].pageX;
   }
 });
 
 addEventListener("touchmove", (e) => {
-  if(gameStarted){
+  if (gameStarted) {
     tm_x = e.touches[0].pageX;
     if (ts_x - tm_x < 0) {
       playerMove = 0.01 * (ts_x - tm_x) / 20;
@@ -291,10 +350,10 @@ addEventListener("touchmove", (e) => {
 });
 
 addEventListener("touchend", (e) => {
-  if (gameStarted) { 
+  if (gameStarted) {
     touchStart = false;
-    playerMove = 0; 
-    playerFire = true; 
+    playerMove = 0;
+    playerFire = true;
     playerTempX = player.x;
     playerTempY = player.y;
   }
@@ -310,12 +369,20 @@ gameRestartBtn.addEventListener('click', e => {
 
   setTimeout(() => {
     gameEndPopup.classList.remove('pop-out');
-    // textAnimation.classList.remove('hide')
   }, 1000);
   setTimeout(() => {
-    // textAnimation.classList.add('hide');
     gameInit();
   }, 0);
+})
+
+gameMusicPlayPauseBtn.addEventListener('click', e => {
+  if(e.currentTarget.classList.contains('paused')){
+    e.currentTarget.classList.remove('paused');
+    playGameAudio();
+  }else{
+    e.currentTarget.classList.add('paused');
+    pauseGameAudio();
+  }
 })
 
 
