@@ -236,7 +236,7 @@ function endGame() {
 }
 
 function beginGame() {
-  gameMusic.load();
+  // gameMusic.load();
   gameMusicPlayPauseBtn.classList.remove('paused');
   playGameAudio();
 
