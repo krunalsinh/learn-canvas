@@ -232,13 +232,11 @@ function endGame() {
   gameEndPopup.classList.add('pop-in');
 
   stopGameAudio();
-  gameMusicPlayPauseBtn.classList.remove('paused');
+  gameMusicPlayPauseBtn.classList.add('paused');
 }
 
 function beginGame() {
-  // gameMusic.load();
-  gameMusicPlayPauseBtn.classList.remove('paused');
-  playGameAudio();
+  
 
   gameStartPopup.classList.remove('pop-in');
   gameStartPopup.classList.add('pop-out');
@@ -257,6 +255,9 @@ function beginGame() {
 }
 
 function gameInit() {
+
+  gameMusicPlayPauseBtn.classList.remove('paused');
+  playGameAudio();
 
   canvas.height = innerHeight;
   canvas.width = innerWidth;
@@ -283,13 +284,9 @@ function gameInit() {
 
   spawnEnemy(3);
 
-
-
   gameStarted = true;
 
   animationFunc();
-
-  
 }
 
 function getRandColor() {

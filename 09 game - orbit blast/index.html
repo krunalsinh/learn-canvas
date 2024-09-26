@@ -15,7 +15,7 @@
   </head>
   <body>
     <canvas id="canvas"></canvas>
-    <button class="clear-btn sound-play-pause-btn" id="gameMusicPlayPauseBtn">
+    <button class="clear-btn sound-play-pause-btn paused" id="gameMusicPlayPauseBtn" >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="45" width="45">
         <path fill="#fff" fill-rule="evenodd" d="m320 359-34-26c40-43 40-109 0-151l34-27c52 58 52 146 0 204ZM234 85l-110 88H43v170h81l110 86V85Z"/>
       </svg>
@@ -47,11 +47,11 @@
         <span>2</span>
         <span>1</span>
     </div>
-    <audio id="gameAudio"  autoplay >
+    <audio id="gameAudio" >
       <source src="./game-music.mp3" type="audio/mpeg">
       <source src="./game-music.ogg" type="audio/ogg">
       Your browser does not support the audio element.
     </audio>
-    <script src="./page.js" type="module"></script>
+    <script src="./page.js" type="module" defer></script>
   </body>
 </html>
