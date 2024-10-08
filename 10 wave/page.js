@@ -1,43 +1,63 @@
-import dat from "./dat.gui.min.js";
+import { fillRect, getDistance, moveTo } from '../common/common-functions.js';
 // const gui = new dat.GUI();
-console.log(dat);
+// console.log(dat);
+let data = { 'frequency': 0.001, 'wavelength': 253, 'speed1': 0.016, 'speed2': 0.005, 'speed3': 0.0108, 'opacity' : 0.042, 'color1' : '#2a9d8f', 'color2': '#e9c46a', 'color3': '#f4a261' };
+let gui = new dat.GUI();
+gui.add(data, 'frequency', 0.001, 0.099);
+gui.add(data, 'wavelength', 10, 500);
+gui.add(data, 'speed1', 0.001, 0.5);
+gui.add(data, 'speed2', 0.001, 0.5);
+gui.add(data, 'speed3', 0.001, 0.5);
+gui.add(data, 'opacity', 0.001, 1);
+gui.addColor(data, 'color1', 0.001, 1);
+gui.addColor(data, 'color2', 0.001, 1);
+gui.addColor(data, 'color3', 0.001, 1);
 
-
-// let value1 = 1;
-// const cubeFolder = gui.addFolder('Cube')
-// cubeFolder.add(value1, 'x', 0, Math.PI * 2)
-// cubeFolder.add(value1, 'y', 0, Math.PI * 2)
-// cubeFolder.add(value1, 'z', 0, Math.PI * 2)
-// cubeFolder.open()
-
-// let value2 = 1;
-// const cameraFolder = gui.addFolder('Camera')
-// cameraFolder.add(value2, 'z', 0, 10)
-// cameraFolder.open()
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = innerWidth;
 
-const eleCount = 50;
-const colors = ['red', 'green', 'blue', 'yellow'];
-const arr = [];
+let temp1 = 1, temp2 = 1, temp3 = 1;
 
+function animationFunc() {
+    temp1 += data.speed1;
+    temp2 += data.speed2;
+    temp3 += data.speed3;
+    fillRect(ctx, 0, 0, innerWidth, innerHeight, `rgba(0,0,0,${data.opacity})`);
 
-ctx.beginPath();
-ctx.moveTo(0, canvas.height / 2);
-for (let i = 0; i < canvas.width; i++) {
-    ctx.lineTo(i, canvas.height / 2 + (Math.sin(i * 0.005) * 100));
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    for (let i = 0; i < canvas.width; i++) {
+        ctx.lineTo(i, canvas.height / 2 + (Math.sin(i * data.frequency + temp1) * data.wavelength));
+    }
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = data.color1;
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    for (let i = 0; i < canvas.width; i++) {
+        ctx.lineTo(i, canvas.height / 2 + (Math.sin(i * data.frequency + temp2) * -data.wavelength));
+    }
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = data.color2;
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    for (let i = 0; i < canvas.width; i++) {
+        ctx.lineTo(i, canvas.height / 2 + (Math.sin(i * data.frequency + temp3) * -data.wavelength));
+    }
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = data.color3;
+    ctx.stroke();
+    ctx.closePath();
+
+    requestAnimationFrame(animationFunc);
 }
-ctx.lineWidth = 1;
-ctx.strokeStyle = 'red';
-ctx.stroke();
-ctx.closePath();
-// function animationFunc(){
-//     fillRect(ctx, 0 , 0, innerWidth, innerHeight, '#000');
-  
-//     requestAnimationFrame(animationFunc);
-// }
 
-// animationFunc()
+animationFunc()
