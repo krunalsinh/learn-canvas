@@ -2,13 +2,14 @@ import {drawCircle} from '../common/common-functions.js';
 
 
 class circle {
-    constructor(ctx,x,y,radius,color){
+    constructor(ctx,x,y,radius,color, offset){
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
         this.sy = 5;
+        this.offset = offset;
     }
     animate(){
         this.draw();
