@@ -1,6 +1,92 @@
-// import {drawCircle, getIntFromRange} from '../common/common-functions.js';
+import { drawSprite } from '../common/common-functions.js';
+
+class player {
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
+        this.ctx = ctx;
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.frameX = frameX;
+        this.frameY = frameY;
+        this.speed = speed;
+        this.moving = moving;
+    }
+    animate(keys) {
+        
+        if (keys[38] && this.y > 100) {
+            this.y -= this.speed;
+            this.frameY = 3;
+        }
+        if (keys[40] && this.y < canvas.height - this.height) {
+            this.y += this.speed;
+            this.frameY = 0;
+        }
+        if (keys[37] && this.x > 0) {
+            this.x -= this.speed;
+            this.frameY = 1
+        }
+        if (keys[39] && this.x < canvas.width - this.width) {
+            this.x += this.speed;
+            this.frameY = 2
+        }
+
+        if (this.frameX < 3 && this.moving) this.frameX++
+        else this.frameX = 0
+
+        this.draw();
+    }
+    draw() {
+        drawSprite(
+            this.ctx,
+            this.image,
+            this.width * this.frameX,
+            this.height * this.frameY,
+            this.width,
+            this.height,
+            this.x,
+            this.y,
+            this.width,
+            this.height)
+    }
+
+}
+
+class enemy extends player{
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
+        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving);
+    }
+}
+
+class ally extends player{
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
+        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving);
+    }
+    animate(){
+        
+        
+        this.y -= this.speed;
+
+        if (this.frameX < 3 && this.moving) this.frameX++
+        else this.frameX = 0
+        
+        this.draw();
+    }
+    draw() {
+        drawSprite(
+            this.ctx,
+            this.image,
+            this.width * this.frameX,
+            this.height * this.frameY,
+            this.width,
+            this.height,
+            this.x,
+            this.y,
+            this.width,
+            this.height)
+    }
+}
 
 
-
-
-// export { };
+export {player, enemy,  ally};

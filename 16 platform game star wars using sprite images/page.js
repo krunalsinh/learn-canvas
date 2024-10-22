@@ -1,4 +1,12 @@
-const alliesCount = 19, alliesImgUrl = [], allyObjs = [], enemyCount = 17, enemyImgUrl = [], enemyObjs = [];
+import { player as hero, enemy, ally } from "./elements.js";
+
+const alliesCount = 17, alliesImgUrl = [], allyObjs = [], spawnedAllies = [], enemyCount = 17, enemyImgUrl = [], enemyObjs = [], spawnedEnemies = [];
+
+const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext('2d');
+canvas.height = 500;
+canvas.width = 800;
+
 
 for (let i = 1; i <= alliesCount; i++) {
     alliesImgUrl.push(`./images/ally/ally-${i}.png`);
@@ -8,30 +16,23 @@ for (let i = 1; i <= enemyCount; i++) {
     enemyImgUrl.push(`./images/enemy/enemy-${i}.png`);
 }
 
-const loadImage = async src => {
-    const img = new Image();
-    img.src = src;
-    await img.decode();
-    return img;
-};
-
 await Promise.all(alliesImgUrl.map(loadImage))
     .then(images => {
         images.forEach((image, i) => {
             allyObjs.push({
                 image: image,
-                x: 200,
-                y: 100,
-                width: 40,
-                height: 72,
-                frameX: 3,
-                frameY: 0,
-                speed: 9,
-                moving: false
+                x: (Math.random() * 100) + 40,
+                y: canvas.height - 72,
+                width: 32,
+                height: 48,
+                frameX: 1,
+                frameY: 3,
+                speed: (Math.random() * 3) + 1,
+                moving: true
             });
         });
         console.log("allies loaded");
-        
+
     })
     .catch(err => console.error(err));
 
@@ -46,49 +47,54 @@ await Promise.all(enemyImgUrl.map(loadImage))
                 height: 72,
                 frameX: 3,
                 frameY: 0,
-                speed: 9,
+                speed: 0.1,
                 moving: false
             });
         });
-        console.log("enemies loaded");
     })
     .catch(err => console.error(err));
 
 // console.log(allyObjs);
 // console.log(enemyObjs);
 
-const canvas = document.querySelector("#canvas");
-const ctx = canvas.getContext('2d');
-canvas.height = 500;
-canvas.width = 800;
-
 const keys = [];
-const player = {
-    x: 200,
-    y: 100,
-    width: 40,
-    height: 72,
-    frameX: 3,
-    frameY: 0,
-    speed: 9,
-    moving: false
-};
+let fpsInterval, startTime, now, then, elapsed;
 
-const ally1 = {
+let player;
+await Promise.resolve(loadImage("./images/game-char.png"))
+    .then(image => {
+        player = new hero(
+            ctx,
+            image,
+            200,
+            100,
+            40,
+            72,
+            3,
+            0,
+            9,
+            false
+        );
+    });
 
-}
+let background;
+let lastIntervalTimestamp = 0;
+await Promise.resolve(loadImage("./images/game-background.png"))
+    .then(image => {
+        background = image;
+        startAnimation(24);
+    });
 
-const playerSprite = new Image();
-playerSprite.src = "./images/game-char.png";
-
-const background = new Image();
-background.src = "./images/game-background.png";
-
-let fps, fpsInterval, startTime, now, then, elapsed;
-
-startAnimation(24);
-function animationFunc() {
+function animationFunc(timestamp) {
     requestAnimationFrame(animationFunc);
+
+    if (!lastIntervalTimestamp || timestamp - lastIntervalTimestamp >= 2 * 1500) {
+        lastIntervalTimestamp = timestamp;
+        const allyObj = allyObjs[Math.floor(Math.random() * (allyObjs.length - 1))];
+        spawnedAllies.push(new ally(ctx, allyObj.image, allyObj.x, allyObj.y, allyObj.width, allyObj.height, allyObj.frameX, allyObj.frameY, allyObj.speed, allyObj.moving));
+        // console.log(spawnedAllies);
+        
+      }
 
     now = Date.now();
     elapsed = now - then;
@@ -98,18 +104,18 @@ function animationFunc() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-        drawSprite(
-            playerSprite,
-            player.width * player.frameX,
-            player.height * player.frameY,
-            player.width,
-            player.height,
-            player.x,
-            player.y,
-            player.width,
-            player.height)
-        movePlayer();
-        handlePlayerFrame();
+        player.animate(keys);
+
+        spawnedAllies.sort((a, b) => a.y - b.y);
+        
+        spawnedAllies.forEach((ally, index) => {
+            // console.log(ally.y);
+            if(ally.y < 145){
+                spawnedAllies.splice(index, 1);
+                // console.log(spawnedAllies, index);
+            }
+            ally.animate()
+        });
     }
 }
 
@@ -120,33 +126,12 @@ function startAnimation(fps) {
     animationFunc()
 }
 
-function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
-    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
-}
-
-function movePlayer() {
-    if (keys[38] && player.y > 100) {
-        player.y -= player.speed;
-        player.frameY = 3;
-    }
-    if (keys[40] && player.y < canvas.height - player.height) {
-        player.y += player.speed;
-        player.frameY = 0;
-    }
-    if (keys[37] && player.x > 0) {
-        player.x -= player.speed;
-        player.frameY = 1
-    }
-    if (keys[39] && player.x < canvas.width - player.width) {
-        player.x += player.speed;
-        player.frameY = 2
-    }
-}
-
-function handlePlayerFrame() {
-    if (player.frameX < 3 && player.moving) player.frameX++
-    else player.frameX = 0
-}
+async function loadImage(src) {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return img;
+};
 
 addEventListener('keydown', e => {
     keys[e.keyCode] = true;

@@ -96,4 +96,8 @@ function moveTo(x1, y1, x2, y2, speed) {
 function getIntFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange };
+
+function drawSprite(ctx, img, sX, sY, sW, sH, dX, dY, dW, dH) {
+    ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+}
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite };
