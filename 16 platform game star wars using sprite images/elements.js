@@ -1,7 +1,7 @@
 import { drawSprite } from '../common/common-functions.js';
 
 class player {
-    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type) {
         this.ctx = ctx;
         this.image = image;
         this.x = x;
@@ -12,6 +12,7 @@ class player {
         this.frameY = frameY;
         this.speed = speed;
         this.moving = moving;
+        this.type = type
     }
     animate(keys) {
         
@@ -32,7 +33,7 @@ class player {
             this.frameY = 2
         }
 
-        if (this.frameX < 3 && this.moving) this.frameX++
+        if (this.frameX < 3 && (keys[38] || keys[40] || keys[37] || keys[39])) this.frameX++
         else this.frameX = 0
 
         this.draw();
@@ -51,17 +52,42 @@ class player {
             this.height)
     }
 
+
 }
 
 class enemy extends player{
-    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
-        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving);
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type) {
+        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type);
     }
+    animate(){
+        
+        
+        this.x -= this.speed;
+
+        if (this.frameX < 3 && this.moving) this.frameX++
+        else this.frameX = 0
+        
+        this.draw();
+    }
+    draw() {
+        drawSprite(
+            this.ctx,
+            this.image,
+            this.width * this.frameX,
+            this.height * this.frameY,
+            this.width,
+            this.height,
+            this.x,
+            this.y,
+            this.width,
+            this.height)
+    }
+
 }
 
 class ally extends player{
-    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving) {
-        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving);
+    constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type) {
+        super(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type);
     }
     animate(){
         
