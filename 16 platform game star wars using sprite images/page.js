@@ -22,7 +22,7 @@ await Promise.all(alliesImgUrl.map(loadImage))
             allyObjs.push({
                 image: image,
                 x: (Math.random() * 100) + 40,
-                y: canvas.height - 72,
+                y: canvas.height + 72,
                 width: 32,
                 height: 48,
                 frameX: 1,
@@ -43,12 +43,12 @@ await Promise.all(enemyImgUrl.map(loadImage))
             enemyObjs.push({
                 image: image,
                 x: canvas.width,
-                y: 200 + (Math.random() * 100),
+                y: 200 + (Math.random() * (canvas.height - 248)),
                 width: 32,
                 height: 48,
                 frameX: 3,
                 frameY: 1,
-                speed: (Math.random() * 3) + 1,
+                speed: (Math.random() * 6) + 1,
                 moving: true,
                 type: 'enemy'
             });
@@ -127,10 +127,17 @@ function animationFunc(timestamp) {
             }
         }
         for (let i = 0; i < allChars.length - 1; i++) {
-            for (let k = 0; k < allChars.length; k++) {
-                if (allChars[i].type === "player" && allChars[k].type === "enemy") {
-                    if (allChars[i]) {
-                        allChars.splice(k, 1);
+            for (let j = 0; j < allChars.length; j++) {
+                if (allChars[i].type === "player" && allChars[j].type === "enemy") {
+                    if ((allChars[i].x + allChars[i].width > allChars[j].x
+                        && allChars[i].x + allChars[i].width < allChars[j].x + allChars[j].width
+                        && allChars[i].y + allChars[i].height > allChars[j].y
+                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height) ||
+                        (allChars[j].x + allChars[j].width > allChars[i].x
+                            && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
+                            && allChars[j].y + allChars[j].height > allChars[i].y
+                            && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height)) {
+                        allChars.splice(j, 1);
                     }
                 }
             }
@@ -138,10 +145,15 @@ function animationFunc(timestamp) {
 
         for (let i = 0; i < allChars.length - 1; i++) {
             for (let j = 0; j < allChars.length; j++) {
-                if (allChars[i].type === "enemy" && allChars[j].type === "ally") {
-                    if (allChars[j].x + allChars[j].width < allChars[i].x 
-                        && allChars[j].y + allChars[j].height < allChars[i].y
-                        && allChars[j].y > allChars[i].y) {
+                if (allChars[j].type === "ally" && allChars[i].type === "enemy") {
+                    if ((allChars[i].x + allChars[i].width > allChars[j].x
+                        && allChars[i].x + allChars[i].width < allChars[j].x + allChars[j].width
+                        && allChars[i].y + allChars[i].height > allChars[j].y
+                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height) ||
+                        (allChars[j].x + allChars[j].width > allChars[i].x
+                            && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
+                            && allChars[j].y + allChars[j].height > allChars[i].y
+                            && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height)) {
                         allChars.splice(j, 1);
                     }
                 }
