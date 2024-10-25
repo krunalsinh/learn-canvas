@@ -1,4 +1,4 @@
-import { drawSprite } from '../common/common-functions.js';
+import { drawSprite, drawCircle } from '../common/common-functions.js';
 
 class player {
     constructor(ctx, image, x, y, width, height, frameX, frameY, speed, moving, type) {
@@ -114,5 +114,33 @@ class ally extends player{
     }
 }
 
+class particle{
+    constructor(ctx, x, y, radius, color, dx, dy){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.dx = dx;
+        this.dy = dy;
+        this.opacity = 1;
+    }
 
-export {player, enemy,  ally};
+    animate(){
+        this.x -= this.dx;
+        this.y -= this.dy;
+        this.opacity -= 0.08;
+
+        this.draw();
+    }
+
+    draw(){
+        this.ctx.save();
+        this.ctx.globalAlpha = this.opacity;
+        drawCircle(this.ctx, this.x, this.y, this.radius, this.color);
+        this.ctx.restore();
+    }
+}
+
+
+export {player, enemy,  ally, particle};

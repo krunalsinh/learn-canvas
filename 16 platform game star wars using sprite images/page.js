@@ -1,6 +1,7 @@
-import { player as hero, enemy, ally } from "./elements.js";
+import {getIntFromRange} from "../common/common-functions.js";
+import { player as hero, enemy, ally, particle } from "./elements.js";
 
-const alliesCount = 17, alliesImgUrl = [], allyObjs = [], enemyCount = 17, enemyImgUrl = [], enemyObjs = [], allChars = [];
+const alliesCount = 17, alliesImgUrl = [], allyObjs = [], enemyCount = 17, enemyImgUrl = [], enemyObjs = [], allChars = [], particles = [], particleCount = 50;;
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext('2d');
@@ -99,7 +100,7 @@ function animationFunc(timestamp) {
         const enemyObj = enemyObjs[Math.floor(Math.random() * (enemyObjs.length - 1))];
         allChars.push(new enemy(ctx, enemyObj.image, enemyObj.x, enemyObj.y, enemyObj.width, enemyObj.height, enemyObj.frameX, enemyObj.frameY, enemyObj.speed, enemyObj.moving, enemyObj.type));
 
-        // console.log(allChars);
+
 
     }
 
@@ -126,18 +127,21 @@ function animationFunc(timestamp) {
                 allChars.splice(i, 1);
             }
         }
-        for (let i = 0; i < allChars.length - 1; i++) {
+        for (let i = 0; i < allChars.length; i++) {
             for (let j = 0; j < allChars.length; j++) {
                 if (allChars[i].type === "player" && allChars[j].type === "enemy") {
-                    if ((allChars[i].x + allChars[i].width > allChars[j].x
+                    const condition1 = allChars[i].x + allChars[i].width > allChars[j].x
                         && allChars[i].x + allChars[i].width < allChars[j].x + allChars[j].width
                         && allChars[i].y + allChars[i].height > allChars[j].y
-                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height) ||
-                        (allChars[j].x + allChars[j].width > allChars[i].x
-                            && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
-                            && allChars[j].y + allChars[j].height > allChars[i].y
-                            && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height)) {
-                        allChars.splice(j, 1);
+                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height;
+
+                    const condition2 = allChars[j].x + allChars[j].width > allChars[i].x
+                        && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
+                        && allChars[j].y + allChars[j].height > allChars[i].y
+                        && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height
+
+                    if (condition1 || condition2) {
+                        handleCharSplice(j, condition1, condition2, allChars[i]);
                     }
                 }
             }
@@ -146,21 +150,31 @@ function animationFunc(timestamp) {
         for (let i = 0; i < allChars.length - 1; i++) {
             for (let j = 0; j < allChars.length; j++) {
                 if (allChars[j].type === "ally" && allChars[i].type === "enemy") {
-                    if ((allChars[i].x + allChars[i].width > allChars[j].x
+                    const condition1 = allChars[i].x + allChars[i].width > allChars[j].x
                         && allChars[i].x + allChars[i].width < allChars[j].x + allChars[j].width
                         && allChars[i].y + allChars[i].height > allChars[j].y
-                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height) ||
-                        (allChars[j].x + allChars[j].width > allChars[i].x
-                            && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
-                            && allChars[j].y + allChars[j].height > allChars[i].y
-                            && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height)) {
-                        allChars.splice(j, 1);
+                        && allChars[i].y + allChars[i].height < allChars[j].y + allChars[j].height;
+
+                    const condition2 = allChars[j].x + allChars[j].width > allChars[i].x
+                        && allChars[j].x + allChars[j].width < allChars[i].x + allChars[i].width
+                        && allChars[j].y + allChars[j].height > allChars[i].y
+                        && allChars[j].y + allChars[j].height < allChars[i].y + allChars[i].height;
+
+                    if (condition1 || condition2) {
+                        handleCharSplice(j, condition1, condition2, allChars[i]);
                     }
                 }
             }
 
-
             allChars[i].animate(keys);
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].animate();
+
+            if (particles[i].opacity < 0.1) {
+                particles.splice(i, 1);
+            }
         }
 
 
@@ -184,6 +198,28 @@ async function loadImage(src) {
     await img.decode();
     return img;
 };
+
+
+function handleCharSplice(index, condition1, condition2, char) {
+
+    // console.log("condition 1 : ", condition1, ", condition2 : ", condition2);
+
+    if (condition1) {
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new particle(ctx, char.x + char.width, char.y + char.height, 5, Math.random() > 0.5 ? "yellow" : "orange", Math.random() * 6 - 3, Math.random() * 6 - 3))
+        }
+    }
+
+    if (condition2) {
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new particle(ctx, char.x, char.y, 5, Math.random() > 0.5 ? "yellow" : "orange", Math.random() * 6 - 3, Math.random() * 6 - 3))
+        }
+    }
+
+    allChars.splice(index, 1);
+
+
+}
 
 addEventListener('keydown', e => {
     keys[e.keyCode] = true;
