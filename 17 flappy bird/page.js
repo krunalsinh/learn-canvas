@@ -15,7 +15,7 @@ let frame = 0;
 let score = 0;
 let gameSpeed = 2;
 const birdSize = 20;
-const bird = new Bird(canvas, ctx, 20, canvas.height - 155, birdSize, birdSize, "red" );
+const bird = new Bird(canvas, ctx, 150, canvas.height - 155, birdSize, birdSize, "red" );
 
 const particleArr = [];
 
