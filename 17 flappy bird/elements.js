@@ -49,17 +49,17 @@ class Bird{
 }
 
 class Particle{
-    constructor(ctx, x, y, size, speedY, gameSpeed, color){
+    constructor(ctx, x, y, size, speedY, color){
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.size = size;
         this.color = color;
         this.speedY = speedY;
-        this.gameSpeed = gameSpeed;
+        
     }
-    animate(){
-        this.x -= this.gameSpeed;
+    animate(gameSpeed){
+        this.x -= gameSpeed;
         this.y += this.speedY;
 
         this.draw();
@@ -69,4 +69,17 @@ class Particle{
     }
 }
 
+class Obstacle{
+    constructor(top, bottom, endY, endX, color, width){
+        this.top = top;
+        this.bottom = bottom;
+        this.endY = endY;
+        this.endX = endX;
+        this.color = color;
+        this.width = width;
+    }
+    animate(gameSpeed){
+
+    }
+}
 export {Bird, Particle};
