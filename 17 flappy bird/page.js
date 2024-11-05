@@ -13,18 +13,26 @@ const ctx = canvas.getContext('2d');
 canvas.height = 400;
 canvas.width = 600;
 
-let gameStarted, spacePressed, angle, hue, frame, score, scoreCount,  gameSpeed, birdSize, bird, particleColorCount, particleArr = [], obstacleColorCount, obstacleArr = [], lastIntervalTimestamp;
+let background, backgroundImg, gameStarted, spacePressed, angle, hue, frame, score, scoreCount, gameSpeed, birdSize, bird, birdImg, particleColorCount, particleArr = [], obstacleColorCount, obstacleArr = [], lastIntervalTimestamp;
 
-gameStartButton.addEventListener('click', function(){
-    gameStartPopup.classList.remove("show");
-    gameInit();
-})
+background = {
+    x1 : 0,
+}
 
-gameRestartButton.addEventListener('click', function(){
-    gameRestartPopup.classList.remove('show');  
-    gameInit();
-})
+await Promise.resolve(loadImage("./images/background.png"))
+.then(image => {
+    backgroundImg = image;
+});
+
+await Promise.resolve(loadImage("./images/bird-spritesheet.png"))
+.then(image => {
+    birdImg = image;
+});
+
+
+
 function gameInit() {
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     gameStarted = true;
 
@@ -121,6 +129,23 @@ function addObstacle() {
 
     obstacleColorCount += 0.1;
 }
+
+async function loadImage(src) {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return img;
+};
+
+gameStartButton.addEventListener('click', function(){
+    gameStartPopup.classList.remove("show");
+    gameInit();
+})
+
+gameRestartButton.addEventListener('click', function(){
+    gameRestartPopup.classList.remove('show');  
+    gameInit();
+})
 
 addEventListener('keydown', e => {
     if (e.code === "Space") spacePressed = true;
