@@ -37,9 +37,10 @@ function drawLine(context, x1 = 0, y1 = 0 , x2 = 0, y2 = 0, strokeWidth = 1, col
     context.closePath();
 }
 
-function addText(context,x,y, fontSize = '10px', fontFamily = "sans-serif", color = "#666", text = ""){
+function addText(context,x,y, fontSize = '10px', fontFamily = "sans-serif", color = "#666", text = "", align = "left"){
     context.font = `${fontSize}  ${fontFamily}`;
     context.fillStyle = color;
+    context.textAlign = align;
     context.fillText(text, x, y);
 }
 

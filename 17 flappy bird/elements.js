@@ -1,4 +1,4 @@
-import { drawRectangle, drawCircle } from '../common/common-functions.js';
+import { drawRectangle, drawCircle, addText } from '../common/common-functions.js';
 
 
 class Bird{
@@ -70,16 +70,42 @@ class Particle{
 }
 
 class Obstacle{
-    constructor(top, bottom, endY, endX, color, width){
+    constructor(ctx, x, top, bottom, endY, color, width){
+        this.ctx = ctx;
+        this.endY = endY;
         this.top = top;
         this.bottom = bottom;
-        this.endY = endY;
-        this.endX = endX;
+        this.x = x;
+        this.bottomY = this.endY - this.bottom;
         this.color = color;
         this.width = width;
     }
-    animate(gameSpeed){
 
+    animate(gameSpeed){
+        this.x -= gameSpeed;
+
+        this.draw();
+    }
+
+    draw(){
+        drawRectangle(this.ctx, this.x, 0, this.width, this.top, this.color);
+        drawRectangle(this.ctx, this.x, this.bottomY, this.width, this.bottomY, this.color);
     }
 }
-export {Bird, Particle};
+
+class Score{
+    constructor(ctx, x, y, color, scoreCount){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.scoreCount = scoreCount;
+    }
+    update(){
+        this.draw();
+    }
+    draw(){
+        addText(this.ctx, this.x, this.y, "24px", "Open Sens", this.color, "Score : "+this.scoreCount, "right")
+    }
+}
+export {Bird, Particle, Obstacle, Score};
