@@ -2,7 +2,7 @@ import { drawRectangle, drawCircle, addText } from '../common/common-functions.j
 
 
 class Bird{
-    constructor(canvas, ctx, x, y, height, width, color){
+    constructor(canvas, ctx, x, y, height, width, color, img){
         this.canvas = canvas;
         this.ctx = ctx;
         this.x = x;
@@ -13,6 +13,8 @@ class Bird{
         this.vy = 0;
         this.weight = 1;
         this.angle = 0;
+        this.frameX = 0;
+        this.img = img;
     }
     animate(spacePressed){
 
@@ -42,9 +44,13 @@ class Bird{
     }
     flap(){
         this.vy -= 2;
+
+        if(this.frameX >= 2) this.frameX = 0;
+        else this.frameX++;
     }
     draw(){
-        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, this.color);
+        // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, this.color);
+        this.ctx.drawImage(this.img, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
 }
 
@@ -76,7 +82,6 @@ class Obstacle{
         this.top = top;
         this.bottom = bottom;
         this.x = x;
-        this.bottomY = this.endY - this.bottom;
         this.color = color;
         this.width = width;
     }
@@ -89,7 +94,7 @@ class Obstacle{
 
     draw(){
         drawRectangle(this.ctx, this.x, 0, this.width, this.top, this.color);
-        drawRectangle(this.ctx, this.x, this.bottomY, this.width, this.bottomY, this.color);
+        drawRectangle(this.ctx, this.x, this.endY - this.bottom, this.width, this.endY - this.bottom, this.color);
     }
 }
 
@@ -108,4 +113,30 @@ class Score{
         addText(this.ctx, this.x, this.y, "24px", "Open Sens", this.color, "Score : "+this.scoreCount, "right")
     }
 }
-export {Bird, Particle, Obstacle, Score};
+
+class Power{
+    constructor(ctx, x, y, width, height, color, img){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.img = img;
+        this.dy = 0;
+        this.verMovementSize = this.height / 2;
+        this.verMoveRatio = 0.05;
+    }
+    update(gameSpeed){
+        this.x -= gameSpeed;
+        this.dy += this.verMoveRatio;
+        this.y = this.y + Math.sin(this.dy) * 3;
+        
+        this.draw();
+    }
+    draw(){
+        // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, this.color);
+        this.ctx.drawImage(this.img, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+    }
+}
+export {Bird, Particle, Obstacle, Score, Power};
