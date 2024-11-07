@@ -87,7 +87,7 @@ function animationFunc(now) {
         if (!lastIntervalTimestamp1 || now - lastIntervalTimestamp1 >= 2 * (powerTime * 2)) {
             lastIntervalTimestamp1 = now;
             if (frameCount > 250) {
-                powerEleArr.push(new Power(ctx, canvas.width, canvas.height / 3, 30, 30, 'red', rocketImg));
+                powerEleArr.push(new Power(ctx, canvas.width, canvas.height / 3, 30, 48, 'red', rocketImg));
             }
 
         }
