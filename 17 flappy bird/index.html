@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="../common/style.css" />
     <style>
         #canvas{
-            width: 600px;
-            height: 400px;
+            width: 100vw;
+            height: 100vh;
             border: 2px solid #fff;
             position: absolute;
             top: 50%;
@@ -16,14 +16,15 @@
             transform: translate(-50%, -50%);
             background-color: #4ec0ca;
             background-image: url('./images/background.png');
+            background-size: cover;
         }
         .game-popup{
             position: fixed;
             display: none;
             inset: 0;
             margin: auto;
-            height: 250px;
-            width: 250px;
+            height: 350px;
+            width: 350px;
             text-align: center;
             background-color: #fff;
             box-shadow: 1px 7px 18px 6px rgba(255, 255, 255, 0.251);
@@ -41,14 +42,17 @@
             text-align: left;
             margin: 0;
             padding: 0;
-            list-style-type: none;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-left: 20px;
         }
         button{
             border-radius: 10px;
             padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -63,7 +67,8 @@
         <button id="gameStartButton">Start The Game</button>
     </div>
     <div class="game-popup game-restart-poup" id="gameRestartPopup" >
-        <h2>Game Score : <span id="gameScore">0</span></h2>
+        <h1>Game Over</h1>
+        <h2>Your Game Score : <span id="gameScore">0</span></h2>
         
         <button id="gameRestartButton">Restart The Game</button>
     </div>

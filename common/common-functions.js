@@ -5,22 +5,36 @@
 // drawLine(ctx,10,10,500,500, 3, 'red');
 //addText(ctx, 100, 100, "200px", 'sans-serif', 'red', 'Loream Ipsum');
 
-function drawRectangle(context, x = 0, y = 0 , width = 50, height = 50, color = "#666"){
+function drawRectangle(context, x = 0, y = 0 , width = 50, height = 50, color = "#666", stroke = false, strokeSize = 1, strokeColor){
     context.beginPath();
     context.rect( x, y, width, height);
-    context.fillStyle = color;
-    context.fill();
+    if(!stroke){
+        context.fillStyle = color;
+        context.fill();
+    } else {
+        if(strokeColor){
+            context.strokeStyle = strokeColor;
+        }else{
+            context.strokeStyle = color;
+        }
+        context.lineWidth = strokeSize;
+        context.stroke();
+    }
     context.closePath();
 }
 
-function drawCircle(context, x = 0, y = 0, radius = 50, color = "#666", stroke = false, strokeSize = 1){
+function drawCircle(context, x = 0, y = 0, radius = 50, color = "#666", stroke = false, strokeSize = 1, strokeColor){
     context.beginPath();
     context.arc(x , y , radius, 0, Math.PI * 2, false);
     if(!stroke){
         context.fillStyle = color;
         context.fill();
     }else{
-        context.strokeStyle = color;
+        if(strokeColor){
+            context.strokeStyle = strokeColor;
+        }else{
+            context.strokeStyle = color;
+        }
         context.lineWidth = strokeSize;
         context.stroke();
     }

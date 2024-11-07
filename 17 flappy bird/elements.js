@@ -93,8 +93,21 @@ class Obstacle{
     }
 
     draw(){
+        this.color = this.ctx.createLinearGradient(this.x,0,this.x + 40,0);;
+        this.color.addColorStop(0, '#a7c957');
+        this.color.addColorStop(1, '#6a994e');
+
+        drawRectangle(this.ctx, this.x, 0, this.width, this.top, this.color, true, 1, "#111");
         drawRectangle(this.ctx, this.x, 0, this.width, this.top, this.color);
+
+        drawRectangle(this.ctx, this.x - 5 , this.top - 20, this.width + 10, 20, this.color);
+        drawRectangle(this.ctx, this.x - 5 , this.top - 20, this.width + 10, 20, this.color, true, 1, "#111");
+
+        drawRectangle(this.ctx, this.x, this.endY - this.bottom, this.width, this.endY - this.bottom, this.color, true, 1, "#111");
         drawRectangle(this.ctx, this.x, this.endY - this.bottom, this.width, this.endY - this.bottom, this.color);
+
+        drawRectangle(this.ctx, this.x - 5 , this.endY - this.bottom , this.width + 10, 20, this.color);
+        drawRectangle(this.ctx, this.x - 5 , this.endY - this.bottom , this.width + 10, 20, this.color, true, 1, "#111");
     }
 }
 

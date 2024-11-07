@@ -10,12 +10,10 @@ const gameScoreEle = document.querySelector("#gameScore");
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext('2d');
-canvas.height = 400;
-canvas.width = 600;
+canvas.height = innerHeight;
+canvas.width = innerWidth;
 
-let animationFrame, background, backgroundImg, gameStarted, spacePressed, angle, hue, frame, score, scoreCount, gameSpeed, birdSize, bird, birdImg, particleColorCount, particleArr = [], obstacleColorCount, obstacleArr = [], lastIntervalTimestamp, lastIntervalTimestamp1, powerEleArr, frameCount, powerActive, powerTime, rocketImg;
-
-
+let animationFrame, background, backgroundImg, gameStarted, spacePressed, gradientLength, gradientAngle, hue, frame, score, scoreCount, gameSpeed, birdSize, bird, birdImg, particleColorCount, particleArr = [],  obstacleArr = [], lastIntervalTimestamp, lastIntervalTimestamp1, powerEleArr, frameCount, powerActive, powerTime, rocketImg;
 
 await Promise.resolve(loadImage("./images/background.png"))
     .then(image => {
@@ -32,9 +30,6 @@ await Promise.resolve(loadImage("./images/rocket.png"))
         rocketImg = image;
     });
 
-
-
-
 function gameInit() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -48,7 +43,6 @@ function gameInit() {
     gameStarted = true;
 
     spacePressed = false;
-    angle = 0;
     hue = 0;
     frame = 0;
     scoreCount = 0;
@@ -62,7 +56,7 @@ function gameInit() {
 
     particleColorCount = 0;
     particleArr = [];
-    obstacleColorCount = 0;
+    
     obstacleArr = [];
     lastIntervalTimestamp = 0;
     lastIntervalTimestamp1 = 0;
@@ -70,7 +64,10 @@ function gameInit() {
     frameCount = 0;
     powerActive = false;
     powerTime = 3000;
-
+    
+    gradientLength = 50, 
+    gradientAngle = 90;
+   
     animationFunc();
 }
 
@@ -79,12 +76,14 @@ function animationFunc(now) {
         animationFrame = requestAnimationFrame(animationFunc);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (!lastIntervalTimestamp || now - lastIntervalTimestamp >= 2 * 300) {
+        if (!lastIntervalTimestamp || now - lastIntervalTimestamp >= 2 * 800) {
             lastIntervalTimestamp = now;
-            addObstacle();
+            if (frameCount > 50) {
+                addObstacle();
+            }
         }
 
-        if (!lastIntervalTimestamp1 || now - lastIntervalTimestamp1 >= 2 * (powerTime * 2)) {
+        if (!lastIntervalTimestamp1 || now - lastIntervalTimestamp1 >= 2 * (powerTime * 3)) {
             lastIntervalTimestamp1 = now;
             if (frameCount > 250) {
                 powerEleArr.push(new Power(ctx, canvas.width, canvas.height / 3, 30, 48, 'red', rocketImg));
@@ -103,7 +102,9 @@ function animationFunc(now) {
             }
 
             if (bird.x + bird.width > obstacle.x &&
-                bird.x + bird.width < obstacle.x + obstacle.width) {
+                bird.x + bird.width < obstacle.x + obstacle.width ||
+                bird.x > obstacle.x && 
+                bird.x < obstacle.x + obstacle.width) {
 
 
                 if (bird.y < obstacle.top ||
@@ -123,8 +124,14 @@ function animationFunc(now) {
                 }
             }
             if (powerActive) {
-                obstacle.top = Math.min(obstacle.top - 1, 20);
-                obstacle.bottom = Math.max(obstacle.bottom - 1, 20);
+                // obstacle.top = Math.min(obstacle.top - 0.02, 20);
+                // obstacle.bottom = Math.min(obstacle.bottom - 0.02, 20);
+
+                obstacle.top -= 2;
+                obstacle.top = Math.max(obstacle.top , 20);
+                obstacle.bottom -= 2;
+                obstacle.bottom = Math.max(obstacle.bottom, 20);;
+                // obstacle.bottom = Math.min(obstacle.bottom - 0.02, 20);
             }
 
 
@@ -193,15 +200,21 @@ function handleParticles() {
 }
 
 function addObstacle() {
-    const top = (Math.random() * canvas.height / 3) + 20;
-    const bottom = (Math.random() * canvas.height / 3) + 20;
-    const endY = canvas.height;
-    const color = `hsl(${Math.sin(obstacleColorCount) * 360}, 40%, 40%)`;
-    const x = canvas.width;
-    const width = 20;
-    obstacleArr.unshift(new Obstacle(ctx, x, top, bottom, endY, color, width))
+    let top = (Math.random() * canvas.height / 2.1) + 20;
+    let bottom = (Math.random() * canvas.height / 2.1) + 20;
 
-    obstacleColorCount += 0.1;
+    console.log(`top ${top} ,, and bottom ${canvas.height - bottom}`);
+    console.log("diff top and bottom :", (canvas.height - bottom) - top);
+    
+    if((canvas.height - bottom) - top < bird.height * 4.5){
+        bottom = bottom - (bird.height * 4.5 - ((canvas.height - bottom) - top) );
+    }
+    const endY = canvas.height;
+    const x = canvas.width;
+    const width = 40;
+    obstacleArr.unshift(new Obstacle(ctx, x, top, bottom, endY, "red", width))
+
+    
 }
 
 async function loadImage(src) {
