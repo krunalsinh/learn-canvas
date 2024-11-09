@@ -115,4 +115,11 @@ function getIntFromRange(min, max) {
 function drawSprite(ctx, img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite };
+
+async function loadImage(src) {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    return img;
+};
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite, loadImage };

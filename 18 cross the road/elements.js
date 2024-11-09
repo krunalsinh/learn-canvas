@@ -1,5 +1,5 @@
 import { canvasHeight, canvasWidth, keys, grid, scored} from './page.js';
-import { drawRectangle, drawCircle, addText } from '../common/common-functions.js';
+import { drawCircle, drawRectangle } from '../common/common-functions.js';
 
 class Frog {
     constructor(ctx, spriteWidth, spriteHeight){
@@ -57,7 +57,61 @@ class Frog {
     }
 }
 
-export {Frog}
+class Obstacle {
+    constructor(ctx, x, y , width, height, speed, type){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.speed = speed;
+        this.type = type;
+    }
+
+    update(gameSpeed){
+        this.x += this.speed * gameSpeed;
+
+        if(this.speed > 0){
+            if(this.x  > canvasWidth + this.width){
+                this.x = 0 - this.width;
+            }
+        }else{
+            if(this.x + this.width * 2 < 0){
+                this.x = canvasWidth;
+            }
+        }
+        this.draw();
+        
+    }
+
+    draw(){
+        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "blue")
+    }
+
+}
+
+class Particle{
+    constructor(ctx, x, y){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.radius = Math.random() * 20 + 1;
+        this.opacity = 1;
+        this.directionX = Math.random() * 1 - 0.5;
+        this.directionY = Math.random() * 1 - 0.5;
+
+    }
+    update(){
+        this.x += this.directionX;
+        this.y += this.directionY;
+        
+        this.draw();
+    }
+    draw(){
+        drawCircle(this.ctx, this.x, this.y, this.radius, 'white');
+    }
+}
+export {Frog, Obstacle}
 
 //canvas1 = particle effects
 //canvas2 = logs and turtle
