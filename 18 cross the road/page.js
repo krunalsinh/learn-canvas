@@ -1,5 +1,5 @@
-import { Frog, Obstacle } from "./elements.js";
-import { loadImage } from "../common/common-functions.js"
+import { Frog, Obstacle, Particle } from "./elements.js";
+import { loadImage, drawRectangle, drawStar } from "../common/common-functions.js"
 
 const canvasWidth = 600;
 const canvasHeight = 600;
@@ -50,20 +50,35 @@ gameInit();
 // functions
 function gameInit() {
     keys = [], score = 0, collisionsCount = 0, frame = 0, gameSpeed = 1;
-    frog = new Frog(ctx3, 250, 250);
+    frog = new Frog(ctx2, 250, 250);
     addObstacles()
     animationFunc();
 }
 
 function animationFunc(now) {
+    ctx1.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx3.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx4.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx5.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    ctx1.drawImage(background_lvl2, 0, 0, canvasWidth, canvasHeight )
-    carsArr.forEach(car => car.update(gameSpeed));
-    logsArr.forEach(log => log.update(gameSpeed));
+    handleRipple();
+    ctx5.drawImage(background_lvl2, 0, 0, canvasWidth, canvasHeight )
     frog.update();
-    ctx4.drawImage(grass, 0, 0, canvasWidth, canvasHeight )
+    carsArr.forEach(car => {
+        car.update(gameSpeed)
+
+        if(handleCollision(frog, car)){
+            drawRectangle(ctx1, frog.x, frog.y, frog.width, frog.height, 'red');
+            drawStar(ctx1, )
+            console.log("collide");
+            
+        }
+    });
+    logsArr.forEach(log => log.update(gameSpeed));
+    handleParticles();
+    handleScoreBoard();
+    ctx1.drawImage(grass, 0, 0, canvasWidth, canvasHeight )
 
     requestAnimationFrame(animationFunc);
 }
@@ -101,14 +116,76 @@ function addObstacles() {
     for (let i = 0; i < 2; i++) {
         let x = i * 400;
         let y = canvasHeight - grid * 5 - 20;
-        logsArr.push(new Obstacle(ctx2, x, y, grid * 2, grid, -2, 'log' ));
+        logsArr.push(new Obstacle(ctx4, x, y, grid * 2, grid, -2, 'log' ));
     }
     //lane 4
     for (let i = 0; i < 2; i++) {
         let x = i * 200;
         let y = canvasHeight - grid * 6 - 20;
-        logsArr.push(new Obstacle(ctx2, x, y, grid, grid, 1, 'turtle' ));
+        logsArr.push(new Obstacle(ctx4, x, y, grid, grid, 1, 'turtle' ));
     }
+}
+
+function handleParticles(){
+    // console.log(particleArr.length);
+    
+    for (let i = 0; i < particleArr.length; i++) {
+        particleArr[i].update();
+        
+    }
+    if(particleArr.length > maxParticles){
+        for (let i = 0; i < 30; i++) {
+            particleArr.pop();
+        }
+    }
+    if( (keys[37] || keys[38] || keys[39] || keys[40]) && frog.y > 250 && particleArr.length < maxParticles + 10){
+        for (let i = 0; i < 10; i++) {
+            particleArr.unshift(new Particle(ctx3, frog.x + frog.width / 2, frog.y + frog.height / 2, 'particle'))
+            
+        }
+    }
+
+    
+}
+
+function handleRipple() {
+    for (let i = 0; i < ripplesArr.length; i++) {
+        ripplesArr[i].update();
+    }
+
+    if(ripplesArr.length > 20){
+        for (let i = 0; i < 5; i++) {
+            ripplesArr.pop();
+        }
+    }
+
+    if( (keys[37] || keys[38] || keys[39] || keys[40]) && frog.y < 250 && frog.y > 100 ){
+        for (let i = 0; i < 20; i++) {
+            ripplesArr.unshift(new Particle(ctx4, frog.x + frog.width / 2, frog.y + frog.height / 2, 'ripple'))
+        }
+    }
+}
+
+function handleScoreBoard(){
+    ctx1.fillStyle = "black";
+    ctx1.strokeStyle = "black";
+    ctx1.font = "15px Verdana";
+    ctx1.strokeText("Score", 265, 15);
+    ctx1.font = "60px Verdana";
+    ctx1.fillText(score, 270, 65);
+
+    ctx1.font = "15px Verdana";
+    ctx1.strokeText("Collision: " + collisionsCount, 10, 175);
+
+    ctx1.font = "15px Verdana";
+    ctx1.strokeText("Game Speed: " + gameSpeed, 10, 199);
+}
+
+function handleCollision(first, second){
+    return !(first.x > second.x + second.width ||
+             first.x + first.width < second.x ||
+             first.y > second.y + second.height ||
+             first.y + first.height < second.y);
 }
 
 //events

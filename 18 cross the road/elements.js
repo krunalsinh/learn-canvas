@@ -11,6 +11,8 @@ class Frog {
         this.x = canvasWidth/2 - this.width/2;
         this.y = canvasHeight - this.height - 40;
         this.moving = false;
+        this.frameX = 0;
+        this.frameY = 0;
     }
 
     update(){
@@ -91,7 +93,7 @@ class Obstacle {
 }
 
 class Particle{
-    constructor(ctx, x, y){
+    constructor(ctx, x, y, type){
         this.ctx = ctx;
         this.x = x;
         this.y = y;
@@ -99,22 +101,52 @@ class Particle{
         this.opacity = 1;
         this.directionX = Math.random() * 1 - 0.5;
         this.directionY = Math.random() * 1 - 0.5;
+        this.type = type;
+        
 
     }
     update(){
-        this.x += this.directionX;
-        this.y += this.directionY;
+        if(this.type === 'particle'){
+            this.x += this.directionX;
+            this.y += this.directionY;
+            
+            if(this.opacity > 0.1){
+                this.opacity -= 0.9;
+            }
+
+            if(this.radius > 0.15){
+                this.radius -= 0.14;
+            }
+        }
+        if(this.type === 'ripple'){
+            if(this.radius < 50){
+                this.radius += 0.7;
+                this.x -= 0.1;
+                this.y -= 0.1;
+            }
+
+            if(this.opacity > 0){
+                this.opacity -= 0.02;
+            }
+        }
         
         this.draw();
     }
     draw(){
-        drawCircle(this.ctx, this.x, this.y, this.radius, 'white');
+        if(this.type === 'particle'){
+            drawCircle(this.ctx, this.x, this.y, this.radius, `rgba(150,150,150,${this.opacity})`);
+        }
+        if(this.type === 'ripple'){
+            drawCircle(this.ctx, this.x, this.y, this.radius, `rgba(150,150,150,${this.opacity})`, true, 1, `rgba(255,255,255,${this.opacity})`);
+        }
     }
 }
-export {Frog, Obstacle}
 
-//canvas1 = particle effects
-//canvas2 = logs and turtle
-//canvas3 = frog
-//canvas4 = cars
+
+export {Frog, Obstacle, Particle}
+
 //canvas5 = overlay grass and tree
+//canvas4 = particle effects
+//canvas3 = cars
+//canvas2 = logs and turtle
+//canvas1 = frog
