@@ -1,4 +1,4 @@
-import { canvasHeight, canvasWidth, keys, grid, scored, turtles, cars, numOfCars, log} from './page.js';
+import { canvasHeight, canvasWidth, keys, grid, scored, turtles, cars, numOfCars, log, frogImg} from './page.js';
 import { drawCircle, drawRectangle } from '../common/common-functions.js';
 
 class Frog {
@@ -20,6 +20,7 @@ class Frog {
             if(this.moving === false){
                 this.y -= grid;
                 this.moving = true;
+                this.frameY = 0;
             }
         }
 
@@ -27,6 +28,7 @@ class Frog {
             if(this.moving === false && this.y + (this.height * 2) < canvasHeight){
                 this.y += grid;
                 this.moving = true;
+                this.frameY = 3;
             }
         }
 
@@ -34,6 +36,7 @@ class Frog {
             if(this.moving === false && this.x > this.width){
                 this.x -= grid;
                 this.moving = true;
+                this.frameY = 2;
             }
         }
 
@@ -41,6 +44,7 @@ class Frog {
             if(this.moving === false && this.x + (this.width * 2) < canvasWidth){
                 this.x += grid;
                 this.moving = true;
+                this.frameY = 1;
             }
         }
 
@@ -50,12 +54,15 @@ class Frog {
     }
 
     draw(){
-        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "green");
+        // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "green");
+
+        this.ctx.drawImage(frogImg, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteHeight, this.spriteWidth, this.x - this.width  / 2, this.y - this.height / 2, this.width * 2, this.height * 2)
         
     }
 
     jump(){
-        // console.log("jump");
+        if(this.moving === false) this.frameX = 1;
+        else if(this.frameX === 1) this.frameX = 0
         
     }
 }
@@ -95,7 +102,7 @@ class Obstacle {
 
     draw(frame){
 
-        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "#666");
+        // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "#666");
 
         if(this.type === "turtle"){
             if(frame % this.randomise === 0){

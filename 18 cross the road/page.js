@@ -32,7 +32,7 @@ canvas5.height = canvasHeight;
 // global variables
 
 const grid = 80, maxParticles = 300, particleArr = [], ripplesArr = [], carsArr = [], logsArr = [];
-let keys, score, collisionsCount, frame, gameSpeed, frog, background_lvl2, grass, turtles, cars, numOfCars, log, safe;
+let keys, score, collisionsCount, frame, gameSpeed, frog, background_lvl2, grass, turtles, cars, numOfCars, log, safe, frogImg;
 
 await Promise.resolve(loadImage("./images/background_lvl2.png"))
 .then(image => {
@@ -57,6 +57,11 @@ await Promise.resolve(loadImage("./images/log.png"))
 await Promise.resolve(loadImage("./images/cars.png"))
 .then(image => {
     cars = image;
+});
+
+await Promise.resolve(loadImage("./images/frog_spritesheet.png"))
+.then(image => {
+    frogImg = image;
 });
 
 gameInit();
@@ -244,6 +249,7 @@ addEventListener('keydown', function (e) {
 addEventListener('keyup', function (e) {
     delete keys[e.keyCode];
     frog.moving = false;
+    frog.frameX = 0;
 })
 
-export { canvasWidth, canvasHeight, keys, grid, scored, turtles, cars, numOfCars, log }
+export { canvasWidth, canvasHeight, keys, grid, scored, turtles, cars, numOfCars, log, frogImg }
