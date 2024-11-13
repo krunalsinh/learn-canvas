@@ -31,8 +31,8 @@ canvas5.height = canvasHeight;
 
 // global variables
 
-const grid = 80, particleArr = [], maxParticles = 300, ripplesArr = [], carsArr = [], logsArr = [];
-let keys, score, collisionsCount, frame, gameSpeed, frog, background_lvl2, grass;
+const grid = 80, maxParticles = 300, particleArr = [], ripplesArr = [], carsArr = [], logsArr = [];
+let keys, score, collisionsCount, frame, gameSpeed, frog, background_lvl2, grass, turtles, cars, numOfCars, log, safe;
 
 await Promise.resolve(loadImage("./images/background_lvl2.png"))
 .then(image => {
@@ -44,15 +44,31 @@ await Promise.resolve(loadImage("./images/grass.png"))
     grass = image;
 });
 
-gameInit();
+await Promise.resolve(loadImage("./images/turtles.png"))
+.then(image => {
+    turtles = image;
+});
 
+await Promise.resolve(loadImage("./images/log.png"))
+.then(image => {
+    log = image;
+});
+
+await Promise.resolve(loadImage("./images/cars.png"))
+.then(image => {
+    cars = image;
+});
+
+gameInit();
+addObstacles()
+animationFunc();
 
 // functions
 function gameInit() {
-    keys = [], score = 0, collisionsCount = 0, frame = 0, gameSpeed = 1;
+    // particleArr = []; ripplesArr = []; carsArr = []; logsArr = [];
+    keys = []; score = 0; collisionsCount = 0; frame = 0; gameSpeed = 1; numOfCars = 3; safe = false;
     frog = new Frog(ctx2, 250, 250);
-    addObstacles()
-    animationFunc();
+    
 }
 
 function animationFunc(now) {
@@ -65,21 +81,11 @@ function animationFunc(now) {
     handleRipple();
     ctx5.drawImage(background_lvl2, 0, 0, canvasWidth, canvasHeight )
     frog.update();
-    carsArr.forEach(car => {
-        car.update(gameSpeed)
-
-        if(handleCollision(frog, car)){
-            drawRectangle(ctx1, frog.x, frog.y, frog.width, frog.height, 'red');
-            drawStar(ctx1, )
-            console.log("collide");
-            
-        }
-    });
-    logsArr.forEach(log => log.update(gameSpeed));
+    handleObstacles();
     handleParticles();
     handleScoreBoard();
     ctx1.drawImage(grass, 0, 0, canvasWidth, canvasHeight )
-
+    frame++;
     requestAnimationFrame(animationFunc);
 }
 
@@ -119,15 +125,48 @@ function addObstacles() {
         logsArr.push(new Obstacle(ctx4, x, y, grid * 2, grid, -2, 'log' ));
     }
     //lane 4
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
         let x = i * 200;
         let y = canvasHeight - grid * 6 - 20;
         logsArr.push(new Obstacle(ctx4, x, y, grid, grid, 1, 'turtle' ));
     }
 }
 
+function handleObstacles() {
+    
+    carsArr.forEach(car => {
+        car.update(gameSpeed)
+        
+        // collision with car
+        if(handleCollision(frog, car)){
+            drawStar(ctx1, frog.x - frog.width / 2 , frog.y - frog.width / 2, frog.width,"red");
+            resetGame();
+        }
+    });
+    
+    logsArr.forEach(log => {
+        log.update(gameSpeed, frame);
+    });
+    
+    if(frog.y < 250 && frog.y > 100){
+        
+        safe = false;
+        logsArr.forEach(log => {
+            if(handleCollision(frog, log)){
+                frog.x += log.speed;
+                safe = true;
+            }
+        })
+        if(!safe){
+            for (let i = 0; i < 20; i++) {
+                ripplesArr.unshift(new Particle(ctx4, frog.x + frog.width / 2, frog.y + frog.height / 2, 'ripple'))
+            }
+            resetGame()
+        }
+    }
+}
+
 function handleParticles(){
-    // console.log(particleArr.length);
     
     for (let i = 0; i < particleArr.length; i++) {
         particleArr[i].update();
@@ -144,7 +183,6 @@ function handleParticles(){
             
         }
     }
-
     
 }
 
@@ -188,6 +226,13 @@ function handleCollision(first, second){
              first.y + first.height < second.y);
 }
 
+function resetGame() {
+    frog.x = canvasWidth / 2 - (frog.width / 2);
+    frog.y = canvasHeight - frog.height - 40;;
+    score = 0;
+    collisionsCount++;
+    gameSpeed = 1;
+}
 //events
 addEventListener('keydown', function (e) {
     keys = [];
@@ -201,4 +246,4 @@ addEventListener('keyup', function (e) {
     frog.moving = false;
 })
 
-export { canvasWidth, canvasHeight, keys, grid, scored }
+export { canvasWidth, canvasHeight, keys, grid, scored, turtles, cars, numOfCars, log }

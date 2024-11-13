@@ -1,4 +1,4 @@
-import { canvasHeight, canvasWidth, keys, grid, scored} from './page.js';
+import { canvasHeight, canvasWidth, keys, grid, scored, turtles, cars, numOfCars, log} from './page.js';
 import { drawCircle, drawRectangle } from '../common/common-functions.js';
 
 class Frog {
@@ -51,10 +51,11 @@ class Frog {
 
     draw(){
         drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "green");
+        
     }
 
     jump(){
-        console.log("jump");
+        // console.log("jump");
         
     }
 }
@@ -68,26 +69,45 @@ class Obstacle {
         this.height = height;
         this.speed = speed;
         this.type = type;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.randomise = Math.floor(Math.random() * 30 + 30);
+        this.carType = Math.floor(Math.random() * numOfCars);
     }
 
-    update(gameSpeed){
+    update(gameSpeed, frame){
         this.x += this.speed * gameSpeed;
 
         if(this.speed > 0){
             if(this.x  > canvasWidth + this.width){
                 this.x = 0 - this.width;
+                this.carType = Math.floor(Math.random() * numOfCars);
             }
         }else{
             if(this.x + this.width * 2 < 0){
                 this.x = canvasWidth;
+                this.carType = Math.floor(Math.random() * numOfCars);
             }
         }
-        this.draw();
+        this.draw(frame);
         
     }
 
-    draw(){
-        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "blue")
+    draw(frame){
+
+        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "#666");
+
+        if(this.type === "turtle"){
+            if(frame % this.randomise === 0){
+                if(this.frameX >= 1) this.frameX = 0;
+                else this.frameX++; 
+            }
+            this.ctx.drawImage(turtles, this.frameX * 70, this.frameY * 70, grid - 10, grid - 10, this.x, this.y, this.width, this.height )
+        }else if(this.type === "log"){
+            this.ctx.drawImage(log, this.x, this.y, this.width, this.height);
+        }else{
+            this.ctx.drawImage(cars, this.speed < 0 ? this.width : 0, this.carType * this.height, grid * 2, grid, this.x, this.y, this.width, this.height);
+        }
     }
 
 }
