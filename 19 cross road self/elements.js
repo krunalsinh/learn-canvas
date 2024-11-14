@@ -69,5 +69,16 @@ class Obstacle{
     }
 }
 
+class Particle{
+    constructor(x, y, radius, color, speed){
+
+    }
+    update(){
+        this.draw();
+    }
+    draw(){
+
+    }
+}
 
 export { Frog , Obstacle}

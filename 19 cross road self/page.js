@@ -107,6 +107,8 @@ function addObstacles() {
 addEventListener('keydown', e => {
     keys[e.keyCode] = true;
     frog.moving = false;
+
+    // if(frog.moving === false && frog.y )
 })
 
 addEventListener('keyup', e => {
