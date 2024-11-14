@@ -70,10 +70,8 @@ animationFunc();
 
 // functions
 function gameInit() {
-    // particleArr = []; ripplesArr = []; carsArr = []; logsArr = [];
     keys = []; score = 0; collisionsCount = 0; frame = 0; gameSpeed = 1; numOfCars = 3; safe = false;
     frog = new Frog(ctx2, 250, 250);
-    
 }
 
 function animationFunc(now) {
