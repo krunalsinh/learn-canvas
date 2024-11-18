@@ -10,7 +10,7 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
 const keys = [], obstaclesArr = [], logsArr = [], particlesArr = [], rippleArr = [];
-let backgroundImg, backgroundImgRoad, frog, cellSize, grassImg, safe, score = 0, carsImg, frogImg, gameSpeed = 1, collisionCount = 0;
+let backgroundImg, backgroundImgRoad, frog, cellSize, grassImg, safe, score = 0, carsImg, frogImg, gameSpeed = 1, collisionCount = 0, logImg, turtlesImg, frameCounter = 0;
 
 await Promise.resolve(loadImage("./images/background.png"))
     .then(image => backgroundImg = image)
@@ -26,6 +26,12 @@ await Promise.resolve(loadImage("./images/cars.png"))
 
 await Promise.resolve(loadImage("./images/frog_spritesheet.png"))
     .then(image => frogImg = image)
+
+await Promise.resolve(loadImage("./images/log.png"))
+    .then(image => logImg = image)
+
+await Promise.resolve(loadImage("./images/turtles.png"))
+    .then(image => turtlesImg = image)
 
 gameInit();
 addObstacles();
@@ -57,9 +63,9 @@ function animationFunc() {
     //grass
     ctx.drawImage(grassImg, 0, 0, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
-    addText(ctx, 10, 50, "30px", "Open Sens", "#000", "Score : " + score);
-    addText(ctx, 10, 80, "30px", "Open Sens", "#000", "Game Speed : " + gameSpeed);
+    handleScoreBoard();
 
+    frameCounter++;
     requestAnimationFrame(animationFunc);
 
 }
@@ -72,7 +78,7 @@ function addObstacles() {
             i * 350,
             canvasHeight - cellSize * 2 - 20,
             cellSize * 2,
-            cellSize, 1));
+            cellSize, 1, "car"));
     }
 
     //row 2
@@ -82,7 +88,7 @@ function addObstacles() {
             i * 350,
             canvasHeight - cellSize * 3 - 20,
             cellSize * 2,
-            cellSize, -2));
+            cellSize, -2, "car"));
     }
 
     //row 3
@@ -92,7 +98,7 @@ function addObstacles() {
             i * 350,
             canvasHeight - cellSize * 4 - 20,
             cellSize * 2,
-            cellSize, 2));
+            cellSize, 2, "car"));
     }
 
     //row 4
@@ -145,7 +151,7 @@ function handleRipples() {
 function handlesLogs() {
     safe = false;
     logsArr.forEach(log => {
-        log.update(gameSpeed);
+        log.update(gameSpeed, frameCounter);
 
         if (detectCollision(frog, log)) {
             frog.x += log.speed;
@@ -194,6 +200,13 @@ function scored() {
 function resetFrogPos() {
     frog.y = canvasHeight - 90;;
 }
+
+function handleScoreBoard() {
+    addText(ctx, 10, 50, "30px", "Open Sens", "#000", "Score : " + score);
+    addText(ctx, 10, 80, "30px", "Open Sens", "#000", "Game Speed : " + gameSpeed);
+    addText(ctx, 10, 110, "30px", "Open Sens", "#000", "Collisions : " + collisionCount);
+}
+
 //events
 addEventListener('keydown', e => {
     keys[e.keyCode] = true;
@@ -216,6 +229,6 @@ addEventListener('keyup', e => {
     frog.frameX = 0;
 })
 
-export { cellSize, canvasWidth, canvasHeight, carsImg, frogImg }
+export { cellSize, canvasWidth, canvasHeight, carsImg, frogImg, logImg, turtlesImg }
 
 

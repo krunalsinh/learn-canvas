@@ -1,5 +1,5 @@
 
-import {cellSize, canvasWidth, canvasHeight, carsImg, frogImg} from "./page.js";
+import {cellSize, canvasWidth, canvasHeight, carsImg, frogImg, logImg, turtlesImg} from "./page.js";
 import { drawCircle, drawRectangle } from "../common/common-functions.js";
 
 class Frog{
@@ -12,7 +12,7 @@ class Frog{
         this.height = spriteHeight / 5;
         this.y = canvasHeight - this.height - 40;
         this.x = canvasWidth / 2 - this.width / 2;
-        this.moving = true;
+        this.moving = false;
         this.color = "green";
         this.frameX = 0;
         this.frameY = 0;
@@ -66,23 +66,46 @@ class Obstacle{
         this.x = x;
         this.speed = speed;
         this.type = type;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.randomCar = Math.floor(Math.random() * 3);
+        this.randValTurtle = Math.floor(Math.random() * 30 + 30);
     }
-    update(gameSpeed){
+    update(gameSpeed, frameCounter){
         
         this.x += this.speed ;
         if(this.speed < 0){
             if(this.x + this.width < 0 ){
-                this.x = canvasWidth + this.width
+                this.x = canvasWidth + this.width;
+                this.randomCar = Math.floor(Math.random() * 3);
             }
         }else{
             if(this.x + this.width > canvasWidth + this.width ){
-                this.x = 0 - this.width * 2
+                this.x = 0 - this.width * 2;
+                this.randomCar = Math.floor(Math.random() * 3);
+            }
+        }
+        if(this.type === "turtle"){
+            if(frameCounter % this.randValTurtle === 0){
+                this.frameX === 0 ? this.frameX = 1 :  this.frameX = 0;
+            }
+
+            if(this.x + this.width > canvasWidth + this.width ){
+                this.frameX = 0;
             }
         }
         this.draw();
     }
     draw(){
-        drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "#666")
+        // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, "#666");
+        if(this.type === "car"){
+            this.ctx.drawImage(carsImg, this.speed < 0 ? cellSize * 2: 0 , this.randomCar * cellSize, this.width, this.height, this.x, this.y, this.width, this.height);
+        }
+        else if(this.type === "log"){
+            this.ctx.drawImage(logImg, this.x, this.y, cellSize * 2, cellSize);
+        }else{
+            this.ctx.drawImage(turtlesImg, this.frameX * (cellSize - 10), 0, this.height -10, this.width -10, this.x, this.y, this.height, this.width);
+        }
     }
 }
 
