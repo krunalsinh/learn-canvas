@@ -75,6 +75,7 @@ function drawTriangle(context, x = 0, y = 0, radius = 50, color = "#666"){
     context.fill();
     context.closePath();
 }
+
 function drawStar(context, x = 0, y = 0, radius = 50, color = "#666"){
     const l = radius * 2; 
     context.beginPath();
