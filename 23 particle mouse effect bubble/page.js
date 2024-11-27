@@ -29,12 +29,8 @@ function gameInit() {
     particlesArr = [];
     addText(ctx, 10, 30, "30px", "Open Sans", "#fff",txtInput.value ? txtInput.value : "Text");
     
-    textData = ctx.getImageData(10, 0, txtInput.value ? txtInput.value.length * (14 + ((txtInput.value.length - 1) * 1)) 
-    : 4 * (14 + 3), 32);
-    endX = (textData.width - 1) * 10;
-    endY = (textData.height - 1) * 10;
-    offsetX = (innerWidth / 2) - (endX );
-    offsetY = (innerHeight / 2) - (endY );
+    textData = ctx.getImageData(10, 0, 100, 50);
+ 
     colrDegIncr = 360 / (textData.height * textData.width);
 
     for (let y = 0; y < textData.height; y++) {
@@ -49,7 +45,7 @@ function gameInit() {
                 let randY2 = Math.random() * 200 + innerHeight;
                 let initX = Math.random() > 0.5 ? randX1 : randX2;
                 let initY = Math.random() > 0.5 ? randY1 : randY2;
-                particlesArr.push(new Particle(ctx, offsetX + positionX * 20, offsetY + positionY * 20, 7, `hsl(${colrDeg}, 60%, 60%)`, initX, initY ))
+                particlesArr.push(new Particle(ctx, 50 + positionX * 20, 50 + positionY * 20, 7, `hsl(${colrDeg}, 60%, 60%)`, initX, initY ))
                 
             }
             
