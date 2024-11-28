@@ -1,4 +1,4 @@
-import { addText, drawLine, getDistance } from "../common/common-functions.js";
+import { addText, drawLine, getDistance,loadImage } from "../common/common-functions.js";
 import { Player, Enemy, Score } from "./elements.js";
 
 const canvasWidth = innerWidth;
@@ -11,12 +11,14 @@ const mouse = {
     y : canvasHeight - 100,
     mouseDown: false
 };
+let angle = 0, swimLeftImg = null, swimRightImg, frameCounter = 0;
 
 const mouseMove = {
     x : canvasWidth / 2,
     y : canvasHeight - 100,
     mouseDown: false
 };
+const testX = 200,testY = 200;
 
 
 const player = new Player(ctx, canvasWidth / 2, canvasHeight - 100, 35, "red");
@@ -26,16 +28,24 @@ const score = new Score(ctx, 50, 50, 0);
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
+await Promise.resolve(loadImage("./images/swim_to_left_sheet.png"))
+.then(image => swimLeftImg = image)
+
+await Promise.resolve(loadImage("./images/swim_to_right_sheet.png"))
+.then(image => swimRightImg = image)
+
 init();
 animationFunc();
 
 // functions
 function init() {
+
     for (let i = 0; i < 10; i++) {
         spawnEnemy();
     }
-
 }
+
+
 
 function spawnEnemy() {
     const size = Math.random() * 30 + 10;
@@ -49,7 +59,7 @@ function spawnEnemy() {
 function animationFunc() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    player.update(mouse);
+    player.update(mouse, mouseMove, frameCounter);
 
     enemyArr.forEach( (enemy,enemyIndex) => {
         enemy.update();
@@ -75,6 +85,8 @@ function animationFunc() {
     }
 
     score.draw();
+
+    frameCounter++;
     
     requestAnimationFrame(animationFunc);
 }
@@ -94,6 +106,6 @@ addEventListener("mouseup", e => {
 addEventListener("mousemove", e => {
     mouseMove.x = e.clientX;
     mouseMove.y = e.clientY;
-    
 })
 
+export { swimLeftImg , swimRightImg}

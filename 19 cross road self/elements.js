@@ -48,7 +48,15 @@ class Frog{
     }
     draw(){
         // drawRectangle(this.ctx, this.x, this.y, this.width, this.height, this.color);
-        this.ctx.drawImage(frogImg, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x - this.width / 2 , this.y - this.height / 2, this.width * 2, this.height * 2)
+        this.ctx.drawImage(frogImg, 
+            this.frameX * this.spriteWidth, 
+            this.frameY * this.spriteHeight, 
+            this.spriteWidth, 
+            this.spriteHeight, 
+            this.x - this.width / 2 , 
+            this.y - this.height / 2, 
+            this.width * 2, 
+            this.height * 2)
 
     }
     jump(){
