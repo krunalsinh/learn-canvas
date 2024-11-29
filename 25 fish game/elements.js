@@ -1,5 +1,5 @@
 import { addText, drawCircle, drawLine, getDistance } from "../common/common-functions.js";
-import { swimLeftImg , swimRightImg} from "./page.js"
+import { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg} from "./page.js"
 
 class Player {
     constructor(ctx, x, y, size, color) {
@@ -17,21 +17,16 @@ class Player {
         this.width = this.spriteWidth / 5;
         this.height = this.spriteHeight / 5;
         this.playerImg = swimLeftImg
-
-        
     }
+
     update(mouse, mouseMove, frameCounter) {
         let dx = this.x - mouse.x;
         let dy = this.y - mouse.y;
-
-        console.log(dx);
-        
 
         let moveDx = this.x - mouseMove.x;
         let moveDy = this.y - mouseMove.y;
     
         this.angle = Math.atan2(moveDy,moveDx) ;
-        
 
         if(mouse.x !== this.x && !mouse.mouseDown){
             this.x -= dx/20;
@@ -44,21 +39,25 @@ class Player {
         this.y = this.y + Math.sin(this.incrVal);
 
         this.incrVal += 0.01;
-
-        if(this.angle > 1.5 || this.angle < -1.5){
-            this.playerImg = swimRightImg;
+        if(dx < 20 && dy < 20){
+            if(this.angle > 1.5 || this.angle < -1.5){
+                this.playerImg = swimRestRightImg;
+            }else{
+                this.playerImg = swimRestLeftImg;
+            }
         }else{
-            this.playerImg = swimLeftImg;
+            
+            if(this.angle > 1.5 || this.angle < -1.5){
+                this.playerImg = swimRightImg;
+            }else{
+                this.playerImg = swimLeftImg;
+            }
         }
-        // console.log(frameCounter);
-        
 
         if(frameCounter % 5 === 0){
-
             if(this.frameX >= 5) this.frameX = 0;
             else this.frameX++;
         }
-        
        
         this.draw();
     }
@@ -66,8 +65,8 @@ class Player {
         this.ctx.save();
         this.ctx.translate( this.x , this.y );
         this.ctx.rotate(this.angle);
-        drawCircle(this.ctx, 0, 0, this.size, this.color);
-        drawCircle(this.ctx, 0 - 30, 0, this.size / 5, "blue");
+        // drawCircle(this.ctx, 0, 0, this.size, this.color);
+        // drawCircle(this.ctx, 0 - 30, 0, this.size / 5, "blue");
 
         this.ctx.drawImage(this.playerImg, 
             this.frameX * this.spriteWidth, 
@@ -99,6 +98,7 @@ class Enemy extends Player{
         this.draw();
     }
     draw(){
+        drawCircle(this.ctx, this.x, this.y, this.size, "rgba(255,255,255,0.05)");
         drawCircle(this.ctx, this.x, this.y, this.size, this.color, true);
         drawCircle(this.ctx, this.x - this.size / 2.5, this.y - this.size / 4, this.size / 6, this.color);
         drawCircle(this.ctx, this.x + this.size / 4, this.y - this.size / 4, this.size / 3.5, this.color);

@@ -1,4 +1,4 @@
-import { addText, drawLine, getDistance,loadImage } from "../common/common-functions.js";
+import { addText, drawLine, getDistance, loadImage } from "../common/common-functions.js";
 import { Player, Enemy, Score } from "./elements.js";
 
 const canvasWidth = innerWidth;
@@ -11,7 +11,7 @@ const mouse = {
     y : canvasHeight - 100,
     mouseDown: false
 };
-let angle = 0, swimLeftImg = null, swimRightImg, frameCounter = 0;
+let angle = 0, swimLeftImg = null, swimRightImg = null, frameCounter = 0, swimRestLeftImg = null, swimRestRightImg = null ;
 
 const mouseMove = {
     x : canvasWidth / 2,
@@ -33,6 +33,14 @@ await Promise.resolve(loadImage("./images/swim_to_left_sheet.png"))
 
 await Promise.resolve(loadImage("./images/swim_to_right_sheet.png"))
 .then(image => swimRightImg = image)
+
+await Promise.resolve(loadImage("./images/rest_to_left_sheet.png"))
+.then(image => swimRestLeftImg = image)
+
+await Promise.resolve(loadImage("./images/rest_to_right_sheet.png"))
+.then(image => swimRestRightImg = image)
+
+
 
 init();
 animationFunc();
@@ -108,4 +116,4 @@ addEventListener("mousemove", e => {
     mouseMove.y = e.clientY;
 })
 
-export { swimLeftImg , swimRightImg}
+export { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg}
