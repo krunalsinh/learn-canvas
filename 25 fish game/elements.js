@@ -1,5 +1,5 @@
-import { addText, drawCircle, drawLine, getDistance } from "../common/common-functions.js";
-import { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg} from "./page.js"
+import { addText, drawCircle, drawLine, fillRect, getDistance } from "../common/common-functions.js";
+import { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg, enemyImg} from "./page.js"
 
 class Player {
     constructor(ctx, x, y, size, color) {
@@ -81,7 +81,7 @@ class Player {
     }
 }
 
-class Enemy extends Player{
+class Bubble extends Player{
     constructor(ctx, x, y, size, color, speed) {
         super(ctx, x, y, size, color); 
         this.speed = speed;
@@ -123,4 +123,67 @@ class Score {
     
 }
 
-export { Player, Enemy, Score }
+class Enemy {
+    constructor(ctx, x, y, color, direction) {
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.incrVal = 0;
+        this.angle = 0;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.spriteWidth = 149;
+        this.spriteHeight = 129;
+        this.width = this.spriteWidth / 2;
+        this.height = this.spriteHeight / 2;
+        this.playerImg = enemyImg;
+        this.direction = direction || "down";
+
+        if(direction === "down"){
+            this.frameY = 0;
+        }else if(direction === "left"){
+            this.frameY = 1;
+        }else if(direction === "right"){
+            this.frameY = 2;
+        }else if(direction === "up"){
+            this.frameY = 3;
+        }
+    }
+
+    update( frameCounter) {
+        
+        if(this.direction === "down"){
+            this.y += 2;
+        }else if(this.direction === "left"){
+            this.x -= 2;
+        }else if(this.direction === "right"){
+            this.x += 2;
+        }else if(this.direction === "up"){
+            this.y -= 2;
+        }
+       
+        if(frameCounter % 10 === 0){
+            if(this.frameX >= 3) this.frameX = 0;
+            else this.frameX++;
+        }
+        this.draw();
+    }
+    draw() {
+       
+
+        // fillRect(this.ctx, this.x, this.y, this.width, this.height, "green");
+        this.ctx.drawImage(this.playerImg, 
+            this.frameX * this.spriteWidth, 
+            this.frameY * this.spriteHeight, 
+            this.spriteWidth, 
+            this.spriteHeight, 
+            this.x, 
+            this.y -  this.height / 3 , 
+            this.width , 
+            this.height * 1.5);
+    }
+}
+
+
+export { Player, Bubble, Score, Enemy }
