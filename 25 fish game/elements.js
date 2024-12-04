@@ -172,7 +172,7 @@ class Enemy {
     draw() {
        
 
-        // fillRect(this.ctx, this.x, this.y, this.width, this.height, "green");
+        fillRect(this.ctx, this.x, this.y, this.width, this.height, "green");
         this.ctx.drawImage(this.playerImg, 
             this.frameX * this.spriteWidth, 
             this.frameY * this.spriteHeight, 

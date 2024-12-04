@@ -123,4 +123,12 @@ async function loadImage(src) {
     await img.decode();
     return img;
 };
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite, loadImage };
+
+function handleBoxCollision(first, second){
+    return !(first.x > second.x + second.width ||
+             first.x + first.width < second.x ||
+             first.y > second.y + second.height ||
+             first.y + first.height < second.y);
+}
+
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite, loadImage, handleBoxCollision };
