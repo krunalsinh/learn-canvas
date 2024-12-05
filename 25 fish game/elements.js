@@ -124,7 +124,7 @@ class Score {
 }
 
 class Enemy {
-    constructor(ctx, x, y, color, direction) {
+    constructor(ctx, x, y, color, direction, enemySpeed) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
@@ -139,6 +139,7 @@ class Enemy {
         this.height = this.spriteHeight / 2;
         this.playerImg = enemyImg;
         this.direction = direction || "down";
+        this.speed = enemySpeed;
 
         if(direction === "down"){
             this.frameY = 0;
@@ -154,16 +155,16 @@ class Enemy {
     update( frameCounter) {
         
         if(this.direction === "down"){
-            this.y += 2;
+            this.y += this.speed;
         }else if(this.direction === "left"){
-            this.x -= 2;
+            this.x -= this.speed;
         }else if(this.direction === "right"){
-            this.x += 2;
+            this.x += this.speed;
         }else if(this.direction === "up"){
-            this.y -= 2;
+            this.y -= this.speed;
         }
        
-        if(frameCounter % 10 === 0){
+        if(frameCounter % (10 - Math.floor(this.speed)) === 0){
             if(this.frameX >= 3) this.frameX = 0;
             else this.frameX++;
         }
@@ -172,7 +173,7 @@ class Enemy {
     draw() {
        
 
-        fillRect(this.ctx, this.x, this.y, this.width, this.height, "green");
+        // fillRect(this.ctx, this.x, this.y, this.width, this.height, "green");
         this.ctx.drawImage(this.playerImg, 
             this.frameX * this.spriteWidth, 
             this.frameY * this.spriteHeight, 
