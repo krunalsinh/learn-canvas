@@ -120,7 +120,7 @@ function spawnBubble() {
 function spawnEnemy(){
     const direction = ["down", "left", "right", "up"][Math.floor(Math.random() * 4)];
     let newEnemyPos = getEnemyPos(direction);
-    let enemySpeed = Math.random() * 3;
+    let enemySpeed = Math.random() * 3 + 0.5;
     enemyArr.push(new Enemy(ctx, newEnemyPos.x, newEnemyPos.y, "red", direction, enemySpeed))
 }
 
@@ -195,7 +195,10 @@ function handleGameOver(){
 }
 function handleDrawLine(){
     if(mouse.mouseDown) {
+        ctx.save();
+        ctx.setLineDash([5, 3])
         drawLine(ctx, mouseMove.x, mouseMove.y, player.x, player.y, 2, "rgba(255,255,255,0.2)");
+        ctx.restore();
     }
 }
 
@@ -241,13 +244,18 @@ addEventListener("touchstart", (e) => {
 addEventListener("touchmove", (e) => {
     mouseMove.x = e.touches[0].pageX;
     mouseMove.y = e.touches[0].pageY;
-  });
+});
   
-  addEventListener("touchend", (e) => {
+addEventListener("touchend", (e) => {
     mouse.x = e.touches[0].pageX;
     mouse.y = e.touches[0].pageY;
     mouse.mouseDown = false;
-  });
+});
+
+addEventListener("resize", (e) => {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+});
 
 gameStartButton.addEventListener('click', function () {
     gameStartPopup.classList.remove("show");

@@ -1,4 +1,4 @@
-import { addText, drawCircle, drawLine, fillRect, getDistance } from "../common/common-functions.js";
+import { addText, drawCircle} from "../common/common-functions.js";
 import { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg, enemyImg} from "./page.js"
 
 class Player {
