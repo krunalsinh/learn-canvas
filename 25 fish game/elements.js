@@ -1,4 +1,4 @@
-import { addText, drawCircle} from "../common/common-functions.js";
+import { addText, drawCircle, fillRect} from "../common/common-functions.js";
 import { swimLeftImg , swimRightImg, swimRestLeftImg, swimRestRightImg, enemyImg} from "./page.js"
 
 class Player {
@@ -25,8 +25,8 @@ class Player {
 
         let moveDx = this.x - mouseMove.x;
         let moveDy = this.y - mouseMove.y;
-    
-        this.angle = Math.atan2(moveDy,moveDx) ;
+       
+        this.angle = Math.atan2(moveDy,moveDx);
 
         if(mouse.x !== this.x && !mouse.mouseDown){
             this.x -= dx/20;
@@ -35,8 +35,9 @@ class Player {
         if(mouse.y !== this.y && !mouse.mouseDown){
             this.y -= dy/20;
         }
-
-        this.y = this.y + Math.sin(this.incrVal);
+        if(!mouse.mouseDown){
+          this.y = this.y + Math.sin(this.incrVal);
+        }
 
         this.incrVal += 0.01;
         if(dx < 20 && dy < 20){
@@ -64,19 +65,25 @@ class Player {
     draw() {
         this.ctx.save();
         this.ctx.translate( this.x , this.y );
+        
         this.ctx.rotate(this.angle);
+        
+        // fillRect(this.ctx, 0 - this.width / 2, 0 - this.height / 2, this.width, this.height, "blue");
+        
         // drawCircle(this.ctx, 0, 0, this.size, this.color);
-        // drawCircle(this.ctx, 0 - 30, 0, this.size / 5, "blue");
 
         this.ctx.drawImage(this.playerImg, 
             this.frameX * this.spriteWidth, 
             this.frameY * this.spriteHeight, 
             this.spriteWidth, 
             this.spriteHeight, 
-            0 - this.width  , 
+            0 - this.width   , 
             0 - this.height , 
             this.width * 2, 
             this.height * 2)
+      
+      // this.ctx.drawImage(this.playerImg,0,0, this.spriteWidth, this.spriteHeight);
+      // this.ctx.drawImage(this.playerImg, 0, 0, 100, 100, 0, 0, 256, 256)
         this.ctx.restore();
     }
 }
