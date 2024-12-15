@@ -55,8 +55,11 @@ function init() {
             const green = scannedImage.data[(y * 4 * scannedImage.width) + (x * 4 + 1)]
             const blue = scannedImage.data[(y * 4 * scannedImage.width) + (x * 4 + 2)]
             const brightness = calculateRelativeBrightness(red, green, blue);
-           
-            row.push(brightness);
+           let cell = [
+            brightness,
+            `rgb(${red},${green},${blue})`
+           ]
+            row.push(cell);
         }
         mappedImage.push(row)
     }

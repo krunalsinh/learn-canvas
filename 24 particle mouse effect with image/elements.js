@@ -14,7 +14,8 @@ class Particle {
     }
     update() {
         if(mappedImage[Math.floor(this.y)][Math.floor(this.x)]){
-            this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)];
+            this.speed = mappedImage[Math.floor(this.y)][Math.floor(this.x)][0];
+            this.color = mappedImage[Math.floor(this.y)][Math.floor(this.x)][1];
         }
         this.x = this.x + Math.sin(this.incr) * this.velocity;
 
