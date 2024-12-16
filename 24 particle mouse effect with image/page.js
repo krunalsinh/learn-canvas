@@ -3,10 +3,11 @@ import { Particle } from "./elements.js";
 import imgData from "./image-data.js";
 
 const canvas = document.getElementById("canvas");
+const movementActionSelect = document.getElementById("particleMovementAction");
 const ctx = canvas.getContext('2d');
 
-let width = 714 / 1.5;
-let height = 952 / 1.5;
+let width = 1500 / 3;
+let height = 1500 / 3;
 
 canvas.width = width ;
 canvas.height = height ;
@@ -22,6 +23,7 @@ image.src = imgData;
 
 const particlesArr = [], particlesCounts = 3500;
 let cellBrightness = null, mappedImage = [];
+let movementAction = 1;
 
 
 // functions
@@ -84,7 +86,7 @@ function animate() {
 
     for (let i = 0; i < particlesArr.length; i++) {
         ctx.globalAlpha = particlesArr[i].speed * 0.3;
-        particlesArr[i].update();
+        particlesArr[i].update(movementAction);
     }
     requestAnimationFrame(animate)
 }
@@ -97,6 +99,12 @@ addEventListener("mousemove", e => {
 })
 
 image.addEventListener("load", init);
+
+movementActionSelect.addEventListener('change', e => {
+    console.log(movementActionSelect.value);
+    movementAction = Number(movementActionSelect.value)
+    
+})
 
 //export
 export { canvas , mappedImage}

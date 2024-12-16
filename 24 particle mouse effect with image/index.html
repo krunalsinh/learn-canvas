@@ -11,12 +11,25 @@
         position: absolute;
         inset: 0;
         margin: auto;
-        
       }
-      
+      .particle-movement-action{
+        position: fixed;
+        z-index: 1;
+        right: 20px;
+        top: 20px;
+        height: 30px;
+      }
     </style>
 </head>
 <body>
+    <select id="particleMovementAction" class="particle-movement-action">
+      <option value="" disabled selected>Select Movement Action</option>
+      <option value="1">Movement 1</option>
+      <option value="2">Movement 2</option>
+      <option value="3">Movement 3</option>
+      <option value="4">Movement 4</option>
+      <option value="5">Movement 5</option>
+    </select>
     <div class="wrapper">
         <canvas id="canvas"></canvas>
     </div>
