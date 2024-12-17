@@ -17,6 +17,16 @@ const mouse = {
     y: null,
     radius: 150
 }
+
+const gradient1 = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+gradient1.addColorStop(0.2, "pink");
+gradient1.addColorStop(0.3, "red");
+gradient1.addColorStop(0.4, "orange");
+gradient1.addColorStop(0.5, "yellow");
+gradient1.addColorStop(0.6, "green");
+gradient1.addColorStop(0.7, "turquoise");
+gradient1.addColorStop(0.8, "violet");
+
 // step1 (take image object to draw)
 let image = new Image();
 image.src = imgData;
@@ -24,7 +34,6 @@ image.src = imgData;
 const particlesArr = [], particlesCounts = 3500;
 let cellBrightness = null, mappedImage = [];
 let movementAction = 1;
-
 
 // functions
 function init() {
@@ -101,10 +110,10 @@ addEventListener("mousemove", e => {
 image.addEventListener("load", init);
 
 movementActionSelect.addEventListener('change', e => {
-    console.log(movementActionSelect.value);
+    ctx.globalCompositeOperation = "source-over";
     movementAction = Number(movementActionSelect.value)
     
 })
 
 //export
-export { canvas , mappedImage}
+export { canvas , mappedImage, gradient1}
