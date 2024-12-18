@@ -113,6 +113,10 @@ function getIntFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function getNumFromRange(min, max) {
+    return Math.random() * (max - min + 1) + min;
+}
+
 function drawSprite(ctx, img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
@@ -131,4 +135,4 @@ function handleBoxCollision(first, second){
              first.y + first.height < second.y);
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange, drawSprite, loadImage, handleBoxCollision };
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision };
