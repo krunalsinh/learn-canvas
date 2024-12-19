@@ -5,12 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Particle mouse effect with image</title>
     <link rel="stylesheet" href="../common/style.css" />
-   
+    <style>
+        .particle-movement-action{
+        position: fixed;
+        z-index: 1;
+        right: 20px;
+        top: 20px;
+        height: 30px;
+      }
+    </style>
 </head>
 <body>
     <div class="wrapper">
         <canvas id="canvas"></canvas>
     </div>
+    <select id="particleMovementAction" class="particle-movement-action">
+        <option value="" disabled selected>Select Movement Action</option>
+        <option value="1">Movement 1</option>
+        <option value="2">Movement 2</option>
+        <option value="3">Movement 3</option>
+        <option value="4">Movement 4</option>
+        <option value="5">Movement 5</option>
+        <option value="6">Movement 6</option>
+        <option value="7">Movement 7</option>
+        <option value="8">Movement 8</option>
+        <option value="9">Movement 9</option>
+        <option value="10">Movement 10</option>
+      </select>
     <script src="./page.js" type="module" defer></script>
 </body>
 </html>

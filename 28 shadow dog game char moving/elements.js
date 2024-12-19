@@ -1,62 +1,32 @@
 import { fillRect } from "../common/common-functions.js";
 import { canvas } from "./page.js";
 
-class Enemy{
-    constructor(ctx, x, y, width, height, img, imgFrameCount, dx, dy, type){
+//sprite width 6876, sprite height 5230
+// col 12, row 10
+//box width 6876/12 = 573, box height 6876/12 = 523, 
+class Player{
+    constructor(ctx, img){
         this.ctx = ctx;
-        this.baseX = x;
-        this.baseY = y;
-        this.x = x;
-        this.y = y;
         this.img = img;
-        this.width = width;
-        this.height = height;
-        this.randSizeRatio = Math.random() * 3 + 1;
-        this.calcWidth = this.width / this.randSizeRatio;
-        this.calcHeight = this.height / this.randSizeRatio;
+        this.width = 573;
+        this.height = 523;
+        this.calcWidth = this.width / 3;
+        this.calcHeight = this.height / 3;
         this.frameX = 0;
-        this.imgFrameCount = imgFrameCount;
-        this.dx = dx;
-        this.dy = dy;
-        this.type = type;
-        this.incr = 0;
+        this.frameY = 0;
+        this.imgFrameCount = 7;
+        this.setInitImageFrameCount();
+    }
+    setInitImageFrameCount(){
+        console.log(this.imgFrameCount);
+        
     }
     update(frameCount){
-
-        if(this.type === 1){
-            this.x += this.dx;
-            this.y += this.dy;
-    
-            
-            if(this.x - this.calcWidth / 2  < 0 || this.x + this.calcWidth / 2 > canvas.width){
-                this.dx = -this.dx;
-            }
-            
-            if(this.y - this.calcHeight / 2 < 0 || this.y + this.calcHeight / 2 > canvas.height){
-                this.dy = -this.dy;
-            }
-        }
         
-        if(this.type === 2){
-            this.x -= this.dx;
-
-            if(this.x + this.calcWidth / 2  < 0 ){
-                this.x = canvas.width + this.width;
-            }
-        }
-
-        if(this.type === 3){
-            this.x = this.baseX + (Math.sin(this.incr) * 300);
-            this.y = this.baseY + (Math.cos(this.incr) * 300);
-        }
-
-
         if(frameCount % 2 === 0){
             if(this.frameX >= this.imgFrameCount - 1) this.frameX = 0;
             else this.frameX++;
         }
-
-        this.incr += 0.1 / this.dx;
 
         this.draw();
     }
@@ -65,15 +35,15 @@ class Enemy{
         this.ctx.drawImage(
             this.img, 
             this.frameX * this.width, 
-            0, 
+            this.frameY * this.height,
             this.width, 
             this.height, 
-            this.x - this.calcWidth / 2, 
-            this.y - this.calcHeight / 2,
+            canvas.width / 2 - this.calcWidth / 2, 
+            canvas.height / 2 - this.calcHeight / 2,
             this.calcWidth, 
             this.calcHeight);
             // fillRect(this.ctx, this.x, this.y, 5, 5, "blue");
     }
 }
 
-export {Enemy}
+export {Player}
