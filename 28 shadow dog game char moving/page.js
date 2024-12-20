@@ -10,6 +10,33 @@ canvas.width = innerWidth;
 let player = null;
 let player1Img = null;
 let frameCount = 0;
+let staggerFrame = 5;
+let spriteWidth = 575, spriteHeight = 523;
+
+const spriteAnimations = [];
+const animationStates = [
+    {
+        name : "idle",
+        frames: 7
+    },
+    {
+        name : "jump",
+        frames: 7
+    }
+];
+animationStates.forEach((state,index) => {
+    let frames = {
+        loc : [],
+    }
+    for (let j = 0; j < state.frames; j++) {
+        let positionX = j * spriteWidth;
+        let positionY = index * spriteHeight;
+        frames.loc.push({x : positionX, y : positionY})
+    }
+    spriteAnimations[state.name] = frames;
+})
+
+
 
 await Promise.resolve(loadImage("./images/shadow_dog.png"))
     .then(image => {
@@ -27,7 +54,7 @@ function init() {
 
 function animate() {
     fillRect(ctx, 0, 0, innerWidth, innerHeight, "rgb(255,255,255)");
-    player.update(frameCount);
+    player.update(frameCount, staggerFrame);
 
     frameCount += 1;
     requestAnimationFrame(animate)
@@ -35,6 +62,10 @@ function animate() {
 
 function setPlayerFrameCount(actionType) {
     switch (actionType) {
+        case 0:
+            player.frameY = 0;
+            player.imgFrameCount = 7;
+            break;
         case 1:
             player.frameY = 1;
             player.imgFrameCount = 7;
@@ -45,19 +76,19 @@ function setPlayerFrameCount(actionType) {
             break;
         case 3:
             player.frameY = 3;
-            player.imgFrameCount = 7;
+            player.imgFrameCount = 9;
             break;
         case 4:
             player.frameY = 4;
-            player.imgFrameCount = 9;
+            player.imgFrameCount = 11;
             break;
         case 5:
             player.frameY = 5;
-            player.imgFrameCount = 11;
+            player.imgFrameCount = 5;
             break;
         case 6:
             player.frameY = 6;
-            player.imgFrameCount = 5;
+            player.imgFrameCount = 7;
             break;
         case 7:
             player.frameY = 7;
@@ -65,14 +96,10 @@ function setPlayerFrameCount(actionType) {
             break;
         case 8:
             player.frameY = 8;
-            player.imgFrameCount = 7;
+            player.imgFrameCount = 12;
             break;
         case 9:
             player.frameY = 9;
-            player.imgFrameCount = 12;
-            break;
-        case 10:
-            player.frameY = 10;
             player.imgFrameCount = 4;
             break;
         default:
