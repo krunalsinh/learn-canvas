@@ -102,8 +102,6 @@ function animate() {
     requestAnimationFrame(animate)
 }
 
-
-
 //event
 movementActionSelect.addEventListener('change', e => {
     console.log(movementActionSelect.value);

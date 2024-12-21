@@ -14,7 +14,6 @@ class Player{
         this.calcHeight = this.height / 3;
         this.frameX = 0;
         this.frameY = 0;
-        this.imgFrameCount = 7;
         this.action = action;
     }
     
