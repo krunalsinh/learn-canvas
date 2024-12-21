@@ -3,6 +3,7 @@ import { Player } from "./elements.js";
 
 const canvas = document.getElementById("canvas");
 const movementActionSelect = document.getElementById("particleMovementAction");
+const elNew = (tag, prop) => Object.assign(document.createElement(tag), prop);
 const ctx = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = innerWidth;
@@ -22,8 +23,41 @@ const animationStates = [
     {
         name : "jump",
         frames: 7
+    },
+    {
+        name : "fall",
+        frames: 7
+    },
+    {
+        name : "run",
+        frames: 7
+    },
+    {
+        name : "dizzy",
+        frames: 7
+    },
+    {
+        name : "sit",
+        frames: 7
+    },
+    {
+        name : "roll",
+        frames: 7
+    },
+    {
+        name : "bite",
+        frames: 7
+    },
+    {
+        name : "ko",
+        frames: 7
+    },
+    {
+        name : "getHit",
+        frames: 7
     }
 ];
+
 animationStates.forEach((state,index) => {
     let frames = {
         loc : [],
@@ -34,7 +68,15 @@ animationStates.forEach((state,index) => {
         frames.loc.push({x : positionX, y : positionY})
     }
     spriteAnimations[state.name] = frames;
+
+    const option = elNew("option", {
+        value: state.name,
+        innerHTML: state.name.toUpperCase()
+    });
+
+    movementActionSelect.append(option)
 })
+console.log(spriteAnimations);
 
 
 
@@ -47,71 +89,27 @@ init();
 
 // functions
 function init() {
-    player = new Player(ctx, player1Img);
+    player = new Player(ctx, player1Img, animationStates[0].name);
 
     animate();
 }
 
 function animate() {
-    fillRect(ctx, 0, 0, innerWidth, innerHeight, "rgb(255,255,255)");
-    player.update(frameCount, staggerFrame);
+    fillRect(ctx, 0, 0, innerWidth, innerHeight, "#666");
+    player.update(frameCount);
 
     frameCount += 1;
     requestAnimationFrame(animate)
 }
 
-function setPlayerFrameCount(actionType) {
-    switch (actionType) {
-        case 0:
-            player.frameY = 0;
-            player.imgFrameCount = 7;
-            break;
-        case 1:
-            player.frameY = 1;
-            player.imgFrameCount = 7;
-            break;
-        case 2:
-            player.frameY = 2;
-            player.imgFrameCount = 7;
-            break;
-        case 3:
-            player.frameY = 3;
-            player.imgFrameCount = 9;
-            break;
-        case 4:
-            player.frameY = 4;
-            player.imgFrameCount = 11;
-            break;
-        case 5:
-            player.frameY = 5;
-            player.imgFrameCount = 5;
-            break;
-        case 6:
-            player.frameY = 6;
-            player.imgFrameCount = 7;
-            break;
-        case 7:
-            player.frameY = 7;
-            player.imgFrameCount = 7;
-            break;
-        case 8:
-            player.frameY = 8;
-            player.imgFrameCount = 12;
-            break;
-        case 9:
-            player.frameY = 9;
-            player.imgFrameCount = 4;
-            break;
-        default:
-            player.frameY = 0;
-            player.imgFrameCount = 7;
-    }
-}
+
 
 //event
 movementActionSelect.addEventListener('change', e => {
-    setPlayerFrameCount(Number(movementActionSelect.value));
+    console.log(movementActionSelect.value);
+    
+    player.action = movementActionSelect.value;
 })
 
 //export
-export { canvas }
+export { canvas, spriteAnimations, staggerFrame}

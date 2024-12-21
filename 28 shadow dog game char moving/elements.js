@@ -1,11 +1,11 @@
 import { fillRect } from "../common/common-functions.js";
-import { canvas } from "./page.js";
+import { canvas, spriteAnimations, staggerFrame } from "./page.js";
 
 //sprite width 6876, sprite height 5230
 // col 12, row 10
 //box width 6876/12 = 573, box height 5230/10 = 523, 
 class Player{
-    constructor(ctx, img){
+    constructor(ctx, img, action){
         this.ctx = ctx;
         this.img = img;
         this.width = 575;
@@ -15,11 +15,15 @@ class Player{
         this.frameX = 0;
         this.frameY = 0;
         this.imgFrameCount = 7;
+        this.action = action;
     }
     
-    update(frameCount, staggerFrame){
-        let position = Math.floor(frameCount / staggerFrame ) % (this.imgFrameCount - 1);
+    update(frameCount){
+        // console.log(spriteAnimations[this.action]);
+        
+        let position = Math.floor(frameCount / staggerFrame ) % (spriteAnimations[this.action].loc.length - 1);
         this.frameX = this.width * position;
+        this.frameY = spriteAnimations[this.action].loc[position].y;
         this.draw();
     }
     draw(){
