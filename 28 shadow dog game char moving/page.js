@@ -30,15 +30,15 @@ const animationStates = [
     },
     {
         name : "run",
-        frames: 7
+        frames: 9
     },
     {
         name : "dizzy",
-        frames: 7
+        frames: 11
     },
     {
         name : "sit",
-        frames: 7
+        frames: 5
     },
     {
         name : "roll",
@@ -50,11 +50,11 @@ const animationStates = [
     },
     {
         name : "ko",
-        frames: 7
+        frames: 12
     },
     {
         name : "getHit",
-        frames: 7
+        frames: 4
     }
 ];
 

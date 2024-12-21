@@ -19,8 +19,6 @@ class Player{
     }
     
     update(frameCount){
-        // console.log(spriteAnimations[this.action]);
-        
         let position = Math.floor(frameCount / staggerFrame ) % (spriteAnimations[this.action].loc.length - 1);
         this.frameX = this.width * position;
         this.frameY = spriteAnimations[this.action].loc[position].y;
@@ -30,8 +28,8 @@ class Player{
         // fillRect(this.ctx, this.x - this.calcWidth / 2, this.y - this.calcHeight / 2, this.calcWidth, this.calcHeight, "red");
         this.ctx.drawImage(
             this.img, 
-            this.frameX , 
-            this.frameY * this.height,
+            this.frameX, 
+            this.frameY,
             this.width, 
             this.height, 
             canvas.width / 2 - this.calcWidth / 2, 
