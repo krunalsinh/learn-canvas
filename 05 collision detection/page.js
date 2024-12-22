@@ -1,4 +1,4 @@
-import { fillRect, drawTriangle, drawCircle, drawStar } from '../common/common-functions.js';
+import { fillRect, drawTriangle, drawCircle, drawStar, handleCircleCollision, getDistance } from '../common/common-functions.js';
 import { circle } from "./elements.js";
 
 const canvas = document.querySelector("#canvas");
@@ -30,7 +30,7 @@ function animationFunc() {
         }
 
         for (var i = 0; i < arr.length; i++) {
-            if (getDistance(arr[i].x, arr[i].y, e.x, e.y) < arr[i].radius + e.radius) {
+            if (handleCircleCollision(arr[i], e)) {
                 resolveCollision(e, arr[i]);
             }
         }
@@ -69,13 +69,6 @@ function generateBalls() {
         arr.push(new circle(ctx, randX, randY, radius, color));
     }
 }
-
-function getDistance(x1, y1, x2, y2) {
-    var xdist = x2 - x1;
-    var ydist = y2 - y1;
-    return Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist, 2));
-}
-
 
 window.addEventListener('mousemove', e => {
     mouse.x = e.clientX;

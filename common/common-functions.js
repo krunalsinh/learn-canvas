@@ -135,4 +135,8 @@ function handleBoxCollision(first, second){
              first.y + first.height < second.y);
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision };
+function handleCircleCollision(first, second) {
+    return !(getDistance(first.x, first.y, second.x, second.y) > first.radius + second.radius);
+}
+
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision, handleCircleCollision };
