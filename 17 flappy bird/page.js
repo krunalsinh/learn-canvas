@@ -34,8 +34,7 @@ function gameInit() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     background = {
-        x1: 0,
-        x2: canvas.width,
+        x: 0,
         y: 0,
         width: canvas.width,
         height: canvas.height
@@ -233,17 +232,14 @@ function handleBackground() {
 
     // ctx.drawImage(backgroundImg, background.x1, background.y, background.width, background.height);
     // ctx.drawImage(backgroundImg, background.x2 - 200, background.y, background.width + 200, background.height);
-    background.x1 -= gameSpeed;
-    ctx.drawImage(backgroundImg, background.x1, background.y, background.width, background.height);
-    if (background.x1 + background.width - gameSpeed < 0) {
-        background.x1 = background.width
+    if (background.x <= -background.width) {
+        background.x = 0
     }
+    background.x -= gameSpeed;
+    ctx.drawImage(backgroundImg, background.x, background.y, background.width, background.height);
 
-    background.x2 -= gameSpeed;
-    ctx.drawImage(backgroundImg, background.x2, background.y, background.width, background.height);
-    if (background.x2 + background.width - gameSpeed < 0) {
-        background.x2 = background.width
-    }
+    ctx.drawImage(backgroundImg, background.x + background.width, background.y, background.width, background.height);
+ 
 
 }
 
