@@ -128,6 +128,12 @@ async function loadImage(src) {
     return img;
 };
 
+async function loadAudio(src) {
+    const audio = new Audio();
+    audio.src = src;
+    return audio;
+};
+
 function handleBoxCollision(first, second){
     return !(first.x > second.x + second.width ||
              first.x + first.width < second.x ||
@@ -139,4 +145,4 @@ function handleCircleCollision(first, second) {
     return !(getDistance(first.x, first.y, second.x, second.y) > first.radius + second.radius);
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision, handleCircleCollision };
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision, handleCircleCollision, loadAudio };
