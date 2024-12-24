@@ -1,4 +1,4 @@
-import { addText, fillRect } from "../common/common-functions.js";
+import { addText, drawCircle, drawLine, fillRect } from "../common/common-functions.js";
 import { canvas } from "./page.js";
 
 
@@ -37,17 +37,18 @@ class Raven{
             this.dy = -this.dy;
         }
         this.timeSinceFlap += deltaTime;
-        if(this.timeSinceFlap > this.flapInterval){
-           this.timeSinceFlap = 0;
-            if(this.frameX > this.maxFrameX) this.frameX = 0;
-            else this.frameX++;
-        }
-
+        // if(this.timeSinceFlap > this.flapInterval){
+        //    this.timeSinceFlap = 0;
+        //     if(this.frameX > this.maxFrameX) this.frameX = 0;
+        //     else this.frameX++;
+        // }
+        let position = Math.floor(this.timeSinceFlap / (Math.floor(deltaTime) * 5)) % this.maxFrameX;
+        this.frameX = this.spriteWidth * position;
         this.draw();
     }
     draw(){
         fillRect(this.ctx2, this.x, this.y, this.width, this.height, this.color);
-        this.ctx.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        this.ctx.drawImage(this.image, this.frameX , 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
 }
 
@@ -109,4 +110,26 @@ class Explosion{
     }
 }
 
-export {Raven, Score, Explosion}
+class Pointer {
+    constructor(ctx, x, y){
+        this.ctx = ctx;
+        this.x = canvas.width / 2;
+        this.y =  canvas.height / 2;
+        this.radius = 30;
+        this.color =  "red";
+
+    }
+    update(mouse = {x: canvas.width / 2, y : canvas.height / 2}){
+        this.x = mouse.x;
+        this.y = mouse.y;
+        this.draw();
+    }
+    draw(){
+        drawLine(this.ctx, this.x - this.radius, this.y, this.x + this.radius, this.y, 2, this.color);
+        drawLine(this.ctx, this.x , this.y - this.radius, this.x , this.y + this.radius, 2, this.color);
+        drawCircle(this.ctx, this.x, this.y, this.radius / 2, this.color, true, 2)
+        drawCircle(this.ctx, this.x, this.y, this.radius, this.color, true, 2)
+    }
+}
+
+export {Raven, Score, Explosion, Pointer}

@@ -1,5 +1,5 @@
 import { loadImage, loadAudio, fillRect, addText } from "../common/common-functions.js";
-import { Raven, Score, Explosion } from "./elements.js";
+import { Raven, Score, Explosion, Pointer} from "./elements.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -17,6 +17,7 @@ let ravens = [], timeToNextRaven = 0, ravenInterval = 500, ravenX = canvas.width
 let score = null;
 let explosions = [];
 let gameOver = false;
+let pointer = null, mouse = {x : canvas.width / 2, y : canvas.height / 2};
 
 
 await Promise.resolve(loadImage("./images/raven.png"))
@@ -41,6 +42,7 @@ init();
 // functions
 function init() {
     score = new Score(ctx, 0, 50, 75);
+    pointer = new Pointer(ctx, canvas.width / 2, canvas.height / 2);
     animate(0);
 }
 
@@ -79,6 +81,8 @@ function animate(timestamp) {
     explosions = explosions.filter(explosion => !explosion.markedForDeletion);
 
     score.draw();
+
+    pointer.update(mouse);
     
 
     if(!gameOver){
@@ -106,8 +110,13 @@ addEventListener('click', e => {
             explosions.push(new Explosion(ctx, boomImg, boomSound, 200, 179, raven.x, raven.y, raven.width, raven.height))
         }
     })
-    
-    
+})
+
+addEventListener('mousemove', e => {
+    if(!gameOver){
+        mouse.x = e.x;
+        mouse.y = e.y;
+    }
 })
 
 //export
