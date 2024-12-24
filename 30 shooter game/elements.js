@@ -48,7 +48,7 @@ class Raven{
         this.draw();
     }
     draw(){
-        if(this.ravenKing) fillRect(this.ctx, this.x, this.y, this.width, this.height, this.color);
+        // if(this.ravenKing) fillRect(this.ctx, this.x, this.y, this.width, this.height, this.color);
         fillRect(this.ctx2, this.x, this.y, this.width, this.height, this.color);
         this.ctx.drawImage(this.image, this.frameX , 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
@@ -134,4 +134,33 @@ class Pointer {
     }
 }
 
-export {Raven, Score, Explosion, Pointer}
+class Particle{
+    constructor(ctx, x, y, size, dx, dy, redSize, color){
+        this.ctx = ctx;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.color = color;
+        this.dy = dy;
+        this.dx = dx;
+        this.redSize = redSize;
+        this.markedForDeletion = false;
+    }
+    update(){
+        this.x += this.dx;
+        this.y += this.dy;
+        this.size -= this.redSize;
+
+        if(this.size < 0.5){
+            this.markedForDeletion = true;
+        }
+
+        this.draw();
+    }
+    draw(){
+        drawCircle(this.ctx, this.x, this.y, this.size, this.color);
+    }
+}
+
+
+export {Raven, Score, Explosion, Pointer, Particle}

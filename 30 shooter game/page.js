@@ -1,5 +1,5 @@
 import { loadImage, loadAudio, fillRect, addText } from "../common/common-functions.js";
-import { Raven, Score, Explosion, Pointer} from "./elements.js";
+import { Raven, Score, Explosion, Pointer, Particle} from "./elements.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -12,10 +12,10 @@ collisionCanvas.width = innerWidth;
 collisionCanvas.height = innerHeight;
 
 let lastTime = 0;
-let ravenImg = null, boomImg = null, boomSound = null;
+let ravenImg = null, ravenKingImg = null, boomImg = null, boomSound = null;
 let ravens = [], timeToNextRaven = 0, timeToNextKingRaven = 0, ravenInterval = 500, ravenX = canvas.width, ravenSpriteWidth = 271, ravenSpriteHeight = 194;
 let score = null;
-let explosions = [];
+let explosions = [], particles = [];
 let gameOver = false;
 let pointer = null, mouse = {x : canvas.width / 2, y : canvas.height / 2};
 
@@ -23,6 +23,11 @@ let pointer = null, mouse = {x : canvas.width / 2, y : canvas.height / 2};
 await Promise.resolve(loadImage("./images/raven.png"))
 .then(image => {
     ravenImg = image;
+});
+
+await Promise.resolve(loadImage("./images/ravenKing.png"))
+.then(image => {
+    ravenKingImg = image;
 });
 
 await Promise.resolve(loadImage("./images/boom.png"))
@@ -34,6 +39,7 @@ await Promise.resolve(loadAudio("./sounds/hit-sound.mp3"))
 .then(sound => {
     boomSound = sound;
 });
+
 
 
 
@@ -70,15 +76,24 @@ function animate(timestamp) {
        
     }
     
-    [...ravens, ...explosions].forEach(object => {
+    [...ravens, ...explosions, ...particles].forEach(object => {
         object.update(deltaTime);
 
         if(object.x < 0 - object.width){
             gameOver = true
         }
+
+        if(object.ravenKing){
+            let randSize = Math.random() * 10 + 5;
+            let ravenDX = Math.random() * 0.8 + 0.2;
+            let ravenDY = Math.random() * 0.8 + 0.2;
+            let redSize = 0.2
+            particles.push(new Particle(ctx, object.x + object.width, object.y + object.height / 2, randSize, ravenDX, ravenDY, redSize, "red" ))
+        }
     });
     ravens = ravens.filter(raven => !raven.markedForDeletion);
     explosions = explosions.filter(explosion => !explosion.markedForDeletion);
+    particles = particles.filter(particle =>  !particle.markedForDeletion)
 
     score.draw();
 
@@ -93,11 +108,11 @@ function animate(timestamp) {
 }
 
 function handleAddRaven(kingRaven = false){
-    let ravenDX = Math.random() * 5 + 3;
-        let ravenDY = kingRaven ? Math.random() * 50 - 30: Math.random() * 5 - 2.5;
+        let ravenDX = Math.random() * 5 + 3;
+        let ravenDY = kingRaven ? Math.random() * 10 + 6: Math.random() * 5 - 2.5;
         let ravenY = Math.random() * (canvas.height - (ravenSpriteHeight / 2));
         
-        ravens.push(new Raven(ctx, collisionCtx, ravenImg, ravenSpriteWidth, ravenSpriteHeight, ravenX, ravenY, ravenDX, ravenDY, kingRaven));
+        ravens.push(new Raven(ctx, collisionCtx, kingRaven ? ravenKingImg : ravenImg, ravenSpriteWidth, ravenSpriteHeight, ravenX, ravenY, ravenDX, ravenDY, kingRaven));
 
         ravens.sort((a,b) => {
             return a.width - b.width;
@@ -124,10 +139,13 @@ addEventListener('click', e => {
         }
     })
     if(isKingHilted){
-        ravens.forEach(raven => {
-            raven.markedForDeletion = true;
-            score.increaseScore();
-            explosions.push(new Explosion(ctx, boomImg, boomSound, 200, 179, raven.x, raven.y, raven.width, raven.height))
+        ravens.forEach( (raven,index) => {
+            setTimeout(() => {
+
+                raven.markedForDeletion = true;
+                score.increaseScore();
+                explosions.push(new Explosion(ctx, boomImg, boomSound, 200, 179, raven.x, raven.y, raven.width, raven.height))
+            }, index * 100)
         })
     }
     isKingHilted = false;
