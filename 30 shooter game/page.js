@@ -94,7 +94,7 @@ function animate(timestamp) {
 
 function handleAddRaven(kingRaven = false){
     let ravenDX = Math.random() * 5 + 3;
-        let ravenDY = Math.random() * 5 - 2.5;
+        let ravenDY = kingRaven ? Math.random() * 50 - 30: Math.random() * 5 - 2.5;
         let ravenY = Math.random() * (canvas.height - (ravenSpriteHeight / 2));
         
         ravens.push(new Raven(ctx, collisionCtx, ravenImg, ravenSpriteWidth, ravenSpriteHeight, ravenX, ravenY, ravenDX, ravenDY, kingRaven));
