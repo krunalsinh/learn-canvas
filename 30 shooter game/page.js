@@ -13,7 +13,7 @@ collisionCanvas.height = innerHeight;
 
 let lastTime = 0;
 let ravenImg = null, boomImg = null, boomSound = null;
-let ravens = [], timeToNextRaven = 0, ravenInterval = 500, ravenX = canvas.width, ravenSpriteWidth = 271, ravenSpriteHeight = 194;
+let ravens = [], timeToNextRaven = 0, timeToNextKingRaven = 0, ravenInterval = 500, ravenX = canvas.width, ravenSpriteWidth = 271, ravenSpriteHeight = 194;
 let score = null;
 let explosions = [];
 let gameOver = false;
@@ -54,20 +54,20 @@ function animate(timestamp) {
     lastTime = timestamp;
 
     timeToNextRaven += deltaTime;
+    timeToNextKingRaven += deltaTime;
 
     if(timeToNextRaven > ravenInterval){
-       
-        let ravenDX = Math.random() * 5 + 3;
-        let ravenDY = Math.random() * 5 - 2.5;
-        let ravenY = Math.random() * (canvas.height - (ravenSpriteHeight / 2));
+        handleAddRaven();
         
-        ravens.push(new Raven(ctx, collisionCtx, ravenImg, ravenSpriteWidth, ravenSpriteHeight, ravenX, ravenY, ravenDX, ravenDY));
-
         timeToNextRaven = 0;
 
-        ravens.sort((a,b) => {
-            return a.width - b.width;
-        })
+    }
+    if(timeToNextKingRaven > ravenInterval * 10){
+       
+        handleAddRaven(true);
+        timeToNextKingRaven = 0;
+
+       
     }
     
     [...ravens, ...explosions].forEach(object => {
@@ -92,6 +92,18 @@ function animate(timestamp) {
     }
 }
 
+function handleAddRaven(kingRaven = false){
+    let ravenDX = Math.random() * 5 + 3;
+        let ravenDY = Math.random() * 5 - 2.5;
+        let ravenY = Math.random() * (canvas.height - (ravenSpriteHeight / 2));
+        
+        ravens.push(new Raven(ctx, collisionCtx, ravenImg, ravenSpriteWidth, ravenSpriteHeight, ravenX, ravenY, ravenDX, ravenDY, kingRaven));
+
+        ravens.sort((a,b) => {
+            return a.width - b.width;
+        })
+}
+
 function drawGameover() {
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     addText(ctx, canvas.width / 2, canvas.height / 2, "50", "Roboto", "#000", `Game Over, Your Score : ${score.score}`, "center");
@@ -102,14 +114,24 @@ function drawGameover() {
 addEventListener('click', e => {
     const detectPixelColor = collisionCtx.getImageData(e.x, e.y, 1, 1);
     const colorData = detectPixelColor.data;
-    
+    let isKingHilted = false;
     ravens.forEach(raven => {
         if(raven.randomColor[0] === colorData[0] && raven.randomColor[1] === colorData[1] && raven.randomColor[2] === colorData[2]){
+            if(raven.ravenKing) isKingHilted = true;
             raven.markedForDeletion = true;
             score.increaseScore();
             explosions.push(new Explosion(ctx, boomImg, boomSound, 200, 179, raven.x, raven.y, raven.width, raven.height))
         }
     })
+    if(isKingHilted){
+        ravens.forEach(raven => {
+            raven.markedForDeletion = true;
+            score.increaseScore();
+            explosions.push(new Explosion(ctx, boomImg, boomSound, 200, 179, raven.x, raven.y, raven.width, raven.height))
+        })
+    }
+    isKingHilted = false;
+
 })
 
 addEventListener('mousemove', e => {

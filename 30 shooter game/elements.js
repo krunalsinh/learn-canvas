@@ -3,7 +3,7 @@ import { canvas } from "./page.js";
 
 
 class Raven{
-    constructor(ctx, ctx2, image, spriteWidth, spriteHeight, x, y, dx, dy){
+    constructor(ctx, ctx2, image, spriteWidth, spriteHeight, x, y, dx, dy, ravenKing = false){
         this.ctx = ctx;
         this.ctx2 = ctx2;
         this.image = image;
@@ -24,6 +24,7 @@ class Raven{
         this.flapInterval = Math.random() * 50 + 50;
         this.randomColor = [Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255)]
         this.color = `rgb(${this.randomColor[0]}, ${this.randomColor[1]}, ${this.randomColor[2]})`;
+        this.ravenKing = ravenKing;
     }
 
     update(deltaTime){
@@ -47,6 +48,7 @@ class Raven{
         this.draw();
     }
     draw(){
+        if(this.ravenKing) fillRect(this.ctx, this.x, this.y, this.width, this.height, this.color);
         fillRect(this.ctx2, this.x, this.y, this.width, this.height, this.color);
         this.ctx.drawImage(this.image, this.frameX , 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
