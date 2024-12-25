@@ -9,7 +9,7 @@ let game = null;
 
 //functions
 function init() {
-    game = new Game();
+    game = new Game(ctx, canvas.width, canvas.height);
     animate(0);
 }
 function animate(timeStamp){
@@ -17,7 +17,8 @@ function animate(timeStamp){
     let deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
     
-    game.update();
+    game.update(deltaTime);
+    game.draw();
 
     requestAnimationFrame(animate);
 }
