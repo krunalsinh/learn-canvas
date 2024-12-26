@@ -38,19 +38,18 @@ class Raven{
             this.dy = -this.dy;
         }
         this.timeSinceFlap += deltaTime;
-        // if(this.timeSinceFlap > this.flapInterval){
-        //    this.timeSinceFlap = 0;
-        //     if(this.frameX > this.maxFrameX) this.frameX = 0;
-        //     else this.frameX++;
-        // }
-        let position = Math.floor(this.timeSinceFlap / (Math.floor(deltaTime) * 5)) % this.maxFrameX;
-        this.frameX = this.spriteWidth * position;
+        
+        if(this.timeSinceFlap > this.flapInterval){
+           this.timeSinceFlap = 0;
+            if(this.frameX > this.maxFrameX) this.frameX = 0;
+            else this.frameX++;
+        }
         this.draw();
     }
     draw(){
         // if(this.ravenKing) fillRect(this.ctx, this.x, this.y, this.width, this.height, this.color);
         fillRect(this.ctx2, this.x, this.y, this.width, this.height, this.color);
-        this.ctx.drawImage(this.image, this.frameX , 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        this.ctx.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
 }
 
