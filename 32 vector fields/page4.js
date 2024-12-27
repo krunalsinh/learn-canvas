@@ -6,14 +6,15 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 let lastTime = 0;
 let timer = 0;
-let interval = 1000/60;
-let cellSize = 25;
+let interval = 1000 / 60;
+let cellSize = 15;
 let distC = getDistance(0, 0, cellSize / 2, cellSize / 2);
 const mouse = {
-    x : 0,
+    x: 0,
     y: 0
 }
 let frameCounter = 0;
+let frameCounterIncr = 0.00001;
 const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
 gradient.addColorStop("0.1", "#ff5c33");
 gradient.addColorStop("0.2", "#ff66b3");
@@ -28,21 +29,30 @@ function animate(timestamp) {
     let deltaTime = timestamp - lastTime;
     lastTime = timestamp;
 
-    if(timer > interval){
+    if (timer > interval) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         for (let y = 0; y < canvas.height; y += cellSize) {
             for (let x = 0; x < canvas.width; x += cellSize) {
 
-            const mouseAngle = Math.atan2(mouse.y - y, mouse.x - x);
-            //  drawLine(ctx, x, y, x + Math.sin(frameCounter) * cellSize , y + Math.cos(frameCounter) * cellSize, 1, "#fff");
-             drawLine(ctx, x, y, x + Math.cos(mouseAngle) * cellSize , y + Math.sin(mouseAngle) * cellSize, 1, gradient);
+                const angle = (Math.cos(x * frameCounter) + Math.sin(y * frameCounter)) * cellSize;
+                drawLine(ctx,
+                    x,
+                    y,
+                    x + Math.cos(angle) * Math.max(Math.min((cellSize * angle), cellSize), cellSize / 2),
+                    y + Math.sin(angle) * Math.max(Math.min((cellSize * angle), cellSize), cellSize / 2),
+                    1,
+                    gradient);
             }
         }
-    }else{
-        timer += deltaTime; 
+        frameCounter += frameCounterIncr;
+
+        if (frameCounter > 0.01 || frameCounter < -0.001) frameCounterIncr = -frameCounterIncr;
+        console.log(frameCounter);
+    } else {
+        timer += deltaTime;
     }
-    frameCounter += 0.01;
+
     requestAnimationFrame(animate);
 }
 

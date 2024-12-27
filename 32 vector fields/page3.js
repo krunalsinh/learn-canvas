@@ -35,8 +35,9 @@ function animate(timestamp) {
             for (let x = 0; x < canvas.width; x += cellSize) {
 
             const mouseAngle = Math.atan2(mouse.y - y, mouse.x - x);
-            //  drawLine(ctx, x, y, x + Math.sin(frameCounter) * cellSize , y + Math.cos(frameCounter) * cellSize, 1, "#fff");
-             drawLine(ctx, x, y, x + Math.cos(mouseAngle) * cellSize , y + Math.sin(mouseAngle) * cellSize, 1, gradient);
+            const disTance = getDistance(mouse.x, mouse.y, x, y);
+            const size = cellSize / Math.max(Math.min(cellSize * (cellSize / disTance), cellSize / 2), 1);
+             drawLine(ctx, x, y, x + Math.cos(mouseAngle) * size , y + Math.sin(mouseAngle) * size, 1, gradient);
             }
         }
     }else{
