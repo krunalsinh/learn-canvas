@@ -1,10 +1,9 @@
-import { states, StandingLeft, StandingRight, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight } from "./state.js";
-
-export default class Player {
-    
-    constructor(gameWidth, gameHeight){
+class Player {
+    constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
+
+        // Define player states
         this.states = [
             new StandingLeft(this), 
             new StandingRight(this), 
@@ -17,24 +16,40 @@ export default class Player {
             new FallingLeft(this),
             new FallingRight(this)
         ];
-        this.currentState = this.states[1];
+
+        // Set initial state
+        this.currentState = this.states[states.STANDING_RIGHT];
+
+        // Load player image
         this.image = document.getElementById("dogImage");
+        if (!this.image) {
+            throw new Error("Image element with id 'dogImage' not found");
+        }
+
+        // Player dimensions
         this.width = 200;
         this.height = 181.83;
+
+        // Initial position
         this.x = this.gameWidth / 2 - this.width / 2;
         this.y = this.gameHeight - this.height;
+
+        // Animation properties
         this.frameX = 0;
         this.frameY = 0;
+        this.maxFrame = 6;
+        this.animationInterval = 1000 / 30;
+        this.timer = 0;
+
+        // Movement properties
         this.speed = 0;
         this.maxSpeed = 15;
         this.vy = 0;
         this.weight = 1;
-        this.maxFrame = 6;
-        this.animationInterval = 1000/30;
-        this.timer = 0;
     }
 
-    draw(ctx){
+    // Draw player on canvas
+    draw(ctx) {
         ctx.drawImage(
             this.image, 
             this.frameX * this.width, 
@@ -45,40 +60,12 @@ export default class Player {
             this.y, 
             this.width, 
             this.height
-        )
+        );
     }
-    update(input, deltaTime){
+
+    // Update player state
+    update(input, deltaTime) {
         this.currentState.handleInput(input);
-        this.x += this.speed;
-
-        if(this.x < 0) this.x = 0;
-        else if(this.x + this.width > this.gameWidth) this.x = this.gameWidth - this.width;
-
-        this.y += this.vy;
-        if(!this.onGround()) {
-            this.vy += this.weight;
-        }else{
-            this.vy = 0;
-        }
-
-        if(this.y + this.height > this.gameHeight) this.y = this.gameHeight - this.height;
-        if(this.timer > this.animationInterval){
-
-            if(this.frameX < this.maxFrame) this.frameX++;
-            else this.frameX = 0;
-
-            this.timer = 0;
-        }else{
-
-            this.timer += deltaTime;
-        }
-
-    }
-    setState(state){
-        this.currentState = this.states[state];
-        this.currentState.enter();
-    }
-    onGround(){
-        return this.y >= this.gameHeight - this.height;
+        // Additional update logic here
     }
 }
