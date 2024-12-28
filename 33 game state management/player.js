@@ -1,10 +1,23 @@
+import { states, StandingLeft, StandingRight, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight } from "./state.js";
+
 export default class Player {
     
     constructor(gameWidth, gameHeight){
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
-        this.states = [];
-        this.currentState = this.states[0];
+        this.states = [
+            new StandingLeft(this), 
+            new StandingRight(this), 
+            new SittingLeft(this), 
+            new SittingRight(this),
+            new RunningLeft(this),
+            new RunningRight(this),
+            new JumpingLeft(this),
+            new JumpingRight(this),
+            new FallingLeft(this),
+            new FallingRight(this)
+        ];
+        this.currentState = this.states[1];
         this.image = document.getElementById("dogImage");
         this.width = 200;
         this.height = 181.83;
@@ -12,6 +25,13 @@ export default class Player {
         this.y = this.gameHeight - this.height;
         this.frameX = 0;
         this.frameY = 0;
+        this.speed = 0;
+        this.maxSpeed = 15;
+        this.vy = 0;
+        this.weight = 1;
+        this.maxFrame = 6;
+        this.animationInterval = 1000/30;
+        this.timer = 0;
     }
 
     draw(ctx){
@@ -26,10 +46,39 @@ export default class Player {
             this.width, 
             this.height
         )
-        // ctx.drawImage(
-        //     this.image, 
-        //     this.x,
-        //     this.y
-        // )
+    }
+    update(input, deltaTime){
+        this.currentState.handleInput(input);
+        this.x += this.speed;
+
+        if(this.x < 0) this.x = 0;
+        else if(this.x + this.width > this.gameWidth) this.x = this.gameWidth - this.width;
+
+        this.y += this.vy;
+        if(!this.onGround()) {
+            this.vy += this.weight;
+        }else{
+            this.vy = 0;
+        }
+
+        if(this.y + this.height > this.gameHeight) this.y = this.gameHeight - this.height;
+        if(this.timer > this.animationInterval){
+
+            if(this.frameX < this.maxFrame) this.frameX++;
+            else this.frameX = 0;
+
+            this.timer = 0;
+        }else{
+
+            this.timer += deltaTime;
+        }
+
+    }
+    setState(state){
+        this.currentState = this.states[state];
+        this.currentState.enter();
+    }
+    onGround(){
+        return this.y >= this.gameHeight - this.height;
     }
 }
