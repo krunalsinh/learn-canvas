@@ -1,4 +1,5 @@
-class Player {
+import { states, StandingLeft, StandingRight, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight } from "./state.js";
+export default class Player {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
@@ -65,7 +66,40 @@ class Player {
 
     // Update player state
     update(input, deltaTime) {
+        
         this.currentState.handleInput(input);
         // Additional update logic here
+        this.x += this.speed;
+
+        if(this.x < 0) this.x = 0;
+        else if(this.x + this.width > this.gameWidth) this.x = this.gameWidth - this.width;
+
+        this.y += this.vy;
+        if(!this.onGround()) {
+            this.vy += this.weight;
+        }else{
+            this.vy = 0;
+        }
+
+        if(this.y + this.height > this.gameHeight) this.y = this.gameHeight - this.height;
+        if(this.timer > this.animationInterval){
+
+            if(this.frameX < this.maxFrame) this.frameX++;
+            else this.frameX = 0;
+
+            this.timer = 0;
+        }else{
+
+            this.timer += deltaTime;
+        }
+
+    }
+    setState(state){
+        this.currentState = this.states[state];
+        this.currentState.enter();
+    }
+    onGround(){
+        return this.y >= this.gameHeight - this.height;
+
     }
 }
