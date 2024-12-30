@@ -1,4 +1,4 @@
-import { states, StandingLeft, StandingRight, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight } from "./state.js";
+import { states, StandingLeft, StandingRight, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight } from "./state.js";
 export default class Player {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
@@ -15,7 +15,9 @@ export default class Player {
             new JumpingLeft(this),
             new JumpingRight(this),
             new FallingLeft(this),
-            new FallingRight(this)
+            new FallingRight(this),
+            new RollingLeft(this),
+            new RollingRight(this)
         ];
 
         // Set initial state

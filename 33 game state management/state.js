@@ -8,7 +8,9 @@ export const states = {
     JUMPING_LEFT: 6,
     JUMPING_RIGHT: 7,
     FALLING_LEFT: 8,
-    FALLING_RIGHT: 9
+    FALLING_RIGHT: 9,
+    ROLLING_LEFT: 10,
+    ROLLING_RIGHT: 11,
 
 }
 
@@ -29,8 +31,9 @@ export class StandingLeft extends State{
         this.player.maxFrame = 6;
     }
     handleInput(input){
-        
-        if(input === "PRESS RIGHT") this.player.setState(states.RUNNING_RIGHT);
+        if(input === "PRESS ROLLING LEFT")this.player.setState(states.ROLLING_LEFT);
+        else if(input === "PRESS ROLLING RIGHT")this.player.setState(states.ROLLING_RIGHT);
+        else if(input === "PRESS RIGHT") this.player.setState(states.RUNNING_RIGHT);
         else if(input === "PRESS LEFT") this.player.setState(states.RUNNING_LEFT);
         else if(input === "PRESS DOWN") this.player.setState(states.SITTING_LEFT);
         else if(input === "PRESS UP") this.player.setState(states.JUMPING_LEFT);
@@ -48,7 +51,9 @@ export class StandingRight extends State{
         this.player.maxFrame = 6;
     }
     handleInput(input){
-        if(input === "PRESS LEFT")this.player.setState(states.RUNNING_LEFT);
+        if(input === "PRESS ROLLING LEFT")this.player.setState(states.ROLLING_LEFT);
+        else if(input === "PRESS ROLLING RIGHT")this.player.setState(states.ROLLING_RIGHT);
+        else if(input === "PRESS LEFT")this.player.setState(states.RUNNING_LEFT);
         else if(input === "PRESS RIGHT") this.player.setState(states.RUNNING_RIGHT);
         else if(input === "PRESS DOWN") this.player.setState(states.SITTING_RIGHT);
         else if(input === "PRESS UP") this.player.setState(states.JUMPING_RIGHT);
@@ -183,6 +188,7 @@ export class FallingRight extends State{
     enter(){
         this.player.frameY = 4;
         this.player.maxFrame = 6;
+        this.player.speed = this.player.maxSpeed;
     }
     handleInput(input){
         if(input === "PRESS LEFT")this.player.setState(states.FALLING_LEFT);
@@ -190,3 +196,37 @@ export class FallingRight extends State{
     }
 }
 
+export class RollingLeft extends State{
+    constructor(player){
+        super("ROLLING LEFT");
+        this.player = player;
+    }
+    enter(){
+        this.player.frameY = 11;
+        this.player.maxFrame = 6;
+        this.player.speed = -this.player.maxSpeed * 2;
+    }
+    handleInput(input){
+        if(input === "PRESS RIGHT ROLLING")this.player.setState(states.ROLLING_RIGHT);
+        else if(input === "RELEASE LEFT")this.player.setState(states.STANDING_LEFT);
+        else if(input === "RELEASE RIGHT")this.player.setState(states.STANDING_RIGHT);
+    }
+}
+
+
+export class RollingRight extends State{
+    constructor(player){
+        super("ROLLING RIGHT");
+        this.player = player;
+    }
+    enter(){
+        this.player.frameY = 10;
+        this.player.maxFrame = 6;
+        this.player.speed = this.player.maxSpeed * 2;
+    }
+    handleInput(input){
+        if(input === "PRESS LEFT ROLLING")this.player.setState(states.ROLLING_LEFT);
+        else if(input === "RELEASE LEFT")this.player.setState(states.STANDING_LEFT);
+        else if(input === "RELEASE RIGHT")this.player.setState(states.STANDING_RIGHT);
+    }
+}

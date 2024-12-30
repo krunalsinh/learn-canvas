@@ -10,8 +10,9 @@ window.addEventListener('load', function() {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
     const ctx = canvas.getContext('2d');
+    let canvasAnimation;
 
-    const player = new Player(canvas.width, canvas.height);
+    let player = new Player(canvas.width, canvas.height);
     const input = new InputHandler();
     let lastTime = 0;
 
@@ -31,9 +32,19 @@ window.addEventListener('load', function() {
         drawStatusText(ctx, input, player);
 
         // Request next animation frame
-        requestAnimationFrame(animate);
+        canvasAnimation = requestAnimationFrame(animate);
     }
 
     // Start the animation loop
     animate(0);
+
+    window.addEventListener('resize', function() {
+        console.log("eve");
+        
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        player = new Player(canvas.width, canvas.height);
+        cancelAnimationFrame(canvasAnimation);
+        animate(0);
+    })
 });
