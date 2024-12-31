@@ -1,7 +1,7 @@
 import Player from "./player.js";
 import InputHandler from "./input.js";
 import { drawStatusText } from "./utils.js";
-import Background from "./Background.js";
+import Background from "./background.js";
 
 window.addEventListener('load', function() {
     const loading = document.getElementById('loading');
@@ -39,7 +39,7 @@ window.addEventListener('load', function() {
 
 
         // Draw status text
-        // drawStatusText(ctx, input, player);
+        drawStatusText(ctx, input, player);
 
         // Request next animation frame
         canvasAnimation = requestAnimationFrame(animate);

@@ -15,9 +15,9 @@ export default class InputHandler{
             else if (e.key === "ArrowRight"){
                 this.lastKey = "PRESS RIGHT";
             }
-            else if (e.key === "ArrowDown"){
-                this.lastKey = "PRESS DOWN";
-            }
+            // else if (e.key === "ArrowDown"){
+            //     this.lastKey = "PRESS DOWN";
+            // }
             else if (e.key === "ArrowUp"){
                 this.lastKey = "PRESS UP";
             }
@@ -31,9 +31,9 @@ export default class InputHandler{
             else if (e.key === "ArrowRight"){
                 this.lastKey = "RELEASE RIGHT";
             }
-            else if (e.key === "ArrowDown"){
-                this.lastKey = "RELEASE DOWN";
-            }
+            // else if (e.key === "ArrowDown"){
+            //     this.lastKey = "RELEASE DOWN";
+            // }
             else if (e.key === "ArrowUp"){
                 this.lastKey = "RELEASE UP";
             }

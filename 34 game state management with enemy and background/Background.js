@@ -5,27 +5,27 @@ export default class Background{
         this.x = 0;
         this.y = 0;
         this.image = document.getElementById("backgroundImg");
-        this.orignalWidth = 2400;
-        this.orignalHeight = 720;
-        this.aspectRatio = this.orignalWidth / this.orignalHeight;
+        this.originalWidth = 2400;
+        this.originalHeight = 720;
+        this.aspectRatio = this.originalWidth / this.originalHeight;
         this.newHeight = this.gameHeight;
-        this.newWidth = this.gameWidth * this.aspectRatio;
+        this.newWidth = this.gameHeight * this.aspectRatio;
         this.timer = 0;
         this.drawFrameInterval = 1000/100;
-        this.speed = 10;
+        this.speedModifier = 4;
+        this.speed = 2 * this.speedModifier;
     }
     update(deltatime){
-        // console.log(this.image);
+        this.speed = 2 * this.speedModifier;
+
+        if(this.x <= -this.newWidth) this.x = 0 - this.speed;
         
-        if(this.timer > this.drawFrameInterval){
-            this.x -= this.speed;
-            this.timer = 0;
-        }else{
-            this.timer += deltatime;
-        }
+        // if(this.x2 < -this.width) this.x2 = this.width + this.x - this.speed;
+
+        this.x = Math.floor(this.x - this.speed);
     }
     draw(context){
         context.drawImage(this.image, this.x, this.y, this.newWidth, this.newHeight);
-        context.drawImage(this.image, this.x + this.newWidth - this.speed, this.y, this.newWidth, this.newHeight);
+        context.drawImage(this.image, this.x + this.newWidth - this.speed , this.y, this.newWidth, this.newHeight);
     }
 }
