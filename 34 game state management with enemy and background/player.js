@@ -1,4 +1,5 @@
-import { states, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight, MovingLeft, MovingRight } from "./state.js";
+import { drawCircle } from "../common/common-functions.js";
+import { states, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight, MovingLeft, MovingRight, RollingDown } from "./state.js";
 export default class Player {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
@@ -17,9 +18,9 @@ export default class Player {
             new FallingLeft(this),
             new FallingRight(this),
             new RollingLeft(this),
-            new RollingRight(this)
+            new RollingRight(this),
+            new RollingDown(this)
         ];
-
         
         // Load player image
         this.image = document.getElementById("dogImage");
@@ -49,11 +50,16 @@ export default class Player {
         this.weight = 1;
         
         // Set initial state
+        this.currentState = this.states[states.RUNNING_RIGHT];
         this.setState(states.RUNNING_RIGHT);
+
+        this.radius = Math.max(this.width * 0.5, this.height * 0.5);
+        
     }
 
     // Draw player on canvas
     draw(ctx) {
+        // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, Math.max(this.width * 0.5, this.height * 0.5), "red");
         ctx.drawImage(
             this.image, 
             this.frameX * this.width, 

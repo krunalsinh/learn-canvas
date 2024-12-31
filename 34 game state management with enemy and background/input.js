@@ -9,6 +9,9 @@ export default class InputHandler{
             else if (e.ctrlKey === true && e.key === "ArrowRight"){
                 this.lastKey = "PRESS ROLLING RIGHT";
             }
+            else if (e.ctrlKey === true && e.key === "ArrowDown"){
+                this.lastKey = "PRESS ROLLING DOWN";
+            }
             else if (e.key === "ArrowLeft"){
                 this.lastKey = "PRESS LEFT";
             }
@@ -31,9 +34,9 @@ export default class InputHandler{
             else if (e.key === "ArrowRight"){
                 this.lastKey = "RELEASE RIGHT";
             }
-            // else if (e.key === "ArrowDown"){
-            //     this.lastKey = "RELEASE DOWN";
-            // }
+            else if (e.key === "ArrowDown"){
+                this.lastKey = "RELEASE DOWN";
+            }
             else if (e.key === "ArrowUp"){
                 this.lastKey = "RELEASE UP";
             }

@@ -1,7 +1,8 @@
 import Player from "./player.js";
 import InputHandler from "./input.js";
-import { drawStatusText } from "./utils.js";
+import { drawStatusText, handleGameover } from "./utils.js";
 import Background from "./background.js";
+import {handleEnemy} from "./enemy.js";
 
 window.addEventListener('load', function() {
     const loading = document.getElementById('loading');
@@ -14,40 +15,49 @@ window.addEventListener('load', function() {
     let canvasAnimation;
 
     let player = new Player(canvas.width, canvas.height);
-    const input = new InputHandler();
-    let lastTime = 0;
-
     let background = new Background(canvas.width, canvas.height);
-
+    const input = new InputHandler();
+    let isGameOver = false;
+    
+    
     // Animation loop
+    let lastTime = 0;
     function animate(timestamp) {
         const deltaTime = timestamp - lastTime;
         lastTime = timestamp;
-
+        
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         // update and draw background
         background.update(deltaTime);
         background.draw(ctx);
-
-        // ctx.drawImage(dogImage, 0, 0);
-
+        
+        // update and draw enemies
+        isGameOver = handleEnemy(canvas, ctx, player, deltaTime);
+        if(isGameOver){
+            cancelAnimationFrame(canvasAnimation);
+            handleGameover(canvas, ctx, 0);
+        }
+        
         // Update and draw player
         player.update(input.lastKey, deltaTime);
         player.draw(ctx);
 
-
         // Draw status text
         drawStatusText(ctx, input, player);
-
+        
         // Request next animation frame
-        canvasAnimation = requestAnimationFrame(animate);
+        if(!isGameOver)
+        requestAnimationFrame(animate);
     }
-
+    
+ 
+    
+    
     // Start the animation loop
     animate(0);
-
+    
     window.addEventListener('resize', function() {
         console.log("eve");
         
