@@ -1,3 +1,5 @@
+import { ctx } from "./script.js";
+
 export default class Background{
     constructor(gameWidth, gameHeight){
         this.gameWidth = gameWidth;
@@ -24,8 +26,8 @@ export default class Background{
 
         this.x = Math.floor(this.x - this.speed);
     }
-    draw(context){
-        context.drawImage(this.image, this.x, this.y, this.newWidth, this.newHeight);
-        context.drawImage(this.image, this.x + this.newWidth - this.speed , this.y, this.newWidth, this.newHeight);
+    draw(){
+        ctx.drawImage(this.image, this.x, this.y, this.newWidth, this.newHeight);
+        ctx.drawImage(this.image, this.x + this.newWidth - this.speed , this.y, this.newWidth, this.newHeight);
     }
 }

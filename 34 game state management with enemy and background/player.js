@@ -1,4 +1,5 @@
 import { drawCircle } from "../common/common-functions.js";
+import { ctx } from "./script.js";
 import { states, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight, MovingLeft, MovingRight, RollingDown } from "./state.js";
 export default class Player {
     constructor(gameWidth, gameHeight) {
@@ -58,7 +59,7 @@ export default class Player {
     }
 
     // Draw player on canvas
-    draw(ctx) {
+    draw() {
         // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, Math.max(this.width * 0.5, this.height * 0.5), "red");
         ctx.drawImage(
             this.image, 

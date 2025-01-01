@@ -4,6 +4,8 @@ import { drawStatusText, handleGameover } from "./utils.js";
 import Background from "./background.js";
 import {handleEnemy} from "./enemy.js";
 
+let ctx;
+
 window.addEventListener('load', function() {
     const loading = document.getElementById('loading');
     loading.style.display = "none";
@@ -11,7 +13,7 @@ window.addEventListener('load', function() {
     const canvas = document.getElementById("canvas");
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    const ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d');
     let canvasAnimation;
 
     let player = new Player(canvas.width, canvas.height);
@@ -31,21 +33,21 @@ window.addEventListener('load', function() {
         
         // update and draw background
         background.update(deltaTime);
-        background.draw(ctx);
+        background.draw();
         
         // update and draw enemies
-        isGameOver = handleEnemy(canvas, ctx, player, deltaTime);
+        isGameOver = handleEnemy(canvas, player, deltaTime);
         if(isGameOver){
             cancelAnimationFrame(canvasAnimation);
-            handleGameover(canvas, ctx, 0);
+            handleGameover(canvas, 0);
         }
         
         // Update and draw player
         player.update(input.lastKey, deltaTime);
-        player.draw(ctx);
+        player.draw();
 
         // Draw status text
-        drawStatusText(ctx, input, player);
+        drawStatusText( input, player);
         
         // Request next animation frame
         if(!isGameOver)
@@ -69,3 +71,5 @@ window.addEventListener('load', function() {
         animate(0);
     })
 });
+
+export { ctx}

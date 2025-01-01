@@ -1,4 +1,7 @@
 import { drawCircle, handleCircleCollision } from "../common/common-functions.js";
+import Explosion from "./explosion.js";
+import score from "./score.js";
+import { ctx } from "./script.js";
 
 export default class Enemy {
     constructor(gameWidth, gameHeight) {
@@ -35,11 +38,15 @@ export default class Enemy {
             this.timer += deltaTime;
         }
         
-        if (this.x < -this.width) this.markForDeletion = true;
+        if (this.x < -this.width) {
+            this.markForDeletion = true;
+            score.incrementScore();
+        }
     }
 
-    draw(ctx) {
+    draw() {
         // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
+        
         ctx.drawImage(
             this.img, 
             this.frameX * this.spriteSliceWidth,
@@ -55,9 +62,9 @@ export default class Enemy {
 }
 
 let enemyTimer = 0
-    let enemyArr = [];
+let enemyArr = [], explosionArr = [];
 
-export function handleEnemy(canvas, ctx, player, deltaTime){
+export function handleEnemy(canvas, player, deltaTime){
         let isGameOver = false, isCollide = false;
         const randEnemyInterval = Math.random() * 10000 + 2000;
 
@@ -70,7 +77,7 @@ export function handleEnemy(canvas, ctx, player, deltaTime){
 
         enemyArr.forEach(enemy => {
             enemy.update(deltaTime);
-            enemy.draw(ctx);
+            enemy.draw();
 
             isCollide = handleCircleCollision(
                 {x : player.x + player.width * 0.5, y : player.y + player.height * 0.5, radius : player.radius},
@@ -79,13 +86,21 @@ export function handleEnemy(canvas, ctx, player, deltaTime){
 
             if(isCollide && (player.currentState.state === "ROLLING LEFT" || player.currentState.state === "ROLLING RIGHT" || player.currentState.state === "ROLLING DOWN") ){
                 enemy.markForDeletion = true;
+                score.incrementScore();
+                explosionArr.push(new Explosion(200, 179, enemy.x, enemy.y, enemy.width, enemy.height));
             }else if(isCollide){
                 isGameOver = true;
             }
 
         })
 
-        enemyArr = enemyArr.filter(enemy => !enemy.markForDeletion)
+        explosionArr.forEach(explosion => {
+            explosion.update(deltaTime);
+        })
+
+
+        enemyArr = enemyArr.filter(enemy => !enemy.markForDeletion);
+        explosionArr = explosionArr.filter(explosion => !explosion.markedForDeletion);
 
         return isGameOver;
 
