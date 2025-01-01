@@ -3,8 +3,13 @@ import InputHandler from "./input.js";
 import { drawStatusText, handleGameover } from "./utils.js";
 import Background from "./background.js";
 import {handleEnemy} from "./enemy.js";
+import score from "./score.js";
+import {isMobile} from "./checkMobile.js";
 
-let ctx;
+let ctx, restartGame;
+
+console.log(isMobile());
+
 
 window.addEventListener('load', function() {
     const loading = document.getElementById('loading');
@@ -52,17 +57,24 @@ window.addEventListener('load', function() {
         // Request next animation frame
         if(!isGameOver)
         requestAnimationFrame(animate);
+
     }
     
- 
+    //Restart game
+    restartGame = function() {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        player = new Player(canvas.width, canvas.height);
+        background = new Background(canvas.width, canvas.height);
+        score.score = 0;
+        animate(0);
+    }
     
     
     // Start the animation loop
     animate(0);
     
     window.addEventListener('resize', function() {
-        console.log("eve");
-        
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth;
         player = new Player(canvas.width, canvas.height);
@@ -72,4 +84,4 @@ window.addEventListener('load', function() {
     })
 });
 
-export { ctx}
+export { ctx, restartGame}

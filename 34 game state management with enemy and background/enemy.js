@@ -1,4 +1,5 @@
 import { drawCircle, handleCircleCollision } from "../common/common-functions.js";
+import ismobileDevice from "./checkMobile.js";
 import Explosion from "./explosion.js";
 import score from "./score.js";
 import { ctx } from "./script.js";
@@ -22,6 +23,12 @@ export default class Enemy {
         this.animationInterval = 1000 / 30;
         this.timer = 0;
         this.radius = Math.max(this.width * 0.5, this.height * 0.5);
+        if(ismobileDevice){
+            this.width = this.spriteSliceWidth * 0.25;
+            this.height = this.spriteSliceHeight * 0.25;
+            this.y = this.gameHeight - this.height;
+            this.radius = Math.max(this.width * 0.5, this.height * 0.5);
+        }
     }
 
     update(deltaTime) {
@@ -45,7 +52,7 @@ export default class Enemy {
     }
 
     draw() {
-        // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
+        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
         
         ctx.drawImage(
             this.img, 
@@ -90,6 +97,9 @@ export function handleEnemy(canvas, player, deltaTime){
                 explosionArr.push(new Explosion(200, 179, enemy.x, enemy.y, enemy.width, enemy.height));
             }else if(isCollide){
                 isGameOver = true;
+                enemyTimer = 0;
+                enemyArr = []; 
+                explosionArr = [];
             }
 
         })

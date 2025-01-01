@@ -1,10 +1,12 @@
 import { drawCircle } from "../common/common-functions.js";
+import ismobileDevice from "./checkMobile.js";
 import { ctx } from "./script.js";
 import { states, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight, MovingLeft, MovingRight, RollingDown } from "./state.js";
 export default class Player {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
+        
 
         // Define player states
         this.states = [
@@ -30,8 +32,10 @@ export default class Player {
         }
         
         // Player dimensions
-        this.width = 200;
-        this.height = 181.83;
+        this.spriteSliceWidth = 200;
+        this.spriteSliceHeight = 181.83;
+        this.width = this.spriteSliceWidth;
+        this.height = this.spriteSliceHeight;
         
         // Initial position
         this.x = this.gameWidth / 2 - this.width / 2;
@@ -56,17 +60,26 @@ export default class Player {
 
         this.radius = Math.max(this.width * 0.5, this.height * 0.5);
         
+        if(ismobileDevice){
+            console.log("player check mobile device : "+ ismobileDevice);
+            
+            this.width = this.spriteSliceWidth * 0.5;
+            this.height =  this.spriteSliceHeight * 0.5;
+            this.x = 0;
+            this.radius = Math.max(this.width * 0.5, this.height * 0.5);
+        }
+        
     }
 
     // Draw player on canvas
     draw() {
-        // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, Math.max(this.width * 0.5, this.height * 0.5), "red");
+        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius, "red");
         ctx.drawImage(
             this.image, 
-            this.frameX * this.width, 
-            this.frameY * this.height, 
-            this.width, 
-            this.height, 
+            this.frameX * this.spriteSliceWidth, 
+            this.frameY * this.spriteSliceHeight, 
+            this.spriteSliceWidth, 
+            this.spriteSliceHeight, 
             this.x, 
             this.y, 
             this.width, 
