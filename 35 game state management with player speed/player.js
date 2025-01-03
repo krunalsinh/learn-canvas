@@ -1,26 +1,20 @@
 import { drawCircle } from "../common/common-functions.js";
 import ismobileDevice from "./checkMobile.js";
 import { ctx } from "./main.js";
-import { states, SittingLeft, SittingRight, RunningLeft, RunningRight, JumpingLeft, JumpingRight, FallingLeft, FallingRight, RollingLeft, RollingRight, MovingLeft, MovingRight, RollingDown } from "./state.js";
+import { states, Sitting, Running, Jumping, Falling } from "./state.js";
 export default class Player {
     constructor(game) {
         this.game = game;
 
+        console.log(this.game.groundMargin);
+        
+        
         // Define player states
         this.states = [
-            new MovingLeft(this), 
-            new MovingRight(this), 
-            new SittingLeft(this), 
-            new SittingRight(this),
-            new RunningLeft(this),
-            new RunningRight(this),
-            new JumpingLeft(this),
-            new JumpingRight(this),
-            new FallingLeft(this),
-            new FallingRight(this),
-            new RollingLeft(this),
-            new RollingRight(this),
-            new RollingDown(this)
+            new Sitting(this),
+            new Running(this),
+            new Jumping(this),
+            new Falling(this),
         ];
         
         // Load player image
@@ -30,20 +24,22 @@ export default class Player {
         }
         
         // Player dimensions
-        this.spriteSliceWidth = 200;
-        this.spriteSliceHeight = 181.83;
-        this.width = this.spriteSliceWidth;
-        this.height = this.spriteSliceHeight;
+        this.spriteSliceWidth = 6876/12;
+        this.spriteSliceHeight = 5230/10;
+        this.width = this.spriteSliceWidth / 5;
+        this.height = this.spriteSliceHeight / 5;
+        this.radius = Math.max(this.width * 0.5, this.height * 0.5);
         
         // Initial position
         this.x = this.game.width / 2 - this.width / 2;
-        this.y = this.game.height - this.height;
+        this.y = this.game.height - this.height - this.game.groundMargin;
         
         // Animation properties
         this.frameX = 0;
         this.frameY = 0;
         this.maxFrame = 6;
-        this.animationInterval = 1000 / 30;
+        this.fps = 30;
+        this.animationInterval = 1000 / this.fps;
         this.timer = 0;
         
         // Movement properties
@@ -53,13 +49,9 @@ export default class Player {
         this.weight = 1;
         
         // Set initial state
-        this.currentState = this.states[states.RUNNING_RIGHT];
-        this.setState(states.RUNNING_RIGHT);
-
-        this.radius = Math.max(this.width * 0.5, this.height * 0.5);
-        
-       
-        
+        // this.currentState = this.states[states.SITTING];
+        // this.currentState.enter();
+        this.setState(states.SITTING, 0);
     }
 
     // Draw player on canvas
@@ -85,6 +77,10 @@ export default class Player {
         // Additional update logic here
         this.x += this.speed;
 
+        if(input.includes("ArrowRight")) this.speed = this.maxSpeed;
+        else if(input.includes("ArrowLeft")) this.speed = -this.maxSpeed;
+        else this.speed = 0;
+
         if(this.x < 0) this.x = 0;
         else if(this.x + this.width > this.game.width) this.x = this.game.width - this.width;
 
@@ -98,7 +94,7 @@ export default class Player {
         if(this.y + this.height > this.game.height) this.y = this.game.height - this.height;
         if(this.timer > this.animationInterval){
 
-            if(this.frameX < this.maxFrame) this.frameX++;
+            if(this.frameX < this.maxFrame - 1) this.frameX++;
             else this.frameX = 0;
 
             this.timer = 0;
@@ -108,12 +104,13 @@ export default class Player {
         }
 
     }
-    setState(state){
+    setState(state, speed){
         this.currentState = this.states[state];
         this.currentState.enter();
+        this.game.speed = speed;
     }
     onGround(){
-        return this.y >= this.game.height - this.height;
+        return this.y >= this.game.height - this.height - this.game.groundMargin;
 
     }
 }

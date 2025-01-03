@@ -1,33 +1,61 @@
 import { ctx } from "./main.js";
 
-export default class Background{
-    constructor(gameWidth, gameHeight){
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
+
+
+class Layer{
+    constructor(game, width, height, speedModifier, image, fullSize = true){
+        this.game = game;
+        this.aspectRatio = width / height;
+        this.height = this.game.height;
+        this.width = this.game.height * this.aspectRatio;
+        this.speedModifier = speedModifier;
+        this.image = image;
         this.x = 0;
         this.y = 0;
-        this.image = document.getElementById("backgroundImg");
-        this.originalWidth = 2400;
-        this.originalHeight = 720;
-        this.aspectRatio = this.originalWidth / this.originalHeight;
-        this.newHeight = this.gameHeight;
-        this.newWidth = this.gameHeight * this.aspectRatio;
-        this.timer = 0;
-        this.drawFrameInterval = 1000/100;
-        this.speedModifier = 4;
-        this.speed = 2 * this.speedModifier;
+        if(!fullSize){
+            this.width = width;
+            this.height = height;
+            this.y = this.game.height - this.height;
+        }
     }
-    update(deltatime){
-        this.speed = 2 * this.speedModifier;
-
-        if(this.x <= -this.newWidth) this.x = 0 - this.speed;
+    update(deltaTime){
         
-        // if(this.x2 < -this.width) this.x2 = this.width + this.x - this.speed;
+        if(this.x <= -this.width) this.x = 0;
+        else this.x -= this.game.speed * this.speedModifier;
+    }
+    draw(ctx){
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
+    }
+}
 
-        this.x = Math.floor(this.x - this.speed);
+export default class Background{
+    constructor(game){
+       this.game = game;
+       this.width = 1667;
+       this.height = 500;
+       this.layer1image = document.getElementById('layer1');
+       this.layer2image = document.getElementById('layer2');
+       this.layer3image = document.getElementById('layer3');
+       this.layer4image = document.getElementById('layer4');
+       this.layer5image = document.getElementById('layer5');
+       this.layer1 = new Layer(this.game, this.width, this.height, 0, this.layer1image);
+       this.layer2 = new Layer(this.game, this.width, this.height, 0.2, this.layer2image);
+       this.layer3 = new Layer(this.game, this.width, this.height, 0.4, this.layer3image);
+       this.layer4 = new Layer(this.game, this.width, this.height, 0.8, this.layer4image);
+       this.layer5 = new Layer(this.game, this.width, this.height - 200, 1, this.layer5image, false);
+       this.backgroundLayers = [this.layer1, this.layer2, this.layer3, this.layer4, this.layer5];  
     }
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.newWidth, this.newHeight);
-        ctx.drawImage(this.image, this.x + this.newWidth - this.speed , this.y, this.newWidth, this.newHeight);
+    update(){
+        this.backgroundLayers.forEach(layer => {
+            layer.update();
+        });
     }
+    draw(context){
+        
+        this.backgroundLayers.forEach(layer => {
+            layer.draw(context);
+        });
+    }
+   
 }

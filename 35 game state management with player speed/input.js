@@ -1,5 +1,4 @@
 import ismobileDevice from "./checkMobile.js";
-import { restartGame } from "./main.js";
 
 export default class InputHandler{
     constructor(){
@@ -12,12 +11,13 @@ export default class InputHandler{
                  e.key === "ArrowUp" || 
                  e.key === "ArrowLeft" || 
                  e.key === "ArrowRight"
-            ) && this.keys.indexOf(e.key) === -1){
+            ) && !this.keys.includes(e.key)){
                 this.keys.push(e.key);
             }
             // console.log(e.key, this.keys);
             
         });
+
         window.addEventListener('keyup', e => {
             if(e.key === "ArrowDown" || 
                 e.key === "ArrowUp" || 
@@ -31,15 +31,17 @@ export default class InputHandler{
         window.addEventListener('touchstart', e => {
             this.touchY = e.changedTouches[0].pageY;
         })
+
         window.addEventListener('touchmove', e => {
             const swipeDistance = e.changedTouches[0].pageY - this.touchY;
-            if(swipeDistance < -this.touchThreshold && this.keys.indexOf("swipe up") === -1){
+            if(swipeDistance < -this.touchThreshold && !this.keys.includes("swipe up")){
                 this.keys.push("swipe up");
             }
-            else if(swipeDistance > this.touchThreshold && this.keys.indexOf("swipe down") === -1){
+            else if(swipeDistance > this.touchThreshold && !this.keys.includes("swipe down")){
                 this.keys.push("swipe down");
             }
         })
+        
         window.addEventListener('touchend', e => {
             // console.log(this.keys);
             this.keys.splice(this.keys.indexOf("swipe up"), 1);
