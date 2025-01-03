@@ -29,13 +29,25 @@ export class MovingLeft extends State {
     }
     enter() {
         this.player.frameY = 7;
-        this.player.speed = -this.player.maxSpeed;
-
         this.player.maxFrame = 6;
+        
+        
+        if(ismobileDevice){
+            this.player.speed = -this.player.maxSpeed * 0.5;
+        }
+        else{
+
+            this.player.speed = -this.player.maxSpeed;
+        }
     }
     handleInput(input) {
         if(ismobileDevice){
-            
+            if (input === "SWIPE DOWN LEFT") this.player.setState(states.ROLLING_LEFT);
+            else if (input === "SWIPE DOWN RIGHT") this.player.setState(states.ROLLING_RIGHT);
+            else if (input === "SWIPE UP LEFT") this.player.setState(states.JUMPING_LEFT);
+            else if (input === "SWIPE UP RIGHT") this.player.setState(states.JUMPING_RIGHT);
+            else if (input === "SWIPE RIGHT UP" || input === "SWIPE RIGHT DOWN") this.player.setState(states.MOVING_RIGHT);
+            else if (this.player.touschLeftEdage()) this.player.setState(states.RUNNING_RIGHT);
         }else{
             if (input === "PRESS RIGHT") this.player.setState(states.RUNNING_RIGHT);
             else if (input === "RELEASE LEFT") this.player.setState(states.RUNNING_RIGHT);
@@ -53,12 +65,21 @@ export class MovingRight extends State {
     }
     enter() {
         this.player.frameY = 6;
-        this.player.speed = this.player.maxSpeed;
         this.player.maxFrame = 6;
+        if(ismobileDevice){
+            this.player.speed = this.player.maxSpeed * 0.5;
+        }else{
+
+            this.player.speed = this.player.maxSpeed ;
+        }
     }
     handleInput(input) {
         if(ismobileDevice){
-            
+            if (input === "SWIPE DOWN LEFT") this.player.setState(states.ROLLING_LEFT);
+            else if (input === "SWIPE DOWN RIGHT") this.player.setState(states.ROLLING_RIGHT);
+            else if (input === "SWIPE UP LEFT") this.player.setState(states.JUMPING_LEFT);
+            else if (input === "SWIPE UP RIGHT") this.player.setState(states.JUMPING_RIGHT);
+            else if (input === "SWIPE LEFT UP" || input === "SWIPE LEFT DOWN") this.player.setState(states.MOVING_LEFT);
         }else{
             if (input === "PRESS LEFT") this.player.setState(states.RUNNING_LEFT);
             else if (input === "RELEASE RIGHT") this.player.setState(states.RUNNING_RIGHT);
@@ -198,8 +219,8 @@ export class FallingLeft extends State {
     }
     handleInput(input) {
         if(ismobileDevice){
-            if (input === "SWIPE DOWN") this.player.setState(states.ROLLING_DOWN);
-            else if (input === "SWIPE RIGHT") this.player.setState(states.FALLING_RIGHT);
+            if (input === "SWIPE DOWN LEFT" || input === "SWIPE DOWN RIGHT") this.player.setState(states.ROLLING_DOWN);
+            else if (input === "SWIPE RIGHT DOWN" || input === "SWIPE RIGHT UP") this.player.setState(states.FALLING_RIGHT);
             else if (this.player.onGround()) this.player.setState(states.RUNNING_RIGHT);
         }else{
             if (input === "PRESS ROLLING DOWN") this.player.setState(states.ROLLING_DOWN);
@@ -220,8 +241,8 @@ export class FallingRight extends State {
     }
     handleInput(input) {
         if(ismobileDevice){
-            if (input === "SWIPE DOWN") this.player.setState(states.ROLLING_DOWN);
-            else if (input === "SWIPE LEFT") this.player.setState(states.FALLING_LEFT);
+            if (input === "SWIPE DOWN LEFT" || input === "SWIPE DOWN RIGHT") this.player.setState(states.ROLLING_DOWN);
+            else if (input === "SWIPE LEFT DOWN" || input === "SWIPE LEFT UP") this.player.setState(states.FALLING_LEFT);
             else if (this.player.onGround()) this.player.setState(states.RUNNING_RIGHT);
         }else{
             if (input === "PRESS ROLLING DOWN") this.player.setState(states.ROLLING_DOWN);
@@ -239,11 +260,16 @@ export class RollingLeft extends State {
     enter() {
         this.player.frameY = 11;
         this.player.maxFrame = 6;
-        this.player.speed = -this.player.maxSpeed * 2;
+        if(ismobileDevice){
+            this.player.speed = -this.player.maxSpeed * 1.5;
+        }else{
+            this.player.speed = -this.player.maxSpeed * 2;
+        }
     }
     handleInput(input) {
         if(ismobileDevice){
-            
+            if (input === "SWIPE DOWN RIGHT") this.player.setState(states.ROLLING_RIGHT);
+            else if(this.player.touschLeftEdage()) this.player.setState(states.JUMPING_RIGHT);
         }else{
             if (input === "PRESS RIGHT ROLLING") this.player.setState(states.ROLLING_RIGHT);
             else if (input === "RELEASE LEFT") this.player.setState(states.RUNNING_RIGHT);
@@ -251,7 +277,6 @@ export class RollingLeft extends State {
         }
     }
 }
-
 
 export class RollingRight extends State {
     constructor(player) {
@@ -261,11 +286,16 @@ export class RollingRight extends State {
     enter() {
         this.player.frameY = 10;
         this.player.maxFrame = 6;
-        this.player.speed = this.player.maxSpeed * 2;
+        if(ismobileDevice){
+            this.player.speed = this.player.maxSpeed * 1.5;
+        }else{
+            this.player.speed = this.player.maxSpeed * 2;
+        }
     }
     handleInput(input) {
         if(ismobileDevice){
-            
+            if (input === "SWIPE DOWN LEFT") this.player.setState(states.ROLLING_LEFT);
+            else if(this.player.touschRightEdage()) this.player.setState(states.JUMPING_LEFT);
         }else{
             
             if (input === "PRESS LEFT ROLLING") this.player.setState(states.ROLLING_LEFT);
@@ -288,7 +318,7 @@ export class RollingDown extends State {
     }
     handleInput(input) {
         if(ismobileDevice){
-            
+            if (this.player.onGround()) this.player.setState(states.RUNNING_RIGHT);
         }else{
 
             if (input === "RELEASE DOWN") this.player.setState(states.RUNNING_RIGHT);

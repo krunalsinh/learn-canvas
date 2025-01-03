@@ -1,6 +1,6 @@
 import Player from "./player.js";
 import InputHandler from "./input.js";
-import { drawStatusText, handleGameover } from "./utils.js";
+import { drawStatusText, handleGameover, toggleFullScreen } from "./utils.js";
 import Background from "./background.js";
 import {handleEnemy} from "./enemy.js";
 import score from "./score.js";
@@ -25,6 +25,7 @@ window.addEventListener('load', function() {
     let background = new Background(canvas.width, canvas.height);
     const input = new InputHandler();
     let isGameOver = false;
+    const toggleFulScreen = document.getElementById("toggleFulScreen");
     
     
     // Animation loop
@@ -62,12 +63,15 @@ window.addEventListener('load', function() {
     
     //Restart game
     restartGame = function() {
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-        player = new Player(canvas.width, canvas.height);
-        background = new Background(canvas.width, canvas.height);
-        score.score = 0;
-        animate(0);
+        if(isGameOver){
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            input.lastKey = "";
+            player = new Player(canvas.width, canvas.height);
+            background = new Background(canvas.width, canvas.height);
+            score.score = 0;
+            animate(0);
+        }
     }
     
     
@@ -77,10 +81,15 @@ window.addEventListener('load', function() {
     window.addEventListener('resize', function() {
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth;
+        input.lastKey = "";
         player = new Player(canvas.width, canvas.height);
         background = new Background(canvas.width, canvas.height);
         cancelAnimationFrame(canvasAnimation);
         animate(0);
+    })
+
+    toggleFulScreen.addEventListener('click', e => {
+        toggleFullScreen();
     })
 });
 

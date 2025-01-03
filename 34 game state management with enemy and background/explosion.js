@@ -20,7 +20,7 @@ export default class Explosion{
     update(deltaTime){
         this.timeSinceLastFrame += deltaTime;
 
-        if(this.frameX === 0) this.audio.play();
+        // if(this.frameX === 0) this.audio.play();
 
         if(this.timeSinceLastFrame > this.frameInterval) {
             this.frameX++;

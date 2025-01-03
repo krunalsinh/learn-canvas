@@ -52,7 +52,7 @@ export default class Enemy {
     }
 
     draw() {
-        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
+        // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
         
         ctx.drawImage(
             this.img, 

@@ -17,8 +17,10 @@ export default class InputHandler{
             window.addEventListener('touchmove', e => {
                 const swipeDistanceY = e.changedTouches[0].pageY - this.touchY;
                 const swipeDistanceX = e.changedTouches[0].pageX - this.touchX;
-                
-                if(swipeDistanceY < -this.touchThreshhold) {
+                if(swipeDistanceX >= 250){
+                    restartGame();
+                }
+                else if(swipeDistanceY < -this.touchThreshhold) {
                     if(this.lastKey !== "SWIPE UP RIGHT" && swipeDistanceX >= 0){
                         this.lastKey = "SWIPE UP RIGHT";
                     }else if(this.lastKey !== "SWIPE UP LEFT" && swipeDistanceX < 0){

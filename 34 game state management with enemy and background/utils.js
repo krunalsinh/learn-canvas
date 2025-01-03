@@ -15,14 +15,28 @@ export function drawStatusText( input, player) {
 }
 
 export function handleGameover(canvas){
-    let shadowGap = 3, lineGap = 50, fontSize = "40px";
     if(ismobileDevice){
-        shadowGap = 1, lineGap = 30, fontSize = "20px";
+        let shadowGap = 1, lineGap = 30, fontSize = "20px";
+        addText(ctx, canvas.width * 0.5, canvas.height * 0.5, fontSize, "Helvetica", "#000", "Game Over, Your score is: "+score.score, "center");
+        addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap, fontSize, "Helvetica", "#fff", "Game Over, Your score is: "+score.score, "center");
+        
+        addText(ctx, canvas.width * 0.5, canvas.height * 0.5 + lineGap, fontSize, "Helvetica", "#000", "Long swipe left to right for restart the game.", "center");
+        addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap + lineGap, fontSize, "Helvetica", "#fff", "Long swipe left to right for restart the game.", "center");
+    }else{
+        let shadowGap = 3, lineGap = 50, fontSize = "40px";
+        addText(ctx, canvas.width * 0.5, canvas.height * 0.5, fontSize, "Helvetica", "#000", "Game Over, Your score is: "+score.score, "center");
+        addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap, fontSize, "Helvetica", "#fff", "Game Over, Your score is: "+score.score, "center");
+        
+        addText(ctx, canvas.width * 0.5, canvas.height * 0.5 + lineGap, fontSize, "Helvetica", "#000", "Please press Enter for restart the game.", "center");
+        addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap + lineGap, fontSize, "Helvetica", "#fff", "Please press Enter for restart the game.", "center");
     }
-    addText(ctx, canvas.width * 0.5, canvas.height * 0.5, fontSize, "Helvetica", "#000", "Game Over, Your score is: "+score.score, "center");
-    addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap, fontSize, "Helvetica", "#fff", "Game Over, Your score is: "+score.score, "center");
-
-    addText(ctx, canvas.width * 0.5, canvas.height * 0.5 + lineGap, fontSize, "Helvetica", "#000", "Please press Enter for restart the game.", "center");
-    addText(ctx, canvas.width * 0.5 + shadowGap, canvas.height * 0.5 + shadowGap + lineGap, fontSize, "Helvetica", "#fff", "Please press Enter for restart the game.", "center");
 
 }
+
+export function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }

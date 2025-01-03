@@ -73,7 +73,7 @@ export default class Player {
 
     // Draw player on canvas
     draw() {
-        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius, "red");
+        // drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius, "red");
         ctx.drawImage(
             this.image, 
             this.frameX * this.spriteSliceWidth, 
@@ -123,6 +123,11 @@ export default class Player {
     }
     onGround(){
         return this.y >= this.gameHeight - this.height;
-
+    }
+    touschLeftEdage(){
+        return this.x <= 0;
+    }
+    touschRightEdage(){
+        return this.x + this.width >= this.gameWidth;
     }
 }
