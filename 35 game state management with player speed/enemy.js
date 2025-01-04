@@ -1,117 +1,120 @@
-import { drawCircle, handleCircleCollision } from "../common/common-functions.js";
-import ismobileDevice from "./checkMobile.js";
-import Explosion from "./explosion.js";
-import score from "./score.js";
-import { ctx } from "./main.js";
+import { drawLine, drawRectangle } from "../common/common-functions.js";
 
-export default class Enemy {
-    constructor(gameWidth, gameHeight) {
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
-        this.img = document.getElementById("enemyImg");
-        this.maxFrame = 6;
-        this.spriteSliceWidth = 960 / this.maxFrame;
-        this.spriteSliceHeight = 119;
-        this.width = this.spriteSliceWidth * 0.5;
-        this.height = this.spriteSliceHeight * 0.5;
-        this.x = this.gameWidth;
-        this.y = this.gameHeight - this.height;
-        this.speed = 5;
-        this.frameX = 0;
-        this.frameY = 0;
+class Enemy{
+    constructor(game){
+        this.game = game;
         this.markForDeletion = false;
-        this.animationInterval = 1000 / 30;
-        this.timer = 0;
-        this.radius = Math.max(this.width * 0.5, this.height * 0.5);
-        if(ismobileDevice){
-            this.width = this.spriteSliceWidth * 0.25;
-            this.height = this.spriteSliceHeight * 0.25;
-            this.y = this.gameHeight - this.height;
-            this.radius = Math.max(this.width * 0.5, this.height * 0.5);
-        }
+        this.fps = 30;
+        this.enemyInterval = 1000/this.fps;
+        this.enemyTimer = 0;
+        this.markedForDeletion = false;
     }
 
-    update(deltaTime) {
-        this.x -= this.speed;
+    update(deltaTime){
+        this.x -= this.vx * deltaTime;
+        if(this.x < 0 - this.width) {
+            this.markedForDeletion = true;
+            this.game.increaseScore();
+        }
 
-        if(this.timer > this.animationInterval){
+        if(this.enemyTimer > this.enemyInterval){
+            this.enemyTimer = 0;
 
-            if(this.frameX < this.maxFrame - 1) {this.frameX++;}
-            else {this.frameX = 0;}
+            if(this.frameX > this.maxFrame) this.frameX = 0 
+            else this.frameX++
 
-            this.timer = 0;
         }else{
-
-            this.timer += deltaTime;
-        }
-        
-        if (this.x < -this.width) {
-            this.markForDeletion = true;
-            score.incrementScore();
+            this.enemyTimer += deltaTime;
         }
     }
 
-    draw() {
-        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius , "blue");
-        
-        ctx.drawImage(
-            this.img, 
-            this.frameX * this.spriteSliceWidth,
-            this.frameY * this.spriteSliceHeight,
-            this.spriteSliceWidth,
-            this.spriteSliceHeight,
-            this.x,
-            this.y,
-            this.width,
-            this.height
-        );
+    draw(ctx){
+        if(this.game.debug){
+            drawRectangle(ctx, this.x, this.y, this.width, this.height, "white", true);
+        }
+        ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
     }
 }
 
-let enemyTimer = 0
-let enemyArr = [], explosionArr = [];
-
-export function handleEnemy(canvas, player, deltaTime){
-        let isGameOver = false, isCollide = false;
-        const randEnemyInterval = Math.random() * 10000 + 2000;
-
-        if(enemyTimer > randEnemyInterval){
-            enemyTimer = 0;
-            enemyArr.push(new Enemy(canvas.width, canvas.height));
-        }else{
-            enemyTimer += deltaTime;
-        }
-
-        enemyArr.forEach(enemy => {
-            enemy.update(deltaTime);
-            enemy.draw();
-
-            isCollide = handleCircleCollision(
-                {x : player.x + player.width * 0.5, y : player.y + player.height * 0.5, radius : player.radius},
-                {x : enemy.x + enemy.width * 0.5, y : enemy.y + enemy.height * 0.5, radius : enemy.radius},
-            )
-
-            if(isCollide && (player.currentState.state === "ROLLING LEFT" || player.currentState.state === "ROLLING RIGHT" || player.currentState.state === "ROLLING DOWN") ){
-                enemy.markForDeletion = true;
-                score.incrementScore();
-                explosionArr.push(new Explosion(200, 179, enemy.x, enemy.y, enemy.width, enemy.height));
-            }else if(isCollide){
-                isGameOver = true;
-                enemyTimer = 0;
-                enemyArr = []; 
-                explosionArr = [];
-            }
-
-        })
-
-        explosionArr.forEach(explosion => {
-            explosion.update(deltaTime);
-        })
-
-
-        enemyArr = enemyArr.filter(enemy => !enemy.markForDeletion);
-        explosionArr = explosionArr.filter(explosion => !explosion.markedForDeletion);
-
-        return isGameOver;
+export class Worm extends Enemy{
+    constructor(game){
+        super(game);
+        this.spriteWidth = 229;
+        this.spriteHeight = 171;
+        this.width = this.spriteWidth / 2 ;
+        this.height = this.spriteHeight / 2;
+        this.x = this.game.width + this.width;
+        this.y = this.game.height - this.height - this.game.groundMargin;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.image = document.getElementById("enemyWorm");
+        this.maxFrame = 4;
+        this.vx = Math.random() * 0.1 + 0.05;
+    }
+   
+}
+export class Ghost extends Enemy{
+    constructor(game){
+        super(game);
+        this.spriteWidth = 261;
+        this.spriteHeight = 209;
+        this.width = this.spriteWidth / 2 ;
+        this.height = this.spriteHeight / 2;
+        this.x = this.game.width + this.width;
+        this.y = Math.random() * this.game.height * 0.6;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.image = document.getElementById("enemyGhost");;
+        this.maxFrame = 4;
+        this.vx = Math.random() * 0.2 + 0.2;
+        this.angle = 0;
+        this.curve = Math.random() * 3 ;
+    }
+    update(deltaTime){
+        super.update(deltaTime);
+        this.y += Math.sin(this.angle) * this.curve;
+        this.angle += 0.05;
+    }
+    draw(ctx){
+        ctx.save();
+        ctx.globalAlpha = 0.7;
+        super.draw(ctx);
+        ctx.globalAlpha = 1;
+        ctx.restore();
 
     }
+   
+}
+export class Spider extends Enemy{
+    constructor(game){
+        super(game);
+        this.spriteWidth = 310;
+        this.spriteHeight = 175;
+        this.width = this.spriteWidth / 2 ;
+        this.height = this.spriteHeight / 2;
+        this.x = Math.random() * (this.game.width - this.width);
+        this.y = 0 - this.height;
+        this.frameX = 0;
+        this.frameY = 0;
+        this.image = document.getElementById("enemySpider");;
+        this.maxFrame = 4;
+        this.vx = 0;
+        this.vy = Math.random() * 0.1 + 0.1;
+        this.maxLength = Math.random() * (this.game.height - this.game.groundMargin * 2);
+    }
+    update(deltaTime){
+        super.update(deltaTime);
+
+        this.y += this.vy * deltaTime;
+
+        if(this.y > this.maxLength) this.vy = -this.vy;
+
+        if(this.y < 0 - (this.height*2)) this.markForDeletion = true;
+    }
+    draw(ctx){
+        drawLine(ctx, this.x + this.width / 2, 0, this.x + this.width / 2, this.y + 5, 1, "#000");
+        super.draw(ctx);
+
+    }
+   
+}

@@ -1,7 +1,8 @@
 import ismobileDevice from "./checkMobile.js";
 
 export default class InputHandler{
-    constructor(){
+    constructor(game){
+        this.game = game;
         this.keys = [];
         this.touchY = '';
         this.touchThreshold = 30;
@@ -10,7 +11,8 @@ export default class InputHandler{
             if( (e.key === "ArrowDown" || 
                  e.key === "ArrowUp" || 
                  e.key === "ArrowLeft" || 
-                 e.key === "ArrowRight"
+                 e.key === "ArrowRight" ||
+                 e.key === "Enter"
             ) && !this.keys.includes(e.key)){
                 this.keys.push(e.key);
             }
@@ -22,10 +24,11 @@ export default class InputHandler{
             if(e.key === "ArrowDown" || 
                 e.key === "ArrowUp" || 
                 e.key === "ArrowLeft" || 
-                e.key === "ArrowRight"){
+                e.key === "ArrowRight" ||
+                e.key === "Enter"){
                 this.keys.splice(this.keys.indexOf(e.key), 1);
             }
-            // console.log(e.key, this.keys);
+            else if(e.key === "d") this.game.debug = !this.game.debug;
         });
 
         window.addEventListener('touchstart', e => {

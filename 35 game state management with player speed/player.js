@@ -1,7 +1,6 @@
-import { drawCircle } from "../common/common-functions.js";
+import { drawCircle, drawRectangle } from "../common/common-functions.js";
 import ismobileDevice from "./checkMobile.js";
-import { ctx } from "./main.js";
-import { states, Sitting, Running, Jumping, Falling } from "./state.js";
+import { states, Sitting, Running, Jumping, Falling, Rolling, Diving, Hit } from "./state.js";
 export default class Player {
     constructor(game) {
         this.game = game;
@@ -11,10 +10,13 @@ export default class Player {
         
         // Define player states
         this.states = [
-            new Sitting(this),
-            new Running(this),
-            new Jumping(this),
-            new Falling(this),
+            new Sitting(this.game),
+            new Running(this.game),
+            new Jumping(this.game),
+            new Falling(this.game),
+            new Rolling(this.game),
+            new Diving(this.game),
+            new Hit(this.game)
         ];
         
         // Load player image
@@ -51,12 +53,15 @@ export default class Player {
         // Set initial state
         // this.currentState = this.states[states.SITTING];
         // this.currentState.enter();
-        this.setState(states.SITTING, 0);
+        // this.setState(states.SITTING, 0);
     }
 
     // Draw player on canvas
-    draw() {
-        drawCircle(ctx, this.x + this.width * 0.5, this.y + this.height * 0.5, this.radius, "red");
+    draw(ctx) {
+        if(this.game.debug){
+
+            drawRectangle(ctx, this.x, this.y, this.width, this.height, "white", true);
+        }
         ctx.drawImage(
             this.image, 
             this.frameX * this.spriteSliceWidth, 
