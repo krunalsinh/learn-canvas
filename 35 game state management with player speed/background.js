@@ -27,7 +27,7 @@ class Layer{
     }
     draw(ctx){
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.x + this.width - this.game.speed, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x + this.width - this.game.speed * this.speedModifier, this.y, this.width, this.height);
     }
 }
 
