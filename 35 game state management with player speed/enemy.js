@@ -100,16 +100,23 @@ export class Spider extends Enemy{
         this.maxFrame = 4;
         this.vx = 0;
         this.vy = Math.random() * 0.1 + 0.1;
-        this.maxLength = Math.random() * (this.game.height - this.game.groundMargin * 2);
+        this.maxLength = Math.random() * (this.game.height - this.game.groundMargin * 1.5) + this.game.groundMargin ;
+        this.maxLengthTouched = false;
     }
     update(deltaTime){
         super.update(deltaTime);
 
+       
         this.y += this.vy * deltaTime;
 
-        if(this.y > this.maxLength) this.vy = -this.vy;
+        if(this.y > this.maxLength && !this.maxLengthTouched){ 
+            this.maxLengthTouched = true;
+            this.vy = -this.vy;
+        }
 
-        if(this.y < 0 - (this.height*2)) this.markForDeletion = true;
+        if(this.y < 0 - (this.height*2) || this.y > this.game.height) this.markedForDeletion = true;
+        // console.log( "y : ",this.y, ", vy : ",this.vy, ", max length : ", this.maxLength, ", deleted : ", this.markForDeletion);
+        
     }
     draw(ctx){
         drawLine(ctx, this.x + this.width / 2, 0, this.x + this.width / 2, this.y + 5, 1, "#000");

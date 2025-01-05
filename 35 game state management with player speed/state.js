@@ -1,4 +1,4 @@
-import { Dust } from "./particle.js";
+import { Dust, Fire, Splash } from "./particle.js";
 
 export const states = {
     SITTING: 0,
@@ -31,7 +31,7 @@ export class Sitting extends State {
 
         if (input.includes("ArrowLeft") || input.includes("ArrowRight")) {
             this.game.player.setState(states.RUNNING, 1);
-        } else if (input.includes("Enter")) {
+        } else if (input.includes("Control")) {
             this.game.player.setState(states.ROLLING, 2);
         }
     }
@@ -52,7 +52,7 @@ export class Running extends State {
         this.game.particles.push(
             new Dust(
                 this.game, 
-                this.game.player.x + this.game.player.width / 2, 
+                this.game.player.x + this.game.player.width / 3, 
                 this.game.player.y + this.game.player.height
             )
         )
@@ -60,7 +60,7 @@ export class Running extends State {
             this.game.player.setState(states.SITTING, 0);
         } else if (input.includes("ArrowUp")) {
             this.game.player.setState(states.JUMPING, 1);
-        } else if (input.includes("Enter")) {
+        } else if (input.includes("Control")) {
             this.game.player.setState(states.ROLLING, 2);
         }
     }
@@ -79,8 +79,10 @@ export class Jumping extends State {
     handleInput(input) {
         if (this.game.player.vy > this.game.player.weight) {
             this.game.player.setState(states.FALLING, 1);
-        } else if (input.includes("Enter")) {
+        } else if (input.includes("Control")) {
             this.game.player.setState(states.ROLLING, 2);
+        }else if (input.includes("ArrowDown")) {
+            this.game.player.setState(states.DIVING, 1);
         }
     }
 }
@@ -97,13 +99,15 @@ export class Falling extends State {
     handleInput(input) {
         if (this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING, 1);
+        }else if (input.includes("ArrowDown")) {
+            this.game.player.setState(states.DIVING, 1);
         }
     }
 }
 
 export class Rolling extends State {
     constructor(game) {
-        super("Rolling", game);
+        super("ROLLING", game);
     }
     enter() {
         this.game.player.frameX = 0;
@@ -111,11 +115,18 @@ export class Rolling extends State {
         this.game.player.maxFrame = 6;
     }
     handleInput(input) {
-        if (!input.includes('Enter') && this.game.player.onGround()) {
+        this.game.particles.push(
+            new Fire(
+                this.game, 
+                this.game.player.x + this.game.player.width * 0.5, 
+                this.game.player.y + this.game.player.height 
+            )
+        )
+        if (!input.includes('Control') && this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING, 1);
-        } else if (!input.includes('Enter') && !this.game.player.onGround()) {
+        } else if (!input.includes('Control') && !this.game.player.onGround()) {
             this.game.player.setState(states.FALLING, 1);
-        } else if (input.includes('Enter') && input.includes('ArrowUp') && this.game.player.onGround()) {
+        } else if (input.includes('Control') && input.includes('ArrowUp') && this.game.player.onGround()) {
             this.game.player.vy -= 27;
         }
     }
@@ -123,14 +134,33 @@ export class Rolling extends State {
 
 export class Diving extends State {
     constructor(game) {
-        super("Diving", game);
+        super("DIVING", game);
     }
     enter() {
-        this.game.player.frameY = 2;
-        this.game.player.maxFrame = 6;
+        this.game.player.frameY = 6;
+        this.game.player.maxFrame = 7;
+        this.game.player.vy = 40;
     }
     handleInput(input) {
+        this.game.particles.push(
+            new Fire(
+                this.game, 
+                this.game.player.x + this.game.player.width * 0.5, 
+                this.game.player.y + this.game.player.height 
+            )
+        )
         if (this.game.player.onGround()) {
+            for (let i = 0; i < 30; i++) {
+                this.game.particles.push(
+                    new Splash(
+                        this.game, 
+                        this.game.player.x + this.game.player.width * 0.5, 
+                        this.game.player.y + this.game.player.height ,
+                        i
+                    )
+                )
+                
+            }
             this.game.player.setState(states.RUNNING, 1);
         }
     }
@@ -138,18 +168,24 @@ export class Diving extends State {
 
 export class Hit extends State {
     constructor(game) {
-        super("Diving", game);
+        super("HIT", game);
     }
     enter() {
-        this.player.game.frameY = 2;
-        this.player.game.maxFrame = 6;
+        this.game.player.frameY = 4;
+        this.game.player.maxFrame = 11;
     }
     handleInput(input) {
-        if (this.player.game.onGround()) {
-            this.player.game.setState(states.RUNNING, 1);
+       
+        
+        if (this.game.player.frameX >= this.game.player.maxFrame - 1 && this.game.player.onGround()) {
+            this.game.player.setState(states.RUNNING, 1);
+        }else if(this.game.player.frameX >= this.game.player.maxFrame - 1 && !this.game.player.onGround()){
+            this.game.player.setState(states.FALLING, 1);
         }
     }
 }
+
+
 
 
 

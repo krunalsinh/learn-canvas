@@ -96,7 +96,7 @@ export default class Player {
             this.vy = 0;
         }
 
-        if(this.y + this.height > this.game.height) this.y = this.game.height - this.height;
+        if(this.y + this.height > this.game.height - this.game.groundMargin) this.y = this.game.height - this.height - this.game.groundMargin;
         if(this.timer > this.animationInterval){
 
             if(this.frameX < this.maxFrame - 1) this.frameX++;

@@ -1,6 +1,7 @@
 import { handleBoxCollision } from "../common/common-functions.js";
 import Background from "./background.js";
 import { Ghost, Spider, Worm } from "./enemy.js";
+import Explosion from "./explosion.js";
 import InputHandler from "./input.js";
 import Player from "./player.js";
 import { states } from "./state.js";
@@ -8,6 +9,8 @@ import UI from "./ui.js";
 
 window.addEventListener('load', function () {
     const canvas = document.getElementById('canvas');
+    const loading = document.getElementById('loading');
+    loading.style.display = "none";
     let ctx = canvas.getContext('2d');
     canvas.width = this.innerWidth;
     canvas.height = this.innerHeight;
@@ -30,6 +33,7 @@ window.addEventListener('load', function () {
             this.debug = true;
             this.score = 0;
             this.player.setState(states.SITTING, 0);
+            this.explosions = [];
         }
         update(deltaTime){
             this.enemyTimer += deltaTime;
@@ -48,7 +52,12 @@ window.addEventListener('load', function () {
                 particle.update(deltaTime)
                 if(particle.markedForDeletion) this.particles.splice(particleIndex, 1);
             });
-            console.log("particles ",this.particles.length);
+
+            this.explosions.forEach((explosion, explosionIndex) => {
+                explosion.update(deltaTime)
+                if(explosion.markedForDeletion) this.explosions.splice(explosionIndex, 1);
+            });
+            // console.log("particles ",this.particles.length);
             
         }
         draw(ctx){
@@ -57,6 +66,7 @@ window.addEventListener('load', function () {
             this.enemies.forEach(enemy => enemy.draw(ctx));
             this.player.draw(ctx);
             this.particles.forEach(particle => particle.draw(ctx));
+            this.explosions.forEach(explosion => explosion.draw(ctx));
             this.ui.draw(ctx);
         }
         addNewEnemy(){
@@ -75,8 +85,18 @@ window.addEventListener('load', function () {
         checkCollision(){
             this.enemies.forEach(enemy => {
                 if(handleBoxCollision(this.player, enemy)){
+                    if(this.player.currentState.state === "JUMPING" || 
+                    this.player.currentState.state === "FALLING" ||
+                    this.player.currentState.state === "RUNNING" ||
+                    this.player.currentState.state === "HIT") {
+                        this.player.setState(states.HIT, 0);
+                    }else{
+                        this.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2));
                         enemy.markedForDeletion = true;
                         this.increaseScore();
+                        console.log(this.explosions);
+                        
+                    }
                 }
             });
         }

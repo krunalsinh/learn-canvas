@@ -1,17 +1,15 @@
-import { ctx } from "./main.js";
 
 export default class Explosion{
-    constructor(spriteWidth, spriteHeight, objectX, objectY, objectWidth, objectHeight){
-        this.image = document.getElementById("explosionImg");
-        this.audio = document.getElementById("explosionAudio");
-        this.x = objectX + objectWidth / 2;
-        this.y = objectY + objectHeight / 2;;
+    constructor(x, y){
+        this.image = document.getElementById('explosionImg');
+        this.x = x;
+        this.y = y;
         this.frameX = 0;
         this.frameY = 0;
-        this.spriteWidth = spriteWidth;
-        this.spriteHeight = spriteHeight;
-        this.width = spriteWidth / 2;
-        this.height = spriteHeight / 2;
+        this.spriteWidth = 1000/5;
+        this.spriteHeight = 179;
+        this.width = this.spriteWidth / 2;
+        this.height = this.spriteHeight / 2;
         this.timeSinceLastFrame = 0;
         this.frameInterval = 200;
         this.markedForDeletion = false;
@@ -20,7 +18,6 @@ export default class Explosion{
     update(deltaTime){
         this.timeSinceLastFrame += deltaTime;
 
-        if(this.frameX === 0) this.audio.play();
 
         if(this.timeSinceLastFrame > this.frameInterval) {
             this.frameX++;
@@ -30,10 +27,9 @@ export default class Explosion{
             }
         }
 
-        this.draw();
     }
 
-    draw(){
+    draw(ctx){
         ctx.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height)
     }
 }

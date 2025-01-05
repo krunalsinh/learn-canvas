@@ -12,7 +12,7 @@ export default class InputHandler{
                  e.key === "ArrowUp" || 
                  e.key === "ArrowLeft" || 
                  e.key === "ArrowRight" ||
-                 e.key === "Enter"
+                 e.key === "Control"
             ) && !this.keys.includes(e.key)){
                 this.keys.push(e.key);
             }
@@ -25,7 +25,7 @@ export default class InputHandler{
                 e.key === "ArrowUp" || 
                 e.key === "ArrowLeft" || 
                 e.key === "ArrowRight" ||
-                e.key === "Enter"){
+                e.key === "Control"){
                 this.keys.splice(this.keys.indexOf(e.key), 1);
             }
             else if(e.key === "d") this.game.debug = !this.game.debug;
