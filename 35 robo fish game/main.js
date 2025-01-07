@@ -1,5 +1,5 @@
 import { handleBoxCollision } from "../common/common-functions.js";
-import Background from "./background.js";
+import Background, { Layer } from "./background.js";
 import { Enemy1, Enemy2, Enemy3, Enemy4 } from "./enemy.js";
 import Explosion from "./explosion.js";
 import GameMessage from "./game-message.js";
@@ -36,6 +36,12 @@ window.addEventListener('load', function () {
             this.player.setState(states.STATE1, 5);
             this.explosions = [];
             this.gameOver = false;
+            this.backgroundLayers = [
+                new Layer(this, this.width, this.height, 0.1, "layer1"),
+                new Layer(this, this.width, this.height, 0.2, "layer2"),
+                new Layer(this, this.width, this.height, 0.4, "layer3"),
+                new Layer(this, this.width, this.height, 0.6, "layer4"),
+            ]
         }
         update(deltaTime){
             this.enemyTimer += deltaTime;
@@ -43,7 +49,7 @@ window.addEventListener('load', function () {
                 this.enemyTimer = 0;
                 this.addNewEnemy();
             }
-            this.background.update(deltaTime);
+            this.backgroundLayers.forEach(layer => layer.update(deltaTime));
             this.checkCollision();
             this.player.update(this.input.keys, deltaTime)
             this.enemies.forEach((enemy, enemyIndex) => {
@@ -59,14 +65,18 @@ window.addEventListener('load', function () {
                 explosion.update(deltaTime)
                 if(explosion.markedForDeletion) this.explosions.splice(explosionIndex, 1);
             });
-            // console.log("particles ",this.particles.length);
+            
             
         }
         draw(ctx){
             
             this.background.draw(ctx);
+            this.backgroundLayers[0].draw(ctx);
+            this.backgroundLayers[1].draw(ctx);
+            this.backgroundLayers[2].draw(ctx);
             this.enemies.forEach(enemy => enemy.draw(ctx));
             this.player.draw(ctx);
+            this.backgroundLayers[3].draw(ctx);
             this.particles.forEach(particle => particle.draw(ctx));
             this.explosions.forEach(explosion => explosion.draw(ctx));
             this.ui.draw(ctx);

@@ -11,13 +11,22 @@ export default class UI{
         this.x = 10;
         this.life = {
             img : document.getElementById("lifeImg"),
-            imgSize : 15
+            imgSize : 150 / 3
         }
         
     }
     draw(ctx){
         for(let i = 0; i < this.game.player.life; i++){
-            ctx.drawImage(this.life.img, this.x + (i * this.life.imgSize * 2), this.baseY + this.lineGap * 0, this.life.imgSize * 2, this.life.imgSize * 2);
+            ctx.drawImage(
+                this.life.img, 
+                0,
+                0,
+                this.life.imgSize,
+                this.life.imgSize,
+                this.x + (i * this.life.imgSize), 
+                this.baseY + this.lineGap * 0, 
+                this.life.imgSize , 
+                this.life.imgSize );
         }
         addText(ctx, this.x, this.baseY + this.lineGap * 2, this.fontSize, this.fontFamily, "#fff", "Last input : "+this.game.input.keys.toString(), "left");
         addText(ctx, this.x, this.baseY + this.lineGap * 3, this.fontSize, this.fontFamily, "#fff", "Active State : "+this.game.player.currentState.state, "left");

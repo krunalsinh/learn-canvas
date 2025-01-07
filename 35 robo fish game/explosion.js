@@ -6,12 +6,12 @@ export default class Explosion{
         this.y = y;
         this.frameX = 0;
         this.frameY = 0;
-        this.spriteWidth = 1000/5;
-        this.spriteHeight = 179;
+        this.spriteWidth = 1600 / 8;
+        this.spriteHeight = 200;
         this.width = this.spriteWidth / 2;
         this.height = this.spriteHeight / 2;
         this.timeSinceLastFrame = 0;
-        this.frameInterval = 200;
+        this.frameInterval = 1000/30;
         this.markedForDeletion = false;
     }
     
@@ -22,7 +22,7 @@ export default class Explosion{
         if(this.timeSinceLastFrame > this.frameInterval) {
             this.frameX++;
 
-            if(this.frameX > 5){
+            if(this.frameX > 8){
                 this.markedForDeletion = true;
             }
         }
