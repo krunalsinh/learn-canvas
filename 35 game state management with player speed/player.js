@@ -49,6 +49,7 @@ export default class Player {
         this.maxSpeed = 15;
         this.vy = 0;
         this.weight = 1;
+        this.life = 5;
         
         // Set initial state
         // this.currentState = this.states[states.SITTING];

@@ -16,7 +16,10 @@ export default class InputHandler{
             ) && !this.keys.includes(e.key)){
                 this.keys.push(e.key);
             }
-            // console.log(e.key, this.keys);
+
+            if(this.game.gameOver && e.key === " "){
+                this.game.restart();
+            }
             
         });
 

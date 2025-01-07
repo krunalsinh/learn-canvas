@@ -2,6 +2,7 @@ import { handleBoxCollision } from "../common/common-functions.js";
 import Background from "./background.js";
 import { Ghost, Spider, Worm } from "./enemy.js";
 import Explosion from "./explosion.js";
+import GameMessage from "./game-message.js";
 import InputHandler from "./input.js";
 import Player from "./player.js";
 import { states } from "./state.js";
@@ -34,6 +35,7 @@ window.addEventListener('load', function () {
             this.score = 0;
             this.player.setState(states.SITTING, 0);
             this.explosions = [];
+            this.gameOver = false;
         }
         update(deltaTime){
             this.enemyTimer += deltaTime;
@@ -85,24 +87,42 @@ window.addEventListener('load', function () {
         checkCollision(){
             this.enemies.forEach(enemy => {
                 if(handleBoxCollision(this.player, enemy)){
+                    this.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2));
+                    enemy.markedForDeletion = true;
+
                     if(this.player.currentState.state === "JUMPING" || 
                     this.player.currentState.state === "FALLING" ||
                     this.player.currentState.state === "RUNNING" ||
                     this.player.currentState.state === "HIT") {
-                        this.player.setState(states.HIT, 0);
+                        this.player.setState(states.HIT, 5);
                     }else{
-                        this.explosions.push(new Explosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2));
-                        enemy.markedForDeletion = true;
                         this.increaseScore();
-                        console.log(this.explosions);
-                        
+                    }
+
+                    if(this.player.life <= 0){
+                        this.gameOver = true;
                     }
                 }
             });
         }
+        restart(){
+            this.player = new Player(this);
+            this.background = new Background(this);
+            this.ui = new UI(this);
+            this.enemies = [];
+            this.enemyTimer = 0;
+            this.particles = [];
+            this.debug = true;
+            this.score = 0;
+            this.player.setState(states.SITTING, 0);
+            this.explosions = [];
+            this.gameOver = false;
+            animate(0);
+        }
     }
 
     const game = new Game(canvas.height, canvas.width);
+    const gameMessage = new GameMessage(game);
 
     let lastTime = 0;
     function animate(timestamp){
@@ -111,7 +131,11 @@ window.addEventListener('load', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         game.update(deltaTime);
         game.draw(ctx);
-        requestAnimationFrame(animate);
+        if(!game.gameOver) {
+            requestAnimationFrame(animate);
+        }else{
+            gameMessage.draw(ctx);
+        }
     }
     animate(0);
 });
