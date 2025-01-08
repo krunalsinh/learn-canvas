@@ -1,7 +1,7 @@
 import { getDistance } from "../common/common-functions.js";
 import {mouse} from "./page.js";
 
-class FlowFieldEffect {
+export class FlowFieldEffect {
     #ctx;
     #width;
     #height;
@@ -73,5 +73,3 @@ class FlowFieldEffect {
         this.flowFieldAnimation.animation = requestAnimationFrame(this.animate.bind(this));
     }
 }
-
-export {FlowFieldEffect}
