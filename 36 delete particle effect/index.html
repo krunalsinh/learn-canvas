@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete particle effect</title>
+  <link rel="stylesheet" href="../common/style.css" />
+  <style id="style1">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      overflow: auto;
+    }
+
+    .cards {
+      padding: 50px;
+      color: #fff;
+    }
+
+    .card {
+      background: #4a4a4a;
+      border-radius: 5px;
+      width: 320px;
+      color: #fff;
+    }
+
+    .card-header {
+      padding: 10px;
+      border-bottom: 1px solid #626262;
+      display: flex;
+    }
+
+    .card-body {
+      padding: 10px;
+    }
+
+    .card-header button {
+      margin-left: auto;
+      background: #6511d3;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="height: 1000px;"></div>
+  <div>
+    <div>
+      <div class="cards">
+        <div class="card" id="appCard1">
+          <div class="card-header">
+            <h4>Demo Card 1</h4><button id="appCard1Btn">Delete</button>
+          </div>
+          <div class="card-body">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas maxime sint debitis deleniti quam rerum,
+              odio incidunt delectus autem a temporibus, quaerat voluptatem dolorem facilis quae similique corporis
+              ratione quasi!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <canvas id="canvas" width="600" height="600">
+  </canvas>
+
+
+
+  <script src="./rasterizeHTML.allinone.js" defer></script>
+  <script src="./page.js" type="module" defer></script>
+</body>
+
+</html>
