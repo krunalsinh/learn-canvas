@@ -1,4 +1,4 @@
-import { drawCircle } from "../common/common-functions.js";
+import { drawCircle, drawLine } from "../common/common-functions.js";
 
 let canvas;
 let ctx;
@@ -13,8 +13,6 @@ class Particle{
         this.y = y;
         this.baseX = x;
         this.baseY = y;
-        this.radius = 8;
-        this.baseRadius = 8;
         this.color = `hsl(${Math.random() * 360}, 50%, 50%)`;
         this.timer = 0;
         this.val = 0;
@@ -23,13 +21,12 @@ class Particle{
     update(deltatime){
         this.timer += deltatime;
 
-        this.val = Math.sin(this.timer * 0.002 + this.x) * 3;
-        this.val2 = Math.cos(this.timer * 0.002 + this.y) * 3;
-        this.radius = this.baseRadius + (this.val + this.val2);
+        this.val = Math.sin(this.timer * 0.002 + this.x) * 30;
+        this.val2 = Math.cos(this.timer * 0.002 + this.y) * 30;
         
     }
     draw(ctx){
-        drawCircle(ctx, this.x, this.y, this.radius, this.color);
+        drawLine(ctx, this.x, this.y, this.x + this.val, this.y + this.val2, 1, this.color);
     }
 }
 
