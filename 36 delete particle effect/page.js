@@ -5,21 +5,18 @@ import { drawRectangle } from "../common/common-functions.js";
 // canvas.height = innerHeight;
 var card = document.getElementById('appCard1');
 var cardBtn = document.getElementById('appCard1Btn');
-// var ctx = canvas.getContext('2d');
 
-
-// appCard1Btn.addEventListener('click', function () {
-//   drawHTMLOnCanvas(card, ctx, 320, 180, "style1");
-// });
 const deleteParticleBtns = document.querySelectorAll("[particleDeleteBtn]");
 deleteParticleBtns.forEach(btn => {
   btn.addEventListener("click", btnE => {
-    const targetId = btnE.target.getAttribute("targetId");
-    drawHTMLOnCanvas(targetId, 320, 180);
+    const targetId = btnE.currentTarget.getAttribute("targetId");
+    console.log(targetId);
+    
+    drawHTMLOnCanvas(targetId);
   });
 });
 
-function drawHTMLOnCanvas(elementId, width, height) {
+function drawHTMLOnCanvas(elementId) {
   let canvas = document.getElementById("deleteParticleEffectCanvas");
   if(!canvas){
     canvas = document.createElement("canvas");
@@ -36,14 +33,16 @@ function drawHTMLOnCanvas(elementId, width, height) {
   // const canvas = document.createElement("canvas");
   const element = document.getElementById(elementId);
   const eleData = element.getBoundingClientRect();
+  console.log(eleData);
+  
   const xPos = eleData.x;
   const yPos = eleData.y;
   html2canvas(element).then(htmCanvas => {
     const img = new Image();
     img.onload = () => {
       const cellCount = 30;
-      const xColCell = width / cellCount;
-      const yRowCell = height / cellCount;
+      const xColCell = eleData.width / cellCount;
+      const yRowCell = eleData.height / cellCount;
       let cells = [], cellAnimation;
       for (let yIndex = 0; yIndex < cellCount; yIndex++) {
         for (let xIndex = 0; xIndex < cellCount; xIndex++) {
