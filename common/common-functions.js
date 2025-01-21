@@ -59,10 +59,11 @@ function addText(context,x,y, fontSize = '10px', fontFamily = "sans-serif", colo
 }
 
 function fillRect(context, x = 0, y = 0 , width = 50, height = 50, color = "#666"){
-    context.beginPath();
     context.fillStyle = color;
     context.fillRect(x, y, width, height)
-    context.closePath();
+}
+function clearRect(context, x = 0, y = 0 , width = 50, height = 50){
+    context.clearRect(x, y, width, height)
 }
 
 
@@ -145,4 +146,4 @@ function handleCircleCollision(first, second) {
     return !(getDistance(first.x, first.y, second.x, second.y) > first.radius + second.radius);
 }
 
-export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision, handleCircleCollision, loadAudio };
+export {drawRectangle, drawCircle, drawTriangle, drawStar, drawLine, addText, fillRect, clearRect ,getDistance, moveTo, getIntFromRange,getNumFromRange, drawSprite, loadImage, handleBoxCollision, handleCircleCollision, loadAudio };
