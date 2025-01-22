@@ -1,7 +1,7 @@
 import { drawRectangle, fillRect } from "../common/common-functions.js";
 
 export default class Snake{
-    constructor(game, x, y,speedX, speedY, color){
+    constructor(game, x, y,speedX, speedY, color, name){
         this.game = game;
         this.x = x;
         this.y = y;
@@ -9,10 +9,23 @@ export default class Snake{
         this.speedX = speedX;
         this.width = this.game.cellSize;
         this.height = this.game.cellSize;
+        this.baseColor = color;
         this.color = color;
         this.moving = true;
+        this.score = 0;
+        this.length = 2;
+        this.segments = [];
+        this.readyToTurn = true;
+        this.name = name;
     }
     update(){
+        this.readyToTurn = true;
+        if(this.game.checkCollision(this, this.game.food)){
+            this.game.food.reset();
+            this.score += 1;
+            this.length += 1;
+
+        }
         if(this.x <= 0 && this.speedX < 0 || 
             this.x >= this.game.columns - 1 && this.speedX > 0 ||
             this.y <= 0 && this.speedY < 0 ||
@@ -22,38 +35,65 @@ export default class Snake{
         if(this.moving){
             this.x += this.speedX;
             this.y += this.speedY;
+            this.segments.unshift({x: this.x, y: this.y});
+
+            if(this.segments.length > this.length){
+                this.segments.pop();
+            }
         }
     }
     draw(){
-        drawRectangle(this.game.ctx, 
-            this.x * this.game.cellSize, 
-            this.y * this.game.cellSize, this.width, this.height, this.color);
+        this.segments.forEach((segment, index) => {
+            if(index === 0){
+                this.color = "black";
+            }else{
+                this.color = this.baseColor;
+            }
+            drawRectangle(this.game.ctx, 
+                segment.x * this.game.cellSize, 
+                segment.y * this.game.cellSize, this.width, this.height, this.color);
+        });
+        // drawRectangle(this.game.ctx, 
+        //     this.x * this.game.cellSize, 
+        //     this.y * this.game.cellSize, this.width, this.height, this.color);
     }
     turnUp(){
-        this.speedX = 0;
-        this.speedY = -1;
-        this.moving = true;
+        if(this.speedY === 0 && this.readyToTurn){
+            this.speedX = 0;
+            this.speedY = -1;
+            this.moving = true;
+            this.readyToTurn = false;
+        }
     }
     turnDown(){
-        this.speedX = 0;
-        this.speedY = 1;
-        this.moving = true;
+        if(this.speedY === 0 && this.readyToTurn){
+            this.speedX = 0;
+            this.speedY = 1;
+            this.moving = true;
+            this.readyToTurn = false;
+        }
     }
     turnLeft(){
-        this.speedX = -1;
-        this.speedY = 0;
-        this.moving = true;
+        if(this.speedX === 0 && this.readyToTurn){
+            this.speedX = -1;
+            this.speedY = 0;
+            this.moving = true;
+            this.readyToTurn = false;
+        }
     }
     turnRight(){
-        this.speedX = 1;
-        this.speedY = 0;
-        this.moving = true;
+        if(this.speedX === 0 && this.readyToTurn){
+            this.speedX = 1;
+            this.speedY = 0;
+            this.moving = true;
+            this.readyToTurn = false;
+        }
     }
 }
 
 export class Keyboard1 extends Snake{
-    constructor(game, x, y,speedX, speedY, color){
-        super(game, x, y,speedX, speedY, color);
+    constructor(game, x, y,speedX, speedY, color, name){
+        super(game, x, y,speedX, speedY, color, name);
         window.addEventListener('keydown', e => {
             switch(e.key){
                 case 'ArrowUp':
@@ -74,8 +114,8 @@ export class Keyboard1 extends Snake{
 }
 
 export class Keyboard2 extends Snake{
-    constructor(game, x, y,speedX, speedY, color){
-        super(game, x, y,speedX, speedY, color);
+    constructor(game, x, y,speedX, speedY, color, name){
+        super(game, x, y,speedX, speedY, color, name);
         window.addEventListener('keydown', e => {
             switch(e.key){
                 case 'w':
@@ -96,8 +136,8 @@ export class Keyboard2 extends Snake{
 }
 
 export class ComputerAi extends Snake{
-    constructor(game, x, y,speedX, speedY, color){
-        super(game, x, y,speedX, speedY, color);
+    constructor(game, x, y,speedX, speedY, color, name){
+        super(game, x, y,speedX, speedY, color, name);
         this.turnTimer = 0;
         this.turnInterval = Math.floor(Math.random() * this.game.columns + 1);
     }

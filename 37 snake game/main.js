@@ -1,5 +1,8 @@
 import { clearRect, drawRectangle, fillRect } from "../common/common-functions.js";
+import Background from "./background.js";
+import Food from "./food.js";
 import Snake, { ComputerAi, Keyboard1, Keyboard2 } from "./snake.js";
+import { UI } from "./ui.js";
 
 class Game{
     constructor(canvas, context){
@@ -18,7 +21,11 @@ class Game{
         this.player2;
         this.player3;
         this.player4;
+        this.food;
         this.gameObjects;  
+        this.ui = new UI(this);
+        this.topMargin = 2;
+        this.background;
 
         window.addEventListener('resize', e => {
             this.resize( e.currentTarget.innerWidth, e.currentTarget.innerHeight);
@@ -32,12 +39,14 @@ class Game{
         this.height = this.canvas.height;
         this.columns = Math.floor(this.width / this.cellSize);
         this.rows = Math.floor(this.height / this.cellSize);
-        this.player1 = new ComputerAi(this, 0, 0, 0, 1, "pink");
-        this.player2 = new ComputerAi(this, this.columns - 1, 0, 1, 0, "skyblue");
-        this.player3 = new ComputerAi(this, 0, this.rows - 1, 1, 0, "gold");
-        this.player4 = new ComputerAi(this, this.columns - 1, this.rows - 1, 1, 0, "blue");
+        this.background = new Background(this);
+        this.player1 = new Keyboard1(this, 1, 1, 0, 1, "pink", "Player1");
+        this.player2 = new ComputerAi(this, this.columns - 3, 2, 1, 0, "skyblue", "Snake killer");
+        this.player3 = new ComputerAi(this, 2, this.rows - 2, 1, 0, "gold", "Python");
+        this.player4 = new ComputerAi(this, this.columns - 3, this.rows - 3, 1, 0, "blue", "Cobra");
+        this.food = new Food(this);
 
-        this.gameObjects = [this.player1, this.player2, this.player3, this.player4];
+        this.gameObjects = [this.player1, this.player2, this.player3, this.player4, this.food];
         
     }
     drawGrid(){
@@ -46,6 +55,18 @@ class Game{
                 drawRectangle(this.ctx, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize, 'rgba(0, 0, 0, 1)', true);
             }
         }
+    }
+    drawStatusText(){
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '30px Impact';
+        this.ctx.textBaseline = 'top';
+        this.ctx.fillText(`Player 1: ${this.player1.score}`, 10, this.cellSize);
+        this.ctx.fillText(`Player 2: ${this.player2.score}`, 10, this.cellSize * 2);
+        this.ctx.fillText(`Player 3: ${this.player3.score}`, 10, this.cellSize * 3);
+        this.ctx.fillText(`Player 4: ${this.player4.score}`, 10, this.cellSize * 4);
+    }
+    checkCollision(a, b){
+        return a.x === b.x && a.y === b.y;
     }
     handlePeriodicEvent(deltaTime){
         if(this.eventTimer < this.eventInterval){
@@ -67,6 +88,9 @@ class Game{
                 obj.update();
                 obj.draw();
             });
+
+            this.drawStatusText();
+            this.ui.update();
         }
     }
 }
