@@ -40,8 +40,8 @@ class Game{
         this.columns = Math.floor(this.width / this.cellSize);
         this.rows = Math.floor(this.height / this.cellSize);
         this.background = new Background(this);
-        this.player1 = new Keyboard1(this, 1, 1, 0, 1, "pink", "Player1");
-        this.player2 = new ComputerAi(this, this.columns - 3, 2, 1, 0, "skyblue", "Snake killer");
+        this.player1 = new Keyboard1(this, 1, this.topMargin, 0, 1, "pink", "Player1");
+        this.player2 = new ComputerAi(this, this.columns - 3, this.topMargin, 1, 0, "skyblue", "Snake killer");
         this.player3 = new ComputerAi(this, 2, this.rows - 2, 1, 0, "gold", "Python");
         this.player4 = new ComputerAi(this, this.columns - 3, this.rows - 3, 1, 0, "blue", "Cobra");
         this.food = new Food(this);
@@ -57,13 +57,18 @@ class Game{
         }
     }
     drawStatusText(){
-        this.ctx.fillStyle = '#fff';
         this.ctx.font = '30px Impact';
         this.ctx.textBaseline = 'top';
-        this.ctx.fillText(`Player 1: ${this.player1.score}`, 10, this.cellSize);
-        this.ctx.fillText(`Player 2: ${this.player2.score}`, 10, this.cellSize * 2);
-        this.ctx.fillText(`Player 3: ${this.player3.score}`, 10, this.cellSize * 3);
-        this.ctx.fillText(`Player 4: ${this.player4.score}`, 10, this.cellSize * 4);
+        this.drawText(`Player 1: ${this.player1.score}`, 10, this.cellSize);
+        this.drawText(`Player 2: ${this.player2.score}`, 10, this.cellSize * 2);
+        this.drawText(`Player 3: ${this.player3.score}`, 10, this.cellSize * 3);
+        this.drawText(`Player 4: ${this.player4.score}`, 10, this.cellSize * 4);
+    }
+    drawText(text, x, y){
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillText(text, x + 3, y + 3);
+        this.ctx.fillStyle = '#fff';
+        this.ctx.fillText(text, x, y);
     }
     checkCollision(a, b){
         return a.x === b.x && a.y === b.y;
@@ -82,6 +87,8 @@ class Game{
         this.handlePeriodicEvent(deltaTime);
         if(this.eventUpdate){
             clearRect(this.ctx, 0, 0, canvas.width, canvas.height);
+
+            this.background.draw();
             this.drawGrid();
             
             this.gameObjects.forEach(obj => {

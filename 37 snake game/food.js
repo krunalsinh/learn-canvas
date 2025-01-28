@@ -10,7 +10,7 @@ export default class Food {
 
     reset(){
         this.x = Math.floor(Math.random() * this.game.columns);
-        this.y = Math.floor(Math.random() * this.game.rows);
+        this.y = Math.floor(Math.random() * (this.game.rows - this.game.topMargin) + this.game.topMargin);
     }
 
     draw() {    
