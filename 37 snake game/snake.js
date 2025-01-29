@@ -41,6 +41,10 @@ export default class Snake{
                 this.segments.pop();
             }
         }
+
+        if(this.score >= this.game.winningScore){
+            this.game.triggerGameOver();
+        }
     }
     draw(){
         this.segments.forEach((segment, index) => {
