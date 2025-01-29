@@ -17,6 +17,9 @@ class Game{
         this.eventInterval = 200;
         this.eventUpdate = false;
 
+        this.gameOver = true;
+        this.winningScore = 3;
+
         this.player1;
         this.player2;
         this.player3;
@@ -40,14 +43,25 @@ class Game{
         this.columns = Math.floor(this.width / this.cellSize);
         this.rows = Math.floor(this.height / this.cellSize);
         this.background = new Background(this);
-        this.player1 = new Keyboard1(this, 1, this.topMargin, 0, 1, "pink", "Player1");
-        this.player2 = new ComputerAi(this, this.columns - 3, this.topMargin, 1, 0, "skyblue", "Snake killer");
-        this.player3 = new ComputerAi(this, 2, this.rows - 2, 1, 0, "gold", "Python");
-        this.player4 = new ComputerAi(this, this.columns - 3, this.rows - 3, 1, 0, "blue", "Cobra");
-        this.food = new Food(this);
-
-        this.gameObjects = [this.player1, this.player2, this.player3, this.player4, this.food];
+      
         
+    }
+    start(){
+        if(!this.gameOver){
+            this.triggerGameOver();
+        }else{
+
+            this.gameOver = false;
+            this.ui.gamePlayUI();
+            this.player1 = new Keyboard1(this, 1, this.topMargin, 0, 1, "pink", "Player1");
+            this.player2 = new ComputerAi(this, this.columns - 3, this.topMargin, 1, 0, "skyblue", "Snake killer");
+            this.player3 = new ComputerAi(this, 2, this.rows - 2, 1, 0, "gold", "Python");
+            this.player4 = new ComputerAi(this, this.columns - 3, this.rows - 3, 1, 0, "blue", "Cobra");
+            this.food = new Food(this);
+    
+            this.gameObjects = [this.player1, this.player2, this.player3, this.player4, this.food];
+        }
+       
     }
     drawGrid(){
         for(let i = 0; i < this.rows; i++){
@@ -85,7 +99,7 @@ class Game{
     }
     render(deltaTime){
         this.handlePeriodicEvent(deltaTime);
-        if(this.eventUpdate){
+        if(this.eventUpdate && !this.gameOver){
             clearRect(this.ctx, 0, 0, canvas.width, canvas.height);
 
             this.background.draw();
@@ -99,6 +113,10 @@ class Game{
             this.drawStatusText();
             this.ui.update();
         }
+    }
+    triggerGameOver(){
+        this.gameOver = true;
+        this.ui.gameOverUI();
     }
 }
 
