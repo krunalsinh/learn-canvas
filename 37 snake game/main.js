@@ -18,7 +18,7 @@ class Game{
         this.eventUpdate = false;
 
         this.gameOver = true;
-        this.winningScore = 3;
+        this.winningScore = 10;
 
         this.player1;
         this.player2;
@@ -96,7 +96,12 @@ class Game{
 
             this.food = new Food(this);
     
-            this.gameObjects = [this.player1, this.player2, this.player3, this.player4, this.food];
+            this.gameObjects = [
+                this.player1, 
+                // this.player2, 
+                // this.player3, 
+                // this.player4, 
+                this.food];
 
             this.ctx.clearRect(0, 0, this.width, this.height);
         }
