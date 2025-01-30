@@ -62,7 +62,7 @@ export default class Snake{
         //     this.y * this.game.cellSize, this.width, this.height, this.color);
     }
     turnUp(){
-        if(this.speedY === 0 && this.readyToTurn){
+        if(this.speedY === 0 && this.y > this.game.topMargin && this.readyToTurn){
             this.speedX = 0;
             this.speedY = -1;
             this.moving = true;
@@ -70,7 +70,7 @@ export default class Snake{
         }
     }
     turnDown(){
-        if(this.speedY === 0 && this.readyToTurn){
+        if(this.speedY === 0 && this.y < this.game.rows - 1 && this.readyToTurn){
             this.speedX = 0;
             this.speedY = 1;
             this.moving = true;
@@ -78,7 +78,7 @@ export default class Snake{
         }
     }
     turnLeft(){
-        if(this.speedX === 0 && this.readyToTurn){
+        if(this.speedX === 0 && this.x > 0 && this.readyToTurn){
             this.speedX = -1;
             this.speedY = 0;
             this.moving = true;
@@ -86,7 +86,7 @@ export default class Snake{
         }
     }
     turnRight(){
-        if(this.speedX === 0 && this.readyToTurn){
+        if(this.speedX === 0 && this.x < this.game.columns - 1 && this.readyToTurn){
             this.speedX = 1;
             this.speedY = 0;
             this.moving = true;

@@ -26,10 +26,17 @@ class Game{
         this.player4;
         this.food;
         this.gameObjects;  
+        this.debug = true;
         this.ui = new UI(this);
         this.topMargin = 2;
         this.background;
-
+        window.addEventListener('keyup', e => {
+            if(e.ctrlKey === true && e.key === 'q'){
+                this.debug = !this.debug;
+            }
+            
+            
+        })
         window.addEventListener('resize', e => {
             this.resize( e.currentTarget.innerWidth, e.currentTarget.innerHeight);
         })
@@ -46,6 +53,35 @@ class Game{
       
         
     }
+
+    player1Init(){
+        const playerName = this.ui.player1Name.value;
+        if(this.ui.playerControl1.value === "keyboard"){
+            this.player1 = new Keyboard1(this, 4, this.topMargin, 1, 0, "pink", playerName);
+        }else{
+            this.player1 = new ComputerAi(this, 4, this.topMargin, 1, 0, "pink", playerName);
+        }
+    }
+
+    player2Init(){
+        const playerName = this.ui.player2Name.value;
+        if(this.ui.playerControl2.value === "wsad"){
+            this.player2 = new Keyboard2(this, 0, this.topMargin + 4, 0, 1, "blue", playerName);
+        }else{
+            this.player2 = new ComputerAi(this, 0, this.topMargin + 4, 0, 1, "blue", playerName);
+        }
+    }
+
+    player3Init(){
+        const playerName = this.ui.player3Name.value;
+        this.player3 = new ComputerAi(this, 4, this.rows - 1, 1, 0, "skyblue", playerName);
+    }
+
+    player4Init(){
+        const playerName = this.ui.player4Name.value;
+        this.player4 = new ComputerAi(this, this.columns - 1, 4, 0, 1, "gold", playerName);
+    }
+
     start(){
         if(!this.gameOver){
             this.triggerGameOver();
@@ -53,13 +89,16 @@ class Game{
 
             this.gameOver = false;
             this.ui.gamePlayUI();
-            this.player1 = new Keyboard1(this, 1, this.topMargin, 0, 1, "pink", "Player1");
-            this.player2 = new ComputerAi(this, this.columns - 3, this.topMargin, 1, 0, "skyblue", "Snake killer");
-            this.player3 = new ComputerAi(this, 2, this.rows - 2, 1, 0, "gold", "Python");
-            this.player4 = new ComputerAi(this, this.columns - 3, this.rows - 3, 1, 0, "blue", "Cobra");
+            this.player1Init();
+            this.player2Init();
+            this.player3Init();
+            this.player4Init();
+
             this.food = new Food(this);
     
             this.gameObjects = [this.player1, this.player2, this.player3, this.player4, this.food];
+
+            this.ctx.clearRect(0, 0, this.width, this.height);
         }
        
     }
@@ -103,7 +142,7 @@ class Game{
             clearRect(this.ctx, 0, 0, canvas.width, canvas.height);
 
             this.background.draw();
-            this.drawGrid();
+            this.debug && this.drawGrid();
             
             this.gameObjects.forEach(obj => {
                 obj.update();
@@ -118,6 +157,13 @@ class Game{
         this.gameOver = true;
         this.ui.gameOverUI();
     }
+    toggleFullScreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
 }
 
 window.addEventListener('load', () => {

@@ -6,6 +6,7 @@ export default class Food {
         this.x;
         this.y;
         this.reset();
+        this.image = document.getElementById("magicBerry");
     }
 
     reset(){
@@ -14,7 +15,10 @@ export default class Food {
     }
 
     draw() {    
-       drawRectangle(this.game.ctx, this.x * this.game.cellSize, this.y * this.game.cellSize, this.game.cellSize, this.game.cellSize, '#fff');
+        if(this.game.debug){
+            drawRectangle(this.game.ctx, this.x * this.game.cellSize, this.y * this.game.cellSize, this.game.cellSize, this.game.cellSize, '#fff');
+        }
+       this.game.ctx.drawImage(this.image, this.x * this.game.cellSize, this.y * this.game.cellSize, this.game.cellSize, this.game.cellSize)
     }
 
     update(deltaTime) {
