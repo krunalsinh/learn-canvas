@@ -15,6 +15,13 @@ export default class Snake{
         this.score = 0;
         this.length = 3;
         this.segments = [];
+        
+        for (let i = 0; i < this.length; i++) {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            this.segments.unshift({x: this.x, y: this.y, frameX : 0, frameY: 0});
+        }
         this.readyToTurn = true;
         this.name = name;
         this.image = document.getElementById("snakeCorgi");
@@ -121,7 +128,63 @@ export default class Snake{
                 segment.frameY = 0;
             }
         }else{//body
-            if(segment.y < nextSegment.y){
+            if(segment.x === nextSegment.x && 
+               segment.y < nextSegment.y &&
+               segment.x < previousSegment.x &&
+               segment.y === previousSegment.y
+            ){
+                segment.frameX = 2;
+                segment.frameY = 2;
+            }else if(segment.x > nextSegment.x && 
+                segment.y === nextSegment.y &&
+                segment.x === previousSegment.x &&
+                segment.y < previousSegment.y
+            ){
+                 segment.frameX = 3;
+                 segment.frameY = 2;
+            }else if(segment.x === nextSegment.x && 
+                segment.y > nextSegment.y &&
+                segment.x > previousSegment.x &&
+                segment.y === previousSegment.y
+            ){
+                 segment.frameX = 3;
+                 segment.frameY = 3;
+            }else if(segment.x < nextSegment.x && 
+                segment.y === nextSegment.y &&
+                segment.x === previousSegment.x &&
+                segment.y > previousSegment.y
+            ){
+                 segment.frameX = 2;
+                 segment.frameY = 3;
+            }else if(segment.x < nextSegment.x && 
+                segment.y === nextSegment.y &&
+                segment.x === previousSegment.x &&
+                segment.y < previousSegment.y
+            ){
+                 segment.frameX = 3;
+                 segment.frameY = 0;
+            }else if(segment.x === nextSegment.x && 
+                segment.y > nextSegment.y &&
+                segment.x < previousSegment.x &&
+                segment.y === previousSegment.y
+            ){
+                 segment.frameX = 3;
+                 segment.frameY = 1;
+            }else if(segment.x > nextSegment.x && 
+                segment.y === nextSegment.y &&
+                segment.x === previousSegment.x &&
+                segment.y > previousSegment.y
+            ){
+                 segment.frameX = 4;
+                 segment.frameY = 1;
+            }else if(segment.x === nextSegment.x && 
+                segment.y < nextSegment.y &&
+                segment.x > previousSegment.x &&
+                segment.y === previousSegment.y
+            ){
+                 segment.frameX = 4;
+                 segment.frameY = 0;
+            }else if(segment.y < nextSegment.y){
                 segment.frameX = 1;
                 segment.frameY = 3;
             }else if(segment.y > nextSegment.y){

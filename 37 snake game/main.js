@@ -98,10 +98,11 @@ class Game{
     
             this.gameObjects = [
                 this.player1, 
-                // this.player2, 
-                // this.player3, 
-                // this.player4, 
-                this.food];
+                this.player2, 
+                this.player3, 
+                this.player4,
+                this.food
+            ];
 
             this.ctx.clearRect(0, 0, this.width, this.height);
         }
