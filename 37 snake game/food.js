@@ -7,6 +7,7 @@ export default class Food {
         this.y;
         this.reset();
         this.frameX = 0;
+        this.frameY = Math.floor(Math.random() * 3);
         this.spriteWidth = 200;
         this.spriteHeight = 400;
         this.frameCounter = 0;
@@ -16,6 +17,8 @@ export default class Food {
     }
 
     reset() {
+        this.frameX = 0;
+        this.frameY = Math.floor(Math.random() * 3);
         this.x = Math.floor(Math.random() * this.game.columns);
         this.y = Math.floor(Math.random() * (this.game.rows - this.game.topMargin) + this.game.topMargin);
     }
@@ -27,7 +30,7 @@ export default class Food {
         this.game.ctx.drawImage(
             this.image,
             this.frameX * this.spriteWidth,
-            0 * this.spriteHeight,
+            this.frameY * this.spriteHeight,
             this.spriteWidth,
             this.spriteHeight,
             this.x * this.game.cellSize,

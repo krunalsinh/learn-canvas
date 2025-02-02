@@ -18,7 +18,7 @@ class Game{
         this.eventUpdate = false;
 
         this.gameOver = true;
-        this.winningScore = 10;
+        this.winningScore = 3;
 
         this.player1;
         this.player2;
@@ -26,7 +26,7 @@ class Game{
         this.player4;
         this.food;
         this.gameObjects;  
-        this.debug = true;
+        this.debug = false;
         this.ui = new UI(this);
         this.topMargin = 2;
         this.background;
@@ -56,30 +56,39 @@ class Game{
 
     player1Init(){
         const playerName = this.ui.player1Name.value;
+        const image = document.getElementById(this.ui.playerType1.value);
+
+        
         if(this.ui.playerControl1.value === "keyboard"){
-            this.player1 = new Keyboard1(this, 4, this.topMargin, 1, 0, "pink", playerName);
+            this.player1 = new Keyboard1(this, 4, this.topMargin, 1, 0, "pink", playerName, image);
         }else{
-            this.player1 = new ComputerAi(this, 4, this.topMargin, 1, 0, "pink", playerName);
+            this.player1 = new ComputerAi(this, 4, this.topMargin, 1, 0, "pink", playerName, image);
         }
     }
 
     player2Init(){
         const playerName = this.ui.player2Name.value;
+        const image = document.getElementById(this.ui.playerType2.value);
+
         if(this.ui.playerControl2.value === "wsad"){
-            this.player2 = new Keyboard2(this, 0, this.topMargin + 4, 0, 1, "blue", playerName);
+            this.player2 = new Keyboard2(this, 0, this.topMargin + 4, 0, 1, "blue", playerName, image);
         }else{
-            this.player2 = new ComputerAi(this, 0, this.topMargin + 4, 0, 1, "blue", playerName);
+            this.player2 = new ComputerAi(this, 0, this.topMargin + 4, 0, 1, "blue", playerName, image);
         }
     }
 
     player3Init(){
         const playerName = this.ui.player3Name.value;
-        this.player3 = new ComputerAi(this, 4, this.rows - 1, 1, 0, "skyblue", playerName);
+        const image = document.getElementById(this.ui.playerType3.value);
+
+        this.player3 = new ComputerAi(this, 4, this.rows - 1, 1, 0, "skyblue", playerName, image);
     }
 
     player4Init(){
         const playerName = this.ui.player4Name.value;
-        this.player4 = new ComputerAi(this, this.columns - 1, 4, 0, 1, "gold", playerName);
+        const image = document.getElementById(this.ui.playerType4.value);
+
+        this.player4 = new ComputerAi(this, this.columns - 1, 4, 0, 1, "gold", playerName, image);
     }
 
     start(){
@@ -159,9 +168,16 @@ class Game{
             this.ui.update();
         }
     }
-    triggerGameOver(){
+    triggerGameOver(winner){
         this.gameOver = true;
         this.ui.gameOverUI();
+        if(winner){
+            this.ui.message1.innerText = winner.name + " wins!";
+            this.ui.message2.innerText = "Winning Score " + winner.score;
+        }else{
+            this.ui.message1.innerText = "Welcome to battle arena!";
+            this.ui.message2.innerText = "Choose your fighters!";
+        }
     }
     toggleFullScreen() {
         if (!document.fullscreenElement) {

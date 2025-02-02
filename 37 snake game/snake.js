@@ -1,7 +1,7 @@
 import { drawRectangle, fillRect } from "../common/common-functions.js";
 
 export default class Snake{
-    constructor(game, x, y,speedX, speedY, color, name){
+    constructor(game, x, y,speedX, speedY, color, name, image){
         this.game = game;
         this.x = x;
         this.y = y;
@@ -24,7 +24,7 @@ export default class Snake{
         }
         this.readyToTurn = true;
         this.name = name;
-        this.image = document.getElementById("snakeCorgi");
+        this.image = image;
         this.spriteWidth = 200;
         this.spriteHeight = 200;
       
@@ -33,9 +33,18 @@ export default class Snake{
         this.readyToTurn = true;
 
         if(this.game.checkCollision(this, this.game.food)){
+            
+            if( this.game.food.frameY === 0 ){
+                this.score += 1;
+                this.length += 1;
+            }else{
+                if(this.score > 0) this.score -= 1;
+                if(this.length > 2) {
+                    this.length -= 1;
+                    this.segments.pop();
+                }
+            }
             this.game.food.reset();
-            this.score += 1;
-            this.length += 1;
 
         }
 
@@ -58,7 +67,7 @@ export default class Snake{
         }
 
         if(this.score >= this.game.winningScore){
-            this.game.triggerGameOver();
+            this.game.triggerGameOver(this);
         }
     }
 
@@ -100,18 +109,39 @@ export default class Snake{
         const nextSegment = this.segments[index + 1] || 0;
 
         if(index === 0){//head
-            if(segment.y < nextSegment.y){
-                segment.frameX = 1;
-                segment.frameY = 2;
-            }else if(segment.y > nextSegment.y){
-                segment.frameX = 0;
-                segment.frameY = 4;
-            }else if(segment.x < nextSegment.x){
-                segment.frameX = 0;
-                segment.frameY = 0;
-            }else if(segment.x > nextSegment.x){
-                segment.frameX = 2;
-                segment.frameY = 1;
+            if(segment.y < nextSegment.y){//face up
+
+                if(segment.x === this.game.food.x && segment.y - 1  === this.game.food.y){
+                    segment.frameX = 7;
+                    segment.frameY = 1;
+                }else{
+                    segment.frameX = 1;
+                    segment.frameY = 2;
+                }
+            }else if(segment.y > nextSegment.y){//face down
+                if(segment.x === this.game.food.x && segment.y + 1  === this.game.food.y){
+                    segment.frameX = 7;
+                    segment.frameY = 3;
+                }else{
+                    segment.frameX = 0;
+                    segment.frameY = 4;
+                }
+            }else if(segment.x < nextSegment.x){//face left
+                if(segment.x - 1 === this.game.food.x && segment.y === this.game.food.y){
+                    segment.frameX = 2;
+                    segment.frameY = 4;
+                }else{
+                    segment.frameX = 0;
+                    segment.frameY = 0;
+                }
+            }else if(segment.x > nextSegment.x){//face right
+                if(segment.x + 1 === this.game.food.x && segment.y === this.game.food.y){
+                    segment.frameX = 4;
+                    segment.frameY = 4;
+                }else{
+                    segment.frameX = 2;
+                    segment.frameY = 1;
+                }
             }
         }else if(index === this.segments.length - 1){//tail
             if(segment.y < previousSegment.y){
@@ -238,8 +268,8 @@ export default class Snake{
 }
 
 export class Keyboard1 extends Snake{
-    constructor(game, x, y,speedX, speedY, color, name){
-        super(game, x, y,speedX, speedY, color, name);
+    constructor(game, x, y,speedX, speedY, color, name, image){
+        super(game, x, y,speedX, speedY, color, name, image);
         window.addEventListener('keydown', e => {
             switch(e.key){
                 case 'ArrowUp':
@@ -260,8 +290,8 @@ export class Keyboard1 extends Snake{
 }
 
 export class Keyboard2 extends Snake{
-    constructor(game, x, y,speedX, speedY, color, name){
-        super(game, x, y,speedX, speedY, color, name);
+    constructor(game, x, y,speedX, speedY, color, name, image){
+        super(game, x, y,speedX, speedY, color, name, image);
         window.addEventListener('keydown', e => {
             switch(e.key){
                 case 'w':
@@ -282,28 +312,59 @@ export class Keyboard2 extends Snake{
 }
 
 export class ComputerAi extends Snake{
-    constructor(game, x, y,speedX, speedY, color, name){
-        super(game, x, y,speedX, speedY, color, name);
+    constructor(game, x, y,speedX, speedY, color, name, image){
+        super(game, x, y,speedX, speedY, color, name, image);
         this.turnTimer = 0;
         this.turnInterval = Math.floor(Math.random() * this.game.columns + 1);
     }
 
     update(){
         super.update();
-        if(this.turnTimer < this.turnInterval){
-            this.turnTimer += 1;
-        }else{
-            this.turnTimer = 0;
+        // if(this.name === "Player3")console.log(this.x, this.game.columns);
+
+        if(this.speedX === 0){
+            if(this.x === 0 || this.x === this.game.columns - 1){
+                if(this.y === this.game.rows - 1){
+                    this.turnUp();
+                }else if(this.y === 0){
+                    this.turnDown();
+                }else{
+                    Math.random() > 0.5 ? this.turnUp() : this.turnDown();
+                }
+            }
+
+        }else if(this.speedY === 0){
+            if(this.y === 0 || this.y === this.game.rows - 1){
+                if(this.x === this.game.columns - 1){
+                    this.turnLeft();
+                }else if(this.x === 0){
+                    this.turnRight();
+                }else{
+                    Math.random() > 0.5 ? this.turnRight() : this.turnLeft();
+                }
+            }
+        }
+        
+        if(this.game.food.x === this.x && this.speedY === 0 ||
+           this.game.food.y === this.y && this.speedX === 0
+        ){
             this.turn();
-            this.turnInterval = Math.floor(Math.random() * this.game.columns + 1);
+        }else{
+            if(this.turnTimer < this.turnInterval){
+                this.turnTimer += 1;
+            }else{
+                this.turnTimer = 0;
+                this.turn();
+                this.turnInterval = Math.floor(Math.random() * this.game.columns + 1);
+            }
         }
     }
 
     turn(){
         if(this.speedY === 0){
-            Math.random() > 0.5 ? this.turnUp() : this.turnDown();
+            this.game.food.y > this.y ? this.turnDown() : this.turnUp()
         }else if(this.speedX === 0){
-            Math.random() > 0.5 ? this.turnLeft() : this.turnRight();
+            this.game.food.x > this.x ? this.turnRight() : this.turnLeft()
         }
     }
 }

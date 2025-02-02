@@ -31,6 +31,19 @@ export class UI {
         this.player2Name = document.getElementById("player2Name");
         this.player3Name = document.getElementById("player3Name");
         this.player4Name = document.getElementById("player4Name");
+
+        this.playerType1 = document.getElementById("playerType1");
+        this.playerType2 = document.getElementById("playerType2");
+        this.playerType3 = document.getElementById("playerType3");
+        this.playerType4 = document.getElementById("playerType4");
+
+        this.message1 = document.getElementById("userMessage1");
+        this.message2 = document.getElementById("userMessage2");
+
+
+
+
+        this.gameOverUI();
     }
     
     update(){

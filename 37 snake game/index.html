@@ -79,6 +79,15 @@
         background-color: blue;
         inset: 0;
       }
+      .user-message{
+        color: #fff;
+        text-align: center;
+        font-size: 23px;
+        padding: 10px;
+      }
+      input, select{
+        width: 100px;
+      }
     </style>
 </head>
 <body>
@@ -105,9 +114,22 @@
         <p id="player4Score">Player 4</p>
       </div>
       <div class="userMenu" id="playerControls">
+        <div class="user-message">
+          <p id="userMessage1">Welcome to battle arena!</p>
+          <p id="userMessage2">Choose your fighters!</p>
+        </div>
         <div id="playerChoice">
           <div class="player-control">
             <p>Player 1</p>
+            <div>
+              <label for="playerType1">Type</label>
+              <select id="playerType1">
+                <option value="snakeCorgi" selected>Snake Corgi</option>
+                <option value="spectralSchnoodle">spectral Schnoodle</option>
+                <option value="stickySaberhound">sticky Saberhound</option>
+                <option value="voidWolf">void Wolf</option>
+              </select>
+            </div>
             <div>
               <label for="playerControl1">Control</label>
               <select id="playerControl1">
@@ -122,6 +144,15 @@
           </div>
           <div class="player-control">
             <p>Player 2</p>
+            <div>
+              <label for="playerType2">Type</label>
+              <select id="playerType2" >
+                <option value="snakeCorgi">Snake Corgi</option>
+                <option value="spectralSchnoodle" selected>spectral Schnoodle</option>
+                <option value="stickySaberhound">sticky Saberhound</option>
+                <option value="voidWolf">void Wolf</option>
+              </select>
+            </div>
             <div>
 
               <label for="playerControl2">Control</label>
@@ -138,6 +169,15 @@
           <div class="player-control">
             <p>Player 3</p>
             <div>
+              <label for="playerType3">Type</label>
+              <select id="playerType3" >
+                <option value="snakeCorgi">Snake Corgi</option>
+                <option value="spectralSchnoodle">spectral Schnoodle</option>
+                <option value="stickySaberhound" selected>sticky Saberhound</option>
+                <option value="voidWolf">void Wolf</option>
+              </select>
+            </div>
+            <div>
 
               <label for="playerControl3">Control</label>
               <select id="playerControl3">
@@ -151,6 +191,15 @@
           </div>
           <div class="player-control">
             <p>Player 4</p>
+            <div>
+              <label for="playerType4">Type</label>
+              <select id="playerType4">
+                <option value="snakeCorgi">Snake Corgi</option>
+                <option value="spectralSchnoodle">spectral Schnoodle</option>
+                <option value="stickySaberhound">sticky Saberhound</option>
+                <option value="voidWolf" selected>void Wolf</option>
+              </select>
+            </div>
             <div>
 
               <label for="playerControl4">Control</label>
@@ -170,8 +219,11 @@
     <div id="assets">
       <img src="./images/forest_margin_repeat_1600x600.png" alt="Game Background" id="gameBackground"/>
       <img src="./images/magic_berry1.png" alt="Magic Berry" id="magicBerry"/>
-      <img src="./images/mushroom_sprite.png" alt="Mushroom" id="mushroom"/>
+      <img src="./images/food.png" alt="Mushroom" id="mushroom"/>
       <img src="./images/snake_corgi.png" alt="Snake Corgi" id="snakeCorgi"/>
+      <img src="./images/spectral_schnoodle.png" alt="spectral Schnoodle" id="spectralSchnoodle"/>
+      <img src="./images/sticky_saberhound.png" alt="sticky Saberhound" id="stickySaberhound"/>
+      <img src="./images/void_wolf.png" alt="void Wolf" id="voidWolf"/>
     </div>
     <script src="./main.js" type="module" defer></script>
 </body>
